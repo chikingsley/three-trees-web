@@ -110,7 +110,7 @@ const Navbar = () => {
             <NavigationMenuItem>
               <NavigationMenuTrigger className="border border-border hover:border-foreground">Court-Ordered Classes</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2">
+                <ul className="grid w-[400px] gap-3 p-4 md:w-[600px] md:grid-cols-2">
                   {courtOrderedClasses.map((classItem) => (
                     <ListItem
                       key={classItem.title}
@@ -136,7 +136,7 @@ const Navbar = () => {
             <NavigationMenuItem>
               <NavigationMenuTrigger className="border border-border hover:border-foreground">College Programs</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2">
+                <ul className="grid w-[600px] gap-3 p-4 md:w-[600px] md:grid-cols-2">
                   {collegePrograms.map((program) => (
                     <ListItem
                       key={program.title}
@@ -162,7 +162,7 @@ const Navbar = () => {
             <NavigationMenuItem>
               <NavigationMenuTrigger className="border border-border hover:border-foreground">Corporate & Hospitals</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2">
+                <ul className="grid w-[600px] gap-3 p-4 md:w-[600px] md:grid-cols-2">
                   {corporatePrograms.map((program) => (
                     <ListItem
                       key={program.title}
