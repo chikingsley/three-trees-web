@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { Logo } from "./logo";
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import {
@@ -14,6 +13,9 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Button } from "../ui/button";
+import { LogoCard } from "./logo-card";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Menu } from "lucide-react";
 
 const courtOrderedClasses = [
   {
@@ -84,12 +86,12 @@ const ListItem = React.forwardRef<
         <a
           ref={ref}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            "group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-transparent",
             className
           )}
           {...props}
         >
-          <div className="text-sm font-medium leading-none">{title}</div>
+          <div className="text-sm font-medium leading-none group-hover:text-primary group-hover:font-bold transition-colors">{title}</div>
           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
             {children}
           </p>
@@ -104,11 +106,13 @@ const Navbar = () => {
   return (
     <nav className="fixed z-10 top-6 inset-x-4 h-14 xs:h-16 bg-background/50 backdrop-blur-sm max-w-screen-xl mx-auto rounded-full">
       <div className="h-full flex items-center justify-between mx-auto px-4">
-        <Logo />
-        <NavigationMenu>
+        <LogoCard />
+
+        {/* Desktop Menu - hidden on screens smaller than 1100px */}
+        <NavigationMenu className="hidden max-xl:hidden xl:block">
           <NavigationMenuList className="gap-4">
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="border border-border hover:border-foreground">Court-Ordered Classes</NavigationMenuTrigger>
+              <NavigationMenuTrigger className="border border-primary bg-accent/10 text-foreground data-[state=open]:text-foreground data-[state=open]:font-bold data-[state=open]:border-transparent data-[state=open]:bg-accent/30">Court-Ordered Classes</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[600px] md:grid-cols-2">
                   {courtOrderedClasses.map((classItem) => (
@@ -122,9 +126,9 @@ const Navbar = () => {
                   ))}
                   <li className="md:col-span-2">
                     <NavigationMenuLink asChild>
-                      <Link
+                      <Link 
                         href="/sign-up/court-ordered"
-                        className="block select-none rounded-md bg-accent/50 p-3 text-center hover:bg-accent"
+                        className="block select-none rounded-md bg-primary text-primary-foreground p-3 text-center"
                       >
                         Sign Up for Court-Ordered Classes
                       </Link>
@@ -134,7 +138,7 @@ const Navbar = () => {
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="border border-border hover:border-foreground">College Programs</NavigationMenuTrigger>
+              <NavigationMenuTrigger className="border border-primary bg-accent/10 text-foreground data-[state=open]:text-foreground data-[state=open]:font-bold data-[state=open]:border-transparent data-[state=open]:bg-accent/30">College Programs</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[600px] gap-3 p-4 md:w-[600px] md:grid-cols-2">
                   {collegePrograms.map((program) => (
@@ -148,9 +152,9 @@ const Navbar = () => {
                   ))}
                   <li className="md:col-span-2">
                     <NavigationMenuLink asChild>
-                      <Link
+                      <Link 
                         href="/sign-up/college"
-                        className="block select-none rounded-md bg-accent/50 p-3 text-center hover:bg-accent"
+                        className="block select-none rounded-md bg-primary text-primary-foreground p-3 text-center hover:bg-primary/90"
                       >
                         Sign Up for College Programs
                       </Link>
@@ -160,7 +164,7 @@ const Navbar = () => {
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="border border-border hover:border-foreground">Corporate & Hospitals</NavigationMenuTrigger>
+              <NavigationMenuTrigger className="border border-primary bg-accent/10 text-foreground data-[state=open]:text-foreground data-[state=open]:font-bold data-[state=open]:border-transparent data-[state=open]:bg-accent/30">Corporate & Hospitals</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[600px] gap-3 p-4 md:w-[600px] md:grid-cols-2">
                   {corporatePrograms.map((program) => (
@@ -174,9 +178,9 @@ const Navbar = () => {
                   ))}
                   <li className="md:col-span-2">
                     <NavigationMenuLink asChild>
-                      <Link
+                      <Link 
                         href="/sign-up/corporate"
-                        className="block select-none rounded-md bg-accent/50 p-3 text-center hover:bg-accent"
+                        className="block select-none rounded-md bg-primary text-primary-foreground p-3 text-center hover:bg-primary/90"
                       >
                         Sign Up for Corporate Programs
                       </Link>
@@ -186,12 +190,93 @@ const Navbar = () => {
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Button variant="outline" className={cn(navigationMenuTriggerStyle(), "border border-border hover:border-foreground")}>
+              <Button variant="default" className={cn(navigationMenuTriggerStyle(), "border border-primary hover:border-primary/80 bg-primary text-primary-foreground")}>
                 Sign In
               </Button>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
+
+        {/* Mobile Menu - visible only on screens smaller than 1100px */}
+        <Popover>
+          <PopoverTrigger asChild className="xl:hidden">
+            <Button variant="outline" size="icon" className="rounded-full">
+              <Menu className="h-4 w-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-72 p-4" align="end">
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <h4 className="font-medium leading-none">Court-Ordered Classes</h4>
+                <div className="grid gap-2">
+                  {courtOrderedClasses.map((classItem) => (
+                    <Link
+                      key={classItem.title}
+                      href={classItem.href}
+                      className="text-sm hover:text-accent-foreground"
+                    >
+                      {classItem.title}
+                    </Link>
+                  ))}
+                  <Link
+                    href="/sign-up/court-ordered"
+                    className="text-sm font-medium text-accent-foreground hover:underline"
+                  >
+                    Sign Up for Court-Ordered Classes
+                  </Link>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <h4 className="font-medium leading-none">College Programs</h4>
+                <div className="grid gap-2">
+                  {collegePrograms.map((program) => (
+                    <Link
+                      key={program.title}
+                      href={program.href}
+                      className="text-sm hover:text-accent-foreground"
+                    >
+                      {program.title}
+                    </Link>
+                  ))}
+                  <Link
+                    href="/sign-up/college"
+                    className="text-sm font-medium text-accent-foreground hover:underline"
+                  >
+                    Sign Up for College Programs
+                  </Link>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <h4 className="font-medium leading-none">Corporate & Hospitals</h4>
+                <div className="grid gap-2">
+                  {corporatePrograms.map((program) => (
+                    <Link
+                      key={program.title}
+                      href={program.href}
+                      className="text-sm hover:text-accent-foreground"
+                    >
+                      {program.title}
+                    </Link>
+                  ))}
+                  <Link
+                    href="/sign-up/corporate"
+                    className="text-sm font-medium text-accent-foreground hover:underline"
+                  >
+                    Sign Up for Corporate Programs
+                  </Link>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Link
+                  href="/sign-in"
+                  className="text-sm font-medium text-primary hover:underline"
+                >
+                  Sign In
+                </Link>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
     </nav>
   );
