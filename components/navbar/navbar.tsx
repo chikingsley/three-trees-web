@@ -112,7 +112,7 @@ const Navbar = () => {
         <NavigationMenu className="hidden max-xl:hidden xl:block">
           <NavigationMenuList className="gap-4">
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="border border-primary bg-accent/10 text-foreground data-[state=open]:text-foreground data-[state=open]:font-bold data-[state=open]:border-transparent data-[state=open]:bg-accent/30">Court-Ordered Classes</NavigationMenuTrigger>
+              <NavigationMenuTrigger className="border border-primary data-[state=open]:border-transparent data-[state=open]:bg-accent/30">Court-Ordered Classes</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[600px] md:grid-cols-2">
                   {courtOrderedClasses.map((classItem) => (
@@ -138,7 +138,7 @@ const Navbar = () => {
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="border border-primary bg-accent/10 text-foreground data-[state=open]:text-foreground data-[state=open]:font-bold data-[state=open]:border-transparent data-[state=open]:bg-accent/30">College Programs</NavigationMenuTrigger>
+              <NavigationMenuTrigger className="border border-primary data-[state=open]:border-transparent data-[state=open]:bg-accent/30">College Programs</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[600px] gap-3 p-4 md:w-[600px] md:grid-cols-2">
                   {collegePrograms.map((program) => (
@@ -164,7 +164,7 @@ const Navbar = () => {
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="border border-primary bg-accent/10 text-foreground data-[state=open]:text-foreground data-[state=open]:font-bold data-[state=open]:border-transparent data-[state=open]:bg-accent/30">Corporate & Hospitals</NavigationMenuTrigger>
+              <NavigationMenuTrigger className="border border-primary data-[state=open]:border-transparent data-[state=open]:bg-accent/30">Corporate & Hospitals</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[600px] gap-3 p-4 md:w-[600px] md:grid-cols-2">
                   {corporatePrograms.map((program) => (
