@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/navbar";
 import Hero from "@/components/hero-section";
+import WhyChooseSection from "@/components/why-choose-section";
 
 export default function Home() {
   return (
@@ -12,7 +13,7 @@ export default function Home() {
         {/* 2. Trust Bar / Social Proof */}
         {/* <TrustBar /> */}
         {/* 3. "Why Three Trees?" / The Difference Section */}
-        {/* <WhyThreeTrees /> */}
+        <WhyChooseSection />
         {/* 4. Court-Mandated Class Focus Section */}
         {/* <ClassFocus /> */}
         {/* 5. "How It Works" Section */}
