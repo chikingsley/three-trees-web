@@ -36,12 +36,12 @@ const Hero = () => {
             </p>
           </div>
           <div className="mt-12 flex flex-row items-center justify-center gap-4">
-            <Button asChild size="lg" className="rounded-full text-base shadow-none">
+            <Button asChild size="lg" className="rounded-full text-base shadow-none hover:border-white hover:border-1">
               <Link href="#enroll">
                 Enroll Now <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="rounded-full text-base shadow-none bg-transparent border-white text-white hover:bg-white/10">
+            <Button asChild variant="outline" size="lg" className="rounded-full text-base shadow-none bg-white border-white text-primary hover:bg-primary/50 hover:text-white">
               <Link href="#contact-us">
                 Contact Us
               </Link>
