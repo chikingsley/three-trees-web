@@ -12,7 +12,7 @@ const Hero = () => {
       {/* Full Bleed Background Image */}
       <div className="absolute inset-0 w-full h-full z-0">
         <Image
-          src="/images/placeholder1.jpg"
+          src="/images/headerbg.jpg"
           alt="Background"
           fill
           priority

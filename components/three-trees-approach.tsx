@@ -13,21 +13,21 @@ const ThreeTreesApproach = () => {
       title: 'Emotional Resilience',
       content: 'Developing the capacity to recognize, understand, and effectively manage emotional responses to stressors and challenges, creating a foundation for healthier relationships.',
       color: 'primary',
-      image: '/images/placeholder1.jpg'
+      image: '/images/resilience2.jpg'
     },
     {
       id: 'cognitive',
-      title: 'Cognitive Clarity',
+      title: 'Mindful Awareness',
       content: 'Identifying and restructuring thought patterns that perpetuate harmful behaviors while enhancing rational thinking and promoting better decision-making in challenging situations.',
       color: 'primary',
-      image: '/images/placeholder1.jpg'
+      image: '/images/confidence.jpg'
     },
     {
       id: 'behavioral',
-      title: 'Behavioral Efficacy',
+      title: 'Effective Habits',
       content: 'Establishing and maintaining positive action patterns that lead to meaningful outcomes and reinforce long-term change through practical skills development and sustainable habit formation.',
       color: 'primary',
-      image: '/images/placeholder1.jpg'
+      image: '/images/habits.jpg'
     }
   ];
 

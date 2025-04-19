@@ -42,7 +42,7 @@ const AnimatedGridPattern = ({
 
 export default function CTABanner() {
   return (
-    <section className="px-4 md:px-6 py-8 md:py-16" id="contact-us">
+    <section className="px-4 md:px-6 py-0" id="contact-us">
       <div className="relative overflow-hidden my-8 md:my-12 w-full bg-primary text-primary-foreground max-w-screen-lg mx-auto rounded-2xl py-10 md:py-16 px-6 md:px-14">
         <AnimatedGridPattern
           numSquares={30}

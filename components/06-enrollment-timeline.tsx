@@ -30,7 +30,7 @@ const enrollmentSteps = [
 
 export default function EnrollmentTimeline() {
   return (
-    <section className="py-8 md:py-16 bg-background" id="enroll">
+    <section className="py-8 md:py-16 bg-gray-100" id="enroll">
       <div className="mx-auto px-4 md:px-6 lg:px-8 max-w-screen-lg">
         <div className="text-center mb-8 md:mb-12">
           <div className="h-1 w-20 bg-primary mx-auto mb-6"></div>
@@ -42,7 +42,7 @@ export default function EnrollmentTimeline() {
         <div className="flex flex-row items-start gap-4 sm:gap-6 lg:gap-12">
           {/* Image */}
           <div className="w-1/3 sm:w-2/5 md:w-1/2 flex justify-center order-1">
-            <div className="rounded-lg shadow-md overflow-hidden relative" style={{ width: '70%', maxWidth: '320px', height: '400px' }}>
+            <div className="rounded-lg shadow-md overflow-hidden relative bg-gray-100" style={{ width: '70%', maxWidth: '320px', height: '400px' }}>
               <Image
                 src="/images/enrollment.jpg"
                 alt="Woman enrolling in online class"

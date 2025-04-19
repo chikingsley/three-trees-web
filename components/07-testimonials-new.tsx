@@ -30,7 +30,7 @@ const Testimonials = () => {
   }, [api]);
 
   return (
-    <section className="py-12 md:py-20 bg-background" id="testimonials">
+    <section className="py-6 md:py-2 bg-background" id="testimonials">
       <div className="mx-auto px-4 md:px-6 lg:px-8 max-w-screen-lg">
       <div className="h-1 w-20 bg-primary mx-auto mb-6"></div>
         <div className="text-center mb-12">
@@ -56,7 +56,7 @@ const Testimonials = () => {
               {testimonialsData.map((testimonial, index) => (
                 <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
                   <div className="h-full">
-                    <div className="rounded-xl p-6 bg-white shadow-sm border border-gray-200/50 h-full flex flex-col">
+                    <div className="rounded-xl p-6 bg-white shadow-sm border border-gray-200/50 h-full flex flex-col hover:border-black/20 hover:shadow-md transition-all">
                       <div className="mb-4">
                         <p className="text-base font-semibold text-evergreen-900">{testimonial.name}</p>
                         {testimonial.title && (
