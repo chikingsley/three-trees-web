@@ -204,23 +204,23 @@ const Navbar = () => {
               <Menu className="h-4 w-4" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-72 p-4" align="end">
+          <PopoverContent className="w-[calc(100vw-2rem)] p-4" align="end">
             <div className="grid gap-4">
               <div className="space-y-2">
                 <h4 className="font-medium leading-none">Court-Ordered Classes</h4>
-                <div className="grid gap-2">
+                <div className="grid gap-1">
                   {courtOrderedClasses.map((classItem) => (
                     <Link
                       key={classItem.title}
                       href={classItem.href}
-                      className="text-sm hover:text-accent-foreground"
+                      className="block p-2 text-base text-foreground hover:text-primary transition-colors"
                     >
                       {classItem.title}
                     </Link>
                   ))}
                   <Link
                     href="/sign-up/court-ordered"
-                    className="text-sm font-medium text-accent-foreground hover:underline"
+                    className="block p-2 text-base font-medium text-primary hover:underline"
                   >
                     Sign Up for Court-Ordered Classes
                   </Link>
@@ -228,19 +228,19 @@ const Navbar = () => {
               </div>
               <div className="space-y-2">
                 <h4 className="font-medium leading-none">College Programs</h4>
-                <div className="grid gap-2">
+                <div className="grid gap-1">
                   {collegePrograms.map((program) => (
                     <Link
                       key={program.title}
                       href={program.href}
-                      className="text-sm hover:text-accent-foreground"
+                      className="block p-2 text-base text-foreground hover:text-primary transition-colors"
                     >
                       {program.title}
                     </Link>
                   ))}
                   <Link
                     href="/sign-up/college"
-                    className="text-sm font-medium text-accent-foreground hover:underline"
+                    className="block p-2 text-base font-medium text-primary hover:underline"
                   >
                     Sign Up for College Programs
                   </Link>
@@ -248,32 +248,27 @@ const Navbar = () => {
               </div>
               <div className="space-y-2">
                 <h4 className="font-medium leading-none">Corporate & Hospitals</h4>
-                <div className="grid gap-2">
+                <div className="grid gap-1">
                   {corporatePrograms.map((program) => (
                     <Link
                       key={program.title}
                       href={program.href}
-                      className="text-sm hover:text-accent-foreground"
+                      className="block p-2 text-base text-foreground hover:text-primary transition-colors"
                     >
                       {program.title}
                     </Link>
                   ))}
                   <Link
                     href="/sign-up/corporate"
-                    className="text-sm font-medium text-accent-foreground hover:underline"
+                    className="block p-2 text-base font-medium text-primary hover:underline"
                   >
                     Sign Up for Corporate Programs
                   </Link>
                 </div>
               </div>
-              <div className="space-y-2">
-                <Link
-                  href="/sign-in"
-                  className="text-sm font-medium text-primary hover:underline"
-                >
-                  Sign In
-                </Link>
-              </div>
+              <Button asChild variant="ghost" className="w-full justify-start mt-2 text-base p-2 h-auto">
+                <Link href="/signin">Sign In</Link>
+              </Button>
             </div>
           </PopoverContent>
         </Popover>
