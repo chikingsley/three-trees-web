@@ -6,14 +6,14 @@ export const Logo = ({ className = "", size = "default" }: { className?: string,
       subtitle: "text-xs",
     },
     default: {
-      logo: "h-18",
-      title: "text-lg",
-      subtitle: "text-lg",
+      logo: "h-10",
+      title: "text-base",
+      subtitle: "text-xs",
     },
     large: {
       logo: "h-12",
-      title: "text-2xl",
-      subtitle: "text-base",
+      title: "text-xl",
+      subtitle: "text-sm",
     },
   };
 
@@ -51,9 +51,9 @@ export const Logo = ({ className = "", size = "default" }: { className?: string,
           }}
         />
       </svg>
-      <div className="flex flex-col leading-[1.0.5]">
-        <h1 className={`${currentSize.title} font-bold text-[#273472]`}>THREE TREES</h1>
-        <p className={`${currentSize.subtitle} text-[#273472]`}>CENTER FOR CHANGE</p>
+      <div className="flex flex-col">
+        <h1 className={`${currentSize.title} font-bold leading-tight text-[#273472]`}>THREE TREES</h1>
+        <p className={`${currentSize.subtitle} leading-tight text-[#273472]`}>CENTER FOR CHANGE</p>
       </div>
     </div>
   );

@@ -38,7 +38,7 @@ const TrustIndicators = ({ className }: TrustIndicatorProps) => {
   ];
 
   return (
-    <section className={cn("w-full py-3 bg-white border-b border-t border-gray-100", className)}>
+    <section className={cn("w-full py-3 bg-white border-b-2 border-t-2 border-primary", className)}>
       <div className="mx-auto max-w-screen-xl px-4 md:px-6 lg:px-8">
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5 lg:gap-1 items-center justify-center">
           {indicators.map((item, index) => (

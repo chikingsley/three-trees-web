@@ -71,12 +71,12 @@ export default function CTABanner() {
           </p>
         </div>
         <div className="relative z-0 mt-8 md:mt-12 flex flex-col sm:flex-row gap-4">
-          <Button size="lg" className="bg-white text-primary hover:bg-white/90">
+          <Button size="lg" className="bg-white text-primary border-2 border-white hover:bg-white hover:border-foreground hover:text-primary">
             <Link href="/enroll" className="flex items-center">
               Find Your Class <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
-          <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+          <Button size="lg" className="bg-white text-primary border-2 border-white hover:bg-white hover:border-foreground hover:text-primary">
             <Link href="https://calendly.com/threetrees/discovery" target="_blank" className="flex items-center">
               Talk to an Expert <Calendar className="ml-2 h-4 w-4" />
             </Link>

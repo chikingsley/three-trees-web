@@ -47,13 +47,13 @@
   /* Base */
   --radius: 0.625rem;
   --background: #FFFFFF;
-  --foreground: #0F3D33; /* Evergreen 900 for dark text */
+  --foreground: #273472; /* Evergreen 900 for dark text */
   
   /* Cards & Popovers */
   --card: #FFFFFF;
-  --card-foreground: #0F3D33;
+  --card-foreground: #273472;
   --popover: #FFFFFF;
-  --popover-foreground: #0F3D33;
+  --popover-foreground: #273472;
   
   /* Brand Colors */
   --primary: #396AF3; /* Primary 500 */
@@ -64,7 +64,7 @@
   /* UI Colors */
   --muted: #F4F1EA; /* Sand 50 - light section bg */
   --muted-foreground: #4B5563; /* Gray 700 - body text */
-  --accent: #0F3D33; /* Evergreen 900 - dark accents */
+  --accent: #273472; /* Evergreen 900 - dark accents */
   --accent-foreground: #FFFFFF;
   --destructive: #D84848; /* Error 500 - form errors */
   --destructive-foreground: #FFFFFF;
@@ -77,13 +77,13 @@
   /* Charts (keeping for compatibility) */
   --chart-1: #396AF3; /* Primary 500 */
   --chart-2: #243D8E; /* Primary 700 */
-  --chart-3: #0F3D33; /* Evergreen 900 */
+  --chart-3: #273472; /* Evergreen 900 */
   --chart-4: #F4F1EA; /* Sand 50 */
   --chart-5: #D84848; /* Error 500 */
   
   /* Sidebar (keeping for compatibility) */
   --sidebar: #FFFFFF;
-  --sidebar-foreground: #0F3D33;
+  --sidebar-foreground: #273472;
   --sidebar-primary: #396AF3; /* Primary 500 */
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #243D8E; /* Primary 700 */
@@ -94,7 +94,7 @@
 
 .dark {
   /* Base */
-  --background: #0F3D33; /* Evergreen 900 */
+  --background: #273472; /* Evergreen 900 */
   --foreground: #FFFFFF;
   
   /* Cards & Popovers */

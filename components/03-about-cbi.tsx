@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react';
 
 export default function AboutCbiMethod() {
   return (
-    <section className="py-8 md:py-12 lg:py-20 bg-[#EEF0FC] dark:bg-gray-900" style={{ backgroundColor: 'rgba(91, 117, 235, 0.1)' }}>
+    <section className="py-8 md:py-12 lg:py-20 bg-[#EEF0FC] dark:bg-gray-900">
       <div className="mx-auto px-4 md:px-6 lg:px-8 max-w-screen-lg">
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="order-2 md:order-1">

@@ -40,16 +40,19 @@ export default function EnrollmentTimeline() {
           <div className="h-1 w-20 bg-primary mx-auto mb-12"></div>
         </div>
         <div className="flex flex-row items-start gap-4 sm:gap-6 lg:gap-12">
-          {/* SVG Image */}
+          {/* Image */}
           <div className="w-1/3 sm:w-2/5 md:w-1/2 flex justify-center order-1">
-            <Image
-              src="/undraw_authentication_tbfc.svg"
-              alt="Authentication illustration"
-              width={400}
-              height={300}
-              className="max-w-full h-auto"
-              priority
-            />
+            <div className="rounded-lg shadow-md overflow-hidden relative" style={{ width: '70%', maxWidth: '320px', height: '400px' }}>
+              <Image
+                src="/images/enrollment.jpg"
+                alt="Woman enrolling in online class"
+                fill
+                sizes="(max-width: 768px) 70vw, 320px"
+                className="object-cover"
+                style={{ objectPosition: 'center center', transform: 'scale(1.2)' }}
+                priority
+              />
+            </div>
           </div>
 
           {/* Timeline */}
