@@ -15,7 +15,12 @@ import {
 import { Button } from "../ui/button";
 import { LogoCard } from "./logo-card";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Menu } from "lucide-react";
+import { Menu, ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const courtOrderedClasses = [
   {
@@ -76,6 +81,29 @@ const corporatePrograms = [
   },
 ]
 
+const aboutUsLinks = [
+  {
+    title: "Our Method",
+    href: "/about/method",
+    description: "Learn about our evidence-based approach to behavioral change.",
+  },
+  {
+    title: "Our Presence",
+    href: "/about/presence",
+    description: "Discover our impact and locations across the country.",
+  },
+  {
+    title: "Blog",
+    href: "/blog",
+    description: "Insights, research, and stories about behavioral health and rehabilitation.",
+  },
+  {
+    title: "Contact",
+    href: "/contact",
+    description: "Get in touch with our team for inquiries or support.",
+  },
+]
+
 const ListItem = React.forwardRef<
   React.ComponentRef<"a">,
   React.ComponentPropsWithoutRef<"a">
@@ -104,13 +132,13 @@ ListItem.displayName = "ListItem"
 
 const Navbar = () => {
   return (
-    <nav className="fixed z-10 top-6 inset-x-4 h-14 xs:h-16 bg-white shadow-md max-w-screen-xl mx-auto rounded-full">
-      <div className="h-full flex items-center justify-between mx-auto px-4">
+    <nav className="fixed z-10 top-6 inset-x-2 h-14 xs:h-16 bg-white shadow-md max-w-7xl mx-auto rounded-full">
+      <div className="h-full flex items-center justify-between mx-auto px-2 md:px-4">
         <LogoCard />
 
         {/* Desktop Menu - hidden on screens smaller than 1100px */}
         <NavigationMenu className="hidden max-xl:hidden xl:block">
-          <NavigationMenuList className="gap-4">
+          <NavigationMenuList className="gap-2 lg:gap-3">
             <NavigationMenuItem>
               <NavigationMenuTrigger className="border border-primary data-[state=open]:border-transparent data-[state=open]:bg-accent/30">Court-Ordered Classes</NavigationMenuTrigger>
               <NavigationMenuContent>
@@ -190,8 +218,39 @@ const Navbar = () => {
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="border border-primary data-[state=open]:border-transparent data-[state=open]:bg-accent/30 hover:bg-transparent flex items-center gap-1 px-4 py-2 h-10 rounded-md">
+                    <span>About Us</span>
+                    <ChevronDown className="h-4 w-4 opacity-70" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-[400px] p-0 rounded-md">
+                  <div className="grid w-full gap-3 p-4">
+                    {aboutUsLinks.map((link) => (
+                      <Link 
+                        key={link.title}
+                        href={link.href}
+                        className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-transparent"
+                      >
+                        <div className="text-sm font-medium leading-none group-hover:text-primary group-hover:font-bold transition-colors">{link.title}</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          {link.description}
+                        </p>
+                      </Link>
+                    ))}
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
               <Button variant="default" className={cn(navigationMenuTriggerStyle(), "border border-primary hover:border-primary/80 bg-primary text-primary-foreground")}>
-                Sign In
+                Enroll Now
+              </Button>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Button variant="default" className={cn(navigationMenuTriggerStyle(), "border border-primary hover:border-primary/80 bg-primary text-primary-foreground")}>
+                Sign In Portal
               </Button>
             </NavigationMenuItem>
           </NavigationMenuList>
