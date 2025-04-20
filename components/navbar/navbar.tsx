@@ -16,11 +16,6 @@ import { Button } from "../ui/button";
 import { LogoCard } from "./logo-card";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Menu, ChevronDown } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 
 const courtOrderedClasses = [
   {
@@ -239,32 +234,27 @@ const Navbar = () => {
               </NavigationMenuContent>
             </NavigationMenuItem>
             {/* About Us */}
-            <NavigationMenuItem>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="border border-primary data-[state=open]:border-transparent data-[state=open]:bg-accent/30 hover:bg-transparent flex items-center gap-1 px-4 py-2 h-9 rounded-md">
-                    <span>About Us</span>
-                    <ChevronDown className="h-4 w-4 opacity-70" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-[400px] p-0 rounded-md">
-                  <div className="grid w-full gap-3 p-4">
-                    {aboutUsLinks.map((link) => (
-                      <Link 
-                        key={link.title}
-                        href={link.href}
-                        className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-transparent"
-                      >
-                        <div className="text-sm font-medium leading-none group-hover:text-primary group-hover:font-bold transition-colors">{link.title}</div>
-                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                          {link.description}
-                        </p>
-                      </Link>
-                    ))}
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </NavigationMenuItem>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="group border border-primary data-[state=open]:border-transparent data-[state=open]:bg-accent/20 hover:bg-secondary hover:text-secondary-foreground flex items-center gap-1 px-4 py-2 h-9 rounded-md">
+                  <span>About Us</span>
+                  <ChevronDown className="h-4 w-4 shrink-0 hover:text-secondary-foreground text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="center" sideOffset={4} className="w-[400px] p-4">
+                <ul className="grid gap-3">
+                  {aboutUsLinks.map((link) => (
+                    <ListItem
+                      key={link.title}
+                      title={link.title}
+                      href={link.href}
+                    >
+                      {link.description}
+                    </ListItem>
+                  ))}
+                </ul>
+              </PopoverContent>
+            </Popover>
             
             {/* Vertical Divider */}
             <div className="h-8 w-px bg-border mx-1"></div>
