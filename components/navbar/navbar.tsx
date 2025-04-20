@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useState, useEffect } from "react";
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import {
@@ -126,36 +127,66 @@ const ListItem = React.forwardRef<
 ListItem.displayName = "ListItem"
 
 const Navbar = () => {
+  // State to track scroll position
+  const [scrolled, setScrolled] = useState(false);
+
+  // Effect to handle scroll event
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      // Set scrolled to true if scrolled more than 50px, false otherwise
+      setScrolled(offset > 50);
+    };
+
+    // Add scroll event listener
+    window.addEventListener("scroll", handleScroll);
+
+    // Cleanup function to remove listener on unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []); // Empty dependency array means this effect runs only once on mount
+
   return (
-    <nav className="fixed z-50 top-6 inset-x-2 h-18 xs:h-16 bg-white shadow-md max-w-8xl mx-auto rounded-md">
-      <div className="h-full flex items-center justify-between mx-auto">
-        <LogoCard />
+    <nav className={cn(
+      "fixed z-50 transition-all duration-300 ease-in-out",
+      scrolled
+        ? "top-6 inset-x-2 max-w-8xl mx-auto rounded-md bg-white shadow-md h-16 xs:h-[4.5rem]"
+        : "top-0 inset-x-0 rounded-none bg-gradient-to-b from-black/30 to-transparent shadow-none h-18 xs:h-16"
+    )}>
+      <div className={cn(
+        "h-full flex items-center justify-between",
+        scrolled ? "max-w-full px-6" : "max-w-8xl mx-auto"
+      )}>
+        <LogoCard scrolled={scrolled} />
 
         {/* Desktop Menu - hidden on screens smaller than 1100px */}
         <NavigationMenu className="hidden max-[1300px]:hidden min-[1300px]:block pr-6">
-          <NavigationMenuList className="gap-2 lg:gap-3">
+          <NavigationMenuList>
             {/* Court-Ordered Classes */}
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="border border-primary data-[state=open]:border-transparent data-[state=open]:bg-accent/30">Court-Ordered Classes</NavigationMenuTrigger>
+              <NavigationMenuTrigger className={cn(
+                // Base styles
+                "uppercase transition-colors duration-300",
+                // Conditional styles
+                scrolled
+                  ? "data-[state=open]:border-transparent data-[state=open]:bg-accent/30 text-foreground"
+                  : "border-transparent bg-transparent text-white hover:bg-white/10 data-[state=open]:bg-white/10"
+              )}>
+                Court-Ordered Classes
+              </NavigationMenuTrigger>
               <NavigationMenuContent>
+                {/* Overview Header */}
+                <Link href="/services/court-mandated/overview" className="block select-none text-secondary text-xl font-semibold text-center px-4 py-2 hover:text-primary hover:underline">
+                  Court-Ordered Classes Overview
+                </Link>
+
+                {/* Separator */}
+                <div className="md:col-span-2">
+                  <div className="h-px bg-border" />
+                </div>
+
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[600px] md:grid-cols-2">
-                  {/* Overview Button */}
-                  <li className="md:col-span-2">
-                    <NavigationMenuLink asChild>
-                      <Link 
-                        href="/services/court-mandated/overview"
-                        className="block select-none text-primary text-3xl font-semibold text-center py-2"
-                      >
-                        Court-Ordered Classes
-                      </Link>
-                    </NavigationMenuLink>
-                  </li>
-                  
-                  {/* Separator */}
-                  <li className="md:col-span-2 my-2">
-                    <div className="h-px bg-border" />
-                  </li>
-                  
                   {/* Individual Classes */}
                   {courtOrderedClasses.map((classItem) => (
                     <ListItem
@@ -168,7 +199,7 @@ const Navbar = () => {
                   ))}
                   <li className="md:col-span-2">
                     <NavigationMenuLink asChild>
-                      <Link 
+                      <Link
                         href="/sign-up/court-ordered"
                         className="block select-none rounded-md bg-primary text-primary-foreground p-3 text-center"
                       >
@@ -181,8 +212,26 @@ const Navbar = () => {
             </NavigationMenuItem>
             {/* College Programs */}
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="border border-primary data-[state=open]:border-transparent data-[state=open]:bg-accent/30">College Programs</NavigationMenuTrigger>
+              <NavigationMenuTrigger className={cn(
+                "uppercase transition-colors duration-300",
+                scrolled
+                  ? "data-[state=open]:border-transparent data-[state=open]:bg-accent/30 text-foreground"
+                  : "border-transparent bg-transparent text-white hover:bg-white/10 data-[state=open]:bg-white/10"
+              )}>
+                College Programs
+              </NavigationMenuTrigger>
               <NavigationMenuContent>
+                {/* Overview Header */}
+                <Link
+                  href="/services/college/overview"
+                  className="block select-none text-secondary text-xl font-semibold text-center px-4 py-2 hover:text-primary hover:underline"
+                >
+                  College Programs Overview
+                </Link>
+                {/* Separator */}
+                <div className="md:col-span-2">
+                  <div className="h-px bg-border" />
+                </div>
                 <ul className="grid w-[600px] gap-3 p-4 md:w-[600px] md:grid-cols-2">
                   {collegePrograms.map((program) => (
                     <ListItem
@@ -195,7 +244,7 @@ const Navbar = () => {
                   ))}
                   <li className="md:col-span-2">
                     <NavigationMenuLink asChild>
-                      <Link 
+                      <Link
                         href="/sign-up/college"
                         className="block select-none rounded-md bg-primary text-primary-foreground p-3 text-center hover:bg-primary/90"
                       >
@@ -208,8 +257,26 @@ const Navbar = () => {
             </NavigationMenuItem>
             {/* Corporate & Hospitals */}
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="border border-primary data-[state=open]:border-transparent data-[state=open]:bg-accent/30">Corporate & Hospitals</NavigationMenuTrigger>
+              <NavigationMenuTrigger className={cn(
+                "uppercase transition-colors duration-300",
+                scrolled
+                  ? "data-[state=open]:border-transparent data-[state=open]:bg-accent/30 text-foreground"
+                  : "border-transparent bg-transparent text-white hover:bg-white/10 data-[state=open]:bg-white/10"
+              )}>
+                Corporate & Hospitals
+              </NavigationMenuTrigger>
               <NavigationMenuContent>
+                {/* Overview Header */}
+                <Link
+                  href="/services/corporate/overview"
+                  className="block select-none text-secondary text-xl font-semibold text-center px-4 py-2 hover:text-primary hover:underline"
+                >
+                  Corporate & Hospitals Overview
+                </Link>
+                {/* Separator */}
+                <div className="md:col-span-2">
+                  <div className="h-px bg-border" />
+                </div>
                 <ul className="grid w-[600px] gap-3 p-4 md:w-[600px] md:grid-cols-2">
                   {corporatePrograms.map((program) => (
                     <ListItem
@@ -222,7 +289,7 @@ const Navbar = () => {
                   ))}
                   <li className="md:col-span-2">
                     <NavigationMenuLink asChild>
-                      <Link 
+                      <Link
                         href="/sign-up/corporate"
                         className="block select-none rounded-md bg-primary text-primary-foreground p-3 text-center hover:bg-primary/90"
                       >
@@ -236,9 +303,17 @@ const Navbar = () => {
             {/* About Us */}
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" className="group border border-primary data-[state=open]:border-transparent data-[state=open]:bg-accent/20 hover:bg-secondary hover:text-secondary-foreground flex items-center gap-1 px-4 py-2 h-9 rounded-md">
+                <Button variant="ghost" className={cn(
+                  "group uppercase flex items-center gap-1 px-4 py-2 h-9 rounded-md transition-colors duration-300",
+                  scrolled
+                    ? "data-[state=open]:border-transparent data-[state=open]:bg-accent/30 text-foreground hover:bg-accent/10"
+                    : "border-transparent text-white hover:bg-white/10 data-[state=open]:bg-white/10"
+                )}>
                   <span>About Us</span>
-                  <ChevronDown className="h-4 w-4 shrink-0 hover:text-secondary-foreground text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                  <ChevronDown className={cn(
+                    "h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180",
+                    scrolled ? "text-muted-foreground" : "text-white"
+                  )} />
                 </Button>
               </PopoverTrigger>
               <PopoverContent align="center" sideOffset={4} className="w-[400px] p-4">
@@ -255,19 +330,27 @@ const Navbar = () => {
                 </ul>
               </PopoverContent>
             </Popover>
-            
-            {/* Vertical Divider */}
-            <div className="h-8 w-px bg-border mx-1"></div>
-            
+
+            {/* Vertical Divider - Conditionally visible? Maybe hide when not scrolled? */}
+            <div className={cn(
+              "h-8 w-px mx-1 transition-colors duration-300",
+              scrolled ? "bg-border" : "bg-white/30" // Adjusted initial divider color
+            )}></div>
+
             {/* Enroll Now */}
-            <NavigationMenuItem>
+            <NavigationMenuItem className="px-2">
               <Button variant="default" className={cn(navigationMenuTriggerStyle(), "border border-primary hover:border-primary/80 bg-primary text-primary-foreground")}>
                 Enroll Now
               </Button>
             </NavigationMenuItem>
             {/* Sign In Portal */}
             <NavigationMenuItem>
-              <Button variant="default" className={cn(navigationMenuTriggerStyle(), "border border-primary bg-white text-primary hover:bg-primary hover:text-primary-foreground")}>
+              <Button
+                variant="default"
+                className={cn(navigationMenuTriggerStyle(),
+                  "border border-primary-foreground bg-transparent text-primary-foreground hover:bg-primary hover:text-primary-foreground",
+                  scrolled ? "bg-transparent text-primary border-primary hover:bg-primary/90" : "text-primary-foreground hover:bg-primary/90"
+                )}>
                 Sign In Portal
               </Button>
             </NavigationMenuItem>

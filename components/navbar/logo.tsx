@@ -1,4 +1,14 @@
-export const Logo = ({ className = "", size = "default" }: { className?: string, size?: "small" | "default" | "large" }) => {
+import { cn } from "@/lib/utils";
+
+export const Logo = ({
+  className = "", 
+  size = "default", 
+  scrolled = false
+}: {
+  className?: string;
+  size?: "small" | "default" | "large";
+  scrolled?: boolean;
+}) => {
   const sizes = {
     small: {
       logo: "h-8",
@@ -18,6 +28,8 @@ export const Logo = ({ className = "", size = "default" }: { className?: string,
   };
 
   const currentSize = sizes[size];
+
+  const textColorClass = scrolled ? "text-[#273472]" : "text-white";
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
@@ -52,8 +64,12 @@ export const Logo = ({ className = "", size = "default" }: { className?: string,
         />
       </svg>
       <div className="flex flex-col">
-        <h1 className={`${currentSize.title} font-bold leading-tight text-[#273472]`}>THREE TREES</h1>
-        <p className={`${currentSize.subtitle} leading-tight text-[#273472]`}>CENTER FOR CHANGE</p>
+        <h1 className={cn(currentSize.title, "font-bold leading-tight", textColorClass)}>
+          THREE TREES
+        </h1>
+        <p className={cn(currentSize.subtitle, "leading-tight", textColorClass)}>
+          CENTER FOR CHANGE
+        </p>
       </div>
     </div>
   );
