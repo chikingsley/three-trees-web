@@ -27,7 +27,7 @@ const WhyChooseSection = () => {
   ];
 
   return (
-    <section className="py-8 md:py-12 lg:py-20 bg-sand-50">
+    <section id="why-choose-section" className="py-8 md:py-12 lg:py-20 bg-sand-50">
       <div className="mx-auto px-4 md:px-6 lg:px-8 max-w-screen-lg">
         {/* blue line */}
         <div className="h-1 w-20 bg-primary mx-auto mb-6"></div>

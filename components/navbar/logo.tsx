@@ -11,7 +11,7 @@ export const Logo = ({ className = "", size = "default" }: { className?: string,
       subtitle: "text-xs",
     },
     large: {
-      logo: "h-12",
+      logo: "h-16",
       title: "text-xl",
       subtitle: "text-sm",
     },

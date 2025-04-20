@@ -132,17 +132,36 @@ ListItem.displayName = "ListItem"
 
 const Navbar = () => {
   return (
-    <nav className="fixed z-10 top-6 inset-x-2 h-14 xs:h-16 bg-white shadow-md max-w-7xl mx-auto rounded-full">
-      <div className="h-full flex items-center justify-between mx-auto px-2 md:px-4">
+    <nav className="fixed z-10 top-6 inset-x-2 h-18 xs:h-16 bg-white shadow-md max-w-8xl mx-auto rounded-md">
+      <div className="h-full flex items-center justify-between mx-auto">
         <LogoCard />
 
         {/* Desktop Menu - hidden on screens smaller than 1100px */}
-        <NavigationMenu className="hidden max-xl:hidden xl:block">
+        <NavigationMenu className="hidden max-[1300px]:hidden min-[1300px]:block pr-6">
           <NavigationMenuList className="gap-2 lg:gap-3">
+            {/* Court-Ordered Classes */}
             <NavigationMenuItem>
               <NavigationMenuTrigger className="border border-primary data-[state=open]:border-transparent data-[state=open]:bg-accent/30">Court-Ordered Classes</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[600px] md:grid-cols-2">
+                  {/* Overview Button */}
+                  <li className="md:col-span-2">
+                    <NavigationMenuLink asChild>
+                      <Link 
+                        href="/services/court-mandated/overview"
+                        className="block select-none text-primary text-3xl font-semibold text-center py-2"
+                      >
+                        Court-Ordered Classes
+                      </Link>
+                    </NavigationMenuLink>
+                  </li>
+                  
+                  {/* Separator */}
+                  <li className="md:col-span-2 my-2">
+                    <div className="h-px bg-border" />
+                  </li>
+                  
+                  {/* Individual Classes */}
                   {courtOrderedClasses.map((classItem) => (
                     <ListItem
                       key={classItem.title}
@@ -165,6 +184,7 @@ const Navbar = () => {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
+            {/* College Programs */}
             <NavigationMenuItem>
               <NavigationMenuTrigger className="border border-primary data-[state=open]:border-transparent data-[state=open]:bg-accent/30">College Programs</NavigationMenuTrigger>
               <NavigationMenuContent>
@@ -191,6 +211,7 @@ const Navbar = () => {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
+            {/* Corporate & Hospitals */}
             <NavigationMenuItem>
               <NavigationMenuTrigger className="border border-primary data-[state=open]:border-transparent data-[state=open]:bg-accent/30">Corporate & Hospitals</NavigationMenuTrigger>
               <NavigationMenuContent>
@@ -217,10 +238,11 @@ const Navbar = () => {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
+            {/* About Us */}
             <NavigationMenuItem>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="border border-primary data-[state=open]:border-transparent data-[state=open]:bg-accent/30 hover:bg-transparent flex items-center gap-1 px-4 py-2 h-10 rounded-md">
+                  <Button variant="outline" className="border border-primary data-[state=open]:border-transparent data-[state=open]:bg-accent/30 hover:bg-transparent flex items-center gap-1 px-4 py-2 h-9 rounded-md">
                     <span>About Us</span>
                     <ChevronDown className="h-4 w-4 opacity-70" />
                   </Button>
@@ -243,11 +265,13 @@ const Navbar = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </NavigationMenuItem>
+            {/* Enroll Now */}
             <NavigationMenuItem>
               <Button variant="default" className={cn(navigationMenuTriggerStyle(), "border border-primary hover:border-primary/80 bg-primary text-primary-foreground")}>
                 Enroll Now
               </Button>
             </NavigationMenuItem>
+            {/* Sign In Portal */}
             <NavigationMenuItem>
               <Button variant="default" className={cn(navigationMenuTriggerStyle(), "border border-primary hover:border-primary/80 bg-primary text-primary-foreground")}>
                 Sign In Portal
@@ -258,7 +282,7 @@ const Navbar = () => {
 
         {/* Mobile Menu - visible only on screens smaller than 1100px */}
         <Popover>
-          <PopoverTrigger asChild className="xl:hidden">
+          <PopoverTrigger asChild className="min-[1300px]:hidden">
             <Button variant="outline" size="icon" className="rounded-full">
               <Menu className="h-4 w-4" />
             </Button>
