@@ -152,7 +152,7 @@ const Navbar = () => {
       "fixed z-50 transition-all duration-300 ease-in-out",
       scrolled
         ? "top-6 inset-x-2 max-w-8xl mx-auto rounded-md bg-white shadow-md h-16 xs:h-[4.5rem]"
-        : "top-0 inset-x-0 rounded-none bg-gradient-to-b from-black/30 to-transparent shadow-none h-18 xs:h-16"
+        : "top-0 inset-x-0 rounded-none bg-gradient-to-b from-black/50 to-transparent shadow-none h-26 xs:h-16"
     )}>
       <div className={cn(
         "h-full flex items-center justify-between",
@@ -302,15 +302,17 @@ const Navbar = () => {
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="ghost" className={cn(
-                  "group uppercase flex items-center gap-1 px-4 py-2 h-9 rounded-md transition-colors duration-300",
+                  "group uppercase flex items-center gap-1 px-4 py-2 h-9 rounded-md transition-colors duration-300 border border-primary-foreground",
                   scrolled
-                    ? "data-[state=open]:border-transparent data-[state=open]:bg-accent/30 text-foreground hover:bg-accent/10"
-                    : "border-transparent text-white hover:bg-white/10 data-[state=open]:bg-white/10"
+                    ? "text-foreground hover:bg-secondary data-[state=open]:bg-secondary data-[state=open]:text-primary-foreground data-[state=open]:border-transparent"
+                    : "border-transparent text-white hover:bg-white/10 data-[state=open]:bg-white/10 data-[state=open]:border-primary-foreground"
                 )}>
                   <span>About Us</span>
                   <ChevronDown className={cn(
                     "h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180",
-                    scrolled ? "text-muted-foreground" : "text-white"
+                    scrolled ? "text-muted-foreground" : "text-white",
+                    "group-hover:text-white",
+                    "group-data-[state=open]:text-white"
                   )} />
                 </Button>
               </PopoverTrigger>
