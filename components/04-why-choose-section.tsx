@@ -21,8 +21,8 @@ const WhyChooseSection = () => {
     },
     {
       icon: <Heart className={iconClass} />,
-      title: "Trauma‑informed",
-      description: "Our CBI model pairs the principles of CBT with mindfulness for deeper, lasting change",
+      title: "No-Hassle",
+      description: "Five-minute online enrollment, online scheduling, and no hidden fees",
     },
   ];
 
@@ -30,14 +30,14 @@ const WhyChooseSection = () => {
     <section id="why-choose-section" className="py-8 md:py-12 lg:py-20 bg-sand-50">
       <div className="mx-auto px-4 md:px-6 lg:px-8 max-w-screen-lg">
         {/* blue line */}
-        <div className="h-1 w-20 bg-primary mx-auto mb-6"></div>
+        <div className="h-0 w-20 bg-primary mx-auto mb-6"></div>
         <div className="text-center mb-8 md:mb-12">
           {/* Title */}
-          <h2 className="text-3xl font-semibold tracking-tight text-black mb-6">
+          <h2 className="text-2xl md:text-4xl font-semibold tracking-tight text-black mb-6">
             Why Choose Three Trees
           </h2>
           {/* Subtitle */}
-          <p className="text-lg text-black max-w-2xl mx-auto mb-6">
+          <p className="text-md md:text-lg text-black max-w-2xl mx-auto mb-6">
             We combine evidence-based approaches with compassionate service to create lasting positive change in our participants&apos; lives.
           </p>
           {/* blue line */}
@@ -58,7 +58,7 @@ const WhyChooseSection = () => {
                   {feature.title}
                 </h3>
               </div>
-              <p className="text-muted-foreground text-md">
+              <p className="text-muted-foreground text-sm md:text-md">
                 {feature.description}
               </p>
             </div>

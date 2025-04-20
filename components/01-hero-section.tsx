@@ -17,7 +17,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative flex flex-col items-center justify-center py-20 text-center min-h-[95vh] overflow-hidden">
+    <section className="relative flex flex-col items-center justify-center py-20 text-center min-h-[90vh] overflow-hidden">
       {/* Full Bleed Background Image */}
       <div className="absolute inset-0 w-full h-full z-0">
         <div 
@@ -34,7 +34,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="mt-6 text-3xl sm:text-2xl md:text-4xl lg:text-5xl font-extrabold tracking-tighter text-white" 
+            className="mt-6 text-3xl sm:text-2xl md:text-4xl lg:text-7xl font-extrabold tracking-tighter text-white" 
             style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}
           >
             {headline}
@@ -46,7 +46,7 @@ const Hero = () => {
             transition={{ duration: 0.7, delay: 0.3 }}
             className="inline-block mt-6 px-4 py-2 bg-black/30 backdrop-blur-sm rounded-lg border-2 border-primary"
           >
-            <p className="text-sm sm:text-sm md:text-base lg:text-xl text-white font-medium max-w-2xl mx-auto">
+            <p className="text-sm sm:text-sm md:text-base lg:text-xl text-white font-medium max-w-[400px] md:max-w-xl mx-auto">
               {subHeadline}
             </p>
           </motion.div>

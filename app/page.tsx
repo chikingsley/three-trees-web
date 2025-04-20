@@ -7,7 +7,7 @@ import EnrollmentTimeline from "@/components/06-enrollment-timeline";
 import Testimonials from "@/components/07-testimonials-new";
 import CTABanner from "@/components/08-cta-banner";
 import TrustIndicators from "@/components/02-trust-indicators";
-import ThreeTreesApproach from "@/components/three-trees-approach";
+import ThreeTreesApproach from "@/components/05-three-trees-approach";
 import SectionDivider from '@/components/section-divider';
 
 export default function Home() {
