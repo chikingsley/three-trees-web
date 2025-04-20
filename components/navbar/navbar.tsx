@@ -132,7 +132,7 @@ ListItem.displayName = "ListItem"
 
 const Navbar = () => {
   return (
-    <nav className="fixed z-10 top-6 inset-x-2 h-18 xs:h-16 bg-white shadow-md max-w-8xl mx-auto rounded-md">
+    <nav className="fixed z-50 top-6 inset-x-2 h-18 xs:h-16 bg-white shadow-md max-w-8xl mx-auto rounded-md">
       <div className="h-full flex items-center justify-between mx-auto">
         <LogoCard />
 
@@ -265,6 +265,10 @@ const Navbar = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </NavigationMenuItem>
+            
+            {/* Vertical Divider */}
+            <div className="h-8 w-px bg-border mx-1"></div>
+            
             {/* Enroll Now */}
             <NavigationMenuItem>
               <Button variant="default" className={cn(navigationMenuTriggerStyle(), "border border-primary hover:border-primary/80 bg-primary text-primary-foreground")}>
@@ -273,7 +277,7 @@ const Navbar = () => {
             </NavigationMenuItem>
             {/* Sign In Portal */}
             <NavigationMenuItem>
-              <Button variant="default" className={cn(navigationMenuTriggerStyle(), "border border-primary hover:border-primary/80 bg-primary text-primary-foreground")}>
+              <Button variant="default" className={cn(navigationMenuTriggerStyle(), "border border-primary bg-white text-primary hover:bg-primary hover:text-primary-foreground")}>
                 Sign In Portal
               </Button>
             </NavigationMenuItem>
