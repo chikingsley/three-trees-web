@@ -161,14 +161,12 @@ const Navbar = () => {
         <LogoCard scrolled={scrolled} />
 
         {/* Desktop Menu - hidden on screens smaller than 1100px */}
-        <NavigationMenu className="hidden max-[1300px]:hidden min-[1300px]:block pr-6">
+        <NavigationMenu className="hidden max-[1450px]:hidden min-[1450px]:block pr-6">
           <NavigationMenuList>
             {/* Court-Ordered Classes */}
             <NavigationMenuItem>
               <NavigationMenuTrigger className={cn(
-                // Base styles
-                "uppercase transition-colors duration-300",
-                // Conditional styles
+                "uppercase transition-colors duration-300 text-sm px-2 py-2",
                 scrolled
                   ? "data-[state=open]:border-transparent data-[state=open]:bg-accent/30 text-foreground"
                   : "border-transparent bg-transparent text-white hover:bg-white/10 data-[state=open]:bg-white/10"
@@ -213,7 +211,7 @@ const Navbar = () => {
             {/* College Programs */}
             <NavigationMenuItem>
               <NavigationMenuTrigger className={cn(
-                "uppercase transition-colors duration-300",
+                "uppercase transition-colors duration-300 text-sm px-2 py-2",
                 scrolled
                   ? "data-[state=open]:border-transparent data-[state=open]:bg-accent/30 text-foreground"
                   : "border-transparent bg-transparent text-white hover:bg-white/10 data-[state=open]:bg-white/10"
@@ -258,7 +256,7 @@ const Navbar = () => {
             {/* Corporate & Hospitals */}
             <NavigationMenuItem>
               <NavigationMenuTrigger className={cn(
-                "uppercase transition-colors duration-300",
+                "uppercase transition-colors duration-300 text-sm px-2 py-2",
                 scrolled
                   ? "data-[state=open]:border-transparent data-[state=open]:bg-accent/30 text-foreground"
                   : "border-transparent bg-transparent text-white hover:bg-white/10 data-[state=open]:bg-white/10"
@@ -339,7 +337,7 @@ const Navbar = () => {
 
             {/* Enroll Now */}
             <NavigationMenuItem className="px-2">
-              <Button variant="default" className={cn(navigationMenuTriggerStyle(), "border border-primary hover:border-primary/80 bg-primary text-primary-foreground")}>
+              <Button variant="default" className={cn(navigationMenuTriggerStyle(), "border border-primary hover:border-primary/80 bg-primary text-primary-foreground uppercase")}>
                 Enroll Now
               </Button>
             </NavigationMenuItem>
@@ -348,7 +346,7 @@ const Navbar = () => {
               <Button
                 variant="default"
                 className={cn(navigationMenuTriggerStyle(),
-                  "border border-primary-foreground bg-transparent text-primary-foreground hover:bg-primary hover:text-primary-foreground",
+                  "border border-primary-foreground bg-transparent text-primary-foreground hover:bg-primary hover:text-primary-foreground uppercase",
                   scrolled ? "bg-transparent text-primary border-primary hover:bg-primary/90" : "text-primary-foreground hover:bg-primary/90"
                 )}>
                 Sign In Portal
@@ -359,7 +357,7 @@ const Navbar = () => {
 
         {/* Mobile Menu - visible only on screens smaller than 1100px */}
         <Popover>
-          <PopoverTrigger asChild className="min-[1300px]:hidden">
+          <PopoverTrigger asChild className="min-[1450]:hidden">
             <Button variant="outline" size="icon" className="rounded-full">
               <Menu className="h-4 w-4" />
             </Button>
