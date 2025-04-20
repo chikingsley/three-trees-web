@@ -15,8 +15,23 @@ import {
 } from "@/components/ui/navigation-menu"
 import { Button } from "../ui/button";
 import { LogoCard } from "./logo-card";
+import { Logo } from "./logo";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Menu, ChevronDown } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+  SheetClose,
+} from "@/components/ui/sheet";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const courtOrderedClasses = [
   {
@@ -357,81 +372,145 @@ const Navbar = () => {
           </NavigationMenuList>
         </NavigationMenu>
 
-        {/* Mobile Menu - visible only on screens smaller than 1100px */}
-        <Popover>
-          <PopoverTrigger asChild className="min-[1450]:hidden">
+        {/* Mobile Menu - visible only on screens smaller than 1450px */}
+        <Sheet>
+          <SheetTrigger asChild className="min-[1450]:hidden">
             <Button variant="outline" size="icon" className="rounded-full">
               <Menu className="h-4 w-4" />
             </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[calc(100vw-2rem)] p-4" align="end">
-            <div className="grid gap-4">
-              <div className="space-y-2">
-                <h4 className="font-medium leading-none">Court-Ordered Classes</h4>
-                <div className="grid gap-1">
-                  {courtOrderedClasses.map((classItem) => (
-                    <Link
-                      key={classItem.title}
-                      href={classItem.href}
-                      className="block p-2 text-base text-foreground hover:text-primary transition-colors"
-                    >
-                      {classItem.title}
-                    </Link>
-                  ))}
-                  <Link
-                    href="/sign-up/court-ordered"
-                    className="block p-2 text-base font-medium text-primary hover:underline"
-                  >
-                    Sign Up for Court-Ordered Classes
-                  </Link>
-                </div>
+          </SheetTrigger>
+          <SheetContent className="w-full overflow-y-auto">
+            <SheetHeader className="border-b pb-4 mb-4">
+              <div className="flex items-center gap-2">
+                <Logo size="default" scrolled={scrolled} className="pl-0" />
+                <SheetTitle className="text-xl text-primary font-bold sr-only">Three Trees</SheetTitle>
               </div>
-              <div className="space-y-2">
-                <h4 className="font-medium leading-none">College Programs</h4>
-                <div className="grid gap-1">
-                  {collegePrograms.map((program) => (
-                    <Link
-                      key={program.title}
-                      href={program.href}
-                      className="block p-2 text-base text-foreground hover:text-primary transition-colors"
-                    >
-                      {program.title}
-                    </Link>
-                  ))}
-                  <Link
-                    href="/sign-up/college"
-                    className="block p-2 text-base font-medium text-primary hover:underline"
-                  >
-                    Sign Up for College Programs
-                  </Link>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <h4 className="font-medium leading-none">Corporate & Hospitals</h4>
-                <div className="grid gap-1">
-                  {corporatePrograms.map((program) => (
-                    <Link
-                      key={program.title}
-                      href={program.href}
-                      className="block p-2 text-base text-foreground hover:text-primary transition-colors"
-                    >
-                      {program.title}
-                    </Link>
-                  ))}
-                  <Link
-                    href="/sign-up/corporate"
-                    className="block p-2 text-base font-medium text-primary hover:underline"
-                  >
-                    Sign Up for Corporate Programs
-                  </Link>
-                </div>
-              </div>
-              <Button asChild variant="ghost" className="w-full justify-start mt-2 text-base p-2 h-auto">
-                <Link href="/signin">Sign In</Link>
-              </Button>
+            </SheetHeader>
+
+            <Accordion type="single" collapsible className="w-full">
+              {/* Court-Ordered Classes */}
+              <AccordionItem value="court-ordered">
+                <AccordionTrigger className="py-3 text-primary [&>svg]:size-5">
+                  <span className="text-lg font-medium">Court-Ordered Classes</span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="grid gap-2 pl-2 py-2">
+                    {courtOrderedClasses.map((classItem) => (
+                      <SheetClose asChild key={classItem.title}>
+                        <Link
+                          href={classItem.href}
+                          className="block p-1.5 text-sm text-foreground hover:text-primary transition-colors"
+                        >
+                          {classItem.title}
+                        </Link>
+                      </SheetClose>
+                    ))}
+                    <SheetClose asChild>
+                      <Link
+                        href="/sign-up/court-ordered"
+                        className="block p-1.5 text-sm font-medium text-primary hover:underline"
+                      >
+                        Sign Up for Court-Ordered Classes
+                      </Link>
+                    </SheetClose>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* College Programs */}
+              <AccordionItem value="college">
+                <AccordionTrigger className="py-3 text-primary [&>svg]:size-5">
+                  <span className="text-lg font-medium">College Programs</span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="grid gap-2 pl-2 py-2">
+                    {collegePrograms.map((program) => (
+                      <SheetClose asChild key={program.title}>
+                        <Link
+                          href={program.href}
+                          className="block p-1.5 text-sm text-foreground hover:text-primary transition-colors"
+                        >
+                          {program.title}
+                        </Link>
+                      </SheetClose>
+                    ))}
+                    <SheetClose asChild>
+                      <Link
+                        href="/sign-up/college"
+                        className="block p-1.5 text-sm font-medium text-primary hover:underline"
+                      >
+                        Sign Up for College Programs
+                      </Link>
+                    </SheetClose>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* Corporate & Hospitals */}
+              <AccordionItem value="corporate">
+                <AccordionTrigger className="py-3 text-primary [&>svg]:size-5">
+                  <span className="text-lg font-medium">Corporate & Hospitals</span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="grid gap-2 pl-2 py-2">
+                    {corporatePrograms.map((program) => (
+                      <SheetClose asChild key={program.title}>
+                        <Link
+                          href={program.href}
+                          className="block p-1.5 text-sm text-foreground hover:text-primary transition-colors"
+                        >
+                          {program.title}
+                        </Link>
+                      </SheetClose>
+                    ))}
+                    <SheetClose asChild>
+                      <Link
+                        href="/sign-up/corporate"
+                        className="block p-1.5 text-sm font-medium text-primary hover:underline"
+                      >
+                        Sign Up for Corporate Programs
+                      </Link>
+                    </SheetClose>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* About Us */}
+              <AccordionItem value="about">
+                <AccordionTrigger className="py-3 text-primary [&>svg]:size-5">
+                  <span className="text-lg font-medium">About Us</span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="grid gap-2 pl-2 py-2">
+                    {aboutUsLinks.map((link) => (
+                      <SheetClose asChild key={link.title}>
+                        <Link
+                          href={link.href}
+                          className="block p-1.5 text-sm text-foreground hover:text-primary transition-colors"
+                        >
+                          {link.title}
+                        </Link>
+                      </SheetClose>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+
+            <div className="grid grid-cols-2 gap-3 mt-6">
+              <SheetClose asChild>
+                <Button asChild variant="default" className="w-full justify-center">
+                  <Link href="/enroll">Enroll Now</Link>
+                </Button>
+              </SheetClose>
+              <SheetClose asChild>
+                <Button asChild variant="outline" className="w-full justify-center">
+                  <Link href="/signin">Sign In</Link>
+                </Button>
+              </SheetClose>
             </div>
-          </PopoverContent>
-        </Popover>
+          </SheetContent>
+        </Sheet>
       </div>
     </nav>
   );
