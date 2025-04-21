@@ -15,6 +15,7 @@ import { BlogPosts } from './collections/BlogPosts.ts'
 import { Testimonials } from './collections/Testimonials.ts'
 import { ProgramTypes } from './collections/ProgramTypes.ts'
 import { Clients } from './collections/Clients.ts'
+import { UsersExpanded } from './collections/UsersExpanded.ts'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -26,7 +27,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Testimonials, ProgramTypes, Clients, Services, Locations, BlogPosts],
+  collections: [Users, Media, Testimonials, ProgramTypes, Clients, Services, Locations, BlogPosts, UsersExpanded],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "payload:types": "NODE_OPTIONS='--import tsx' npx payload generate:types"
+    "generate:types": "NODE_OPTIONS='--import tsx' npx payload generate:types"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.35.1",
