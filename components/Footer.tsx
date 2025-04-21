@@ -21,78 +21,85 @@ const footerSections = [
     title: "Court-Ordered Programs",
     links: [
       {
-        title: "Overview",
-        href: "/court-ordered",
+        title: "Court-Ordered Programs Overview",
+        href: "/court-ordered-programs",
       },
       {
         title: "Domestic Violence",
-        href: "/services/court-mandated/domestic-violence",
+        href: "/services/court-ordered-programs/domestic-violence",
       },
       {
         title: "Anger Management",
-        href: "/services/court-mandated/anger-management",
+        href: "/services/court-ordered-programs/anger-management",
       },
       {
         title: "Substance Abuse",
-        href: "/services/court-mandated/substance-abuse",
+        href: "/services/court-ordered-programs/substance-abuse",
       },
       {
         title: "Peaceful Parenting",
-        href: "/services/court-mandated/peaceful-parenting",
+        href: "/services/court-ordered-programs/peaceful-parenting",
       },
       {
-        title: "Sign Up",
-        href: "/sign-up/court-ordered",
-      },
-    ],
-  },
-  {
-    title: "College Programs",
-    links: [
-      {
-        title: "Overview",
-        href: "/college",
-      },
-      {
-        title: "Conflict Resolution",
-        href: "/services/college/conflict-resolution",
-      },
-      {
-        title: "Responsible Relationships",
-        href: "/services/college/responsible-relationships",
-      },
-      {
-        title: "Rethinking Substance Abuse",
-        href: "/services/college/substance-abuse",
-      },
-      {
-        title: "Sign Up",
-        href: "/sign-up/college",
+        title: "Sign Up for Court Programs",
+        href: "/sign-up/court-ordered-programs",
+        isPrimary: true,
       },
     ],
   },
   {
-    title: "Corporate & Hospitals",
+    title: "College & University Programs",
     links: [
       {
-        title: "Overview",
-        href: "/corporate",
+        title: "College & University Programs Overview",
+        href: "/college-university-programs",
+      },
+      {
+        title: "Mental Health Support",
+        href: "/services/college-university-programs/mental-health",
+      },
+      {
+        title: "Substance Abuse Prevention",
+        href: "/services/college-university-programs/substance-abuse",
+      },
+      {
+        title: "Personal Development",
+        href: "/services/college-university-programs/personal-development",
+      },
+      {
+        title: "Academic Success",
+        href: "/services/college-university-programs/academic-success",
+      },
+      {
+        title: "Sign Up for College Programs",
+        href: "/sign-up/college-university-programs",
+        isPrimary: true,
+      },
+    ],
+  },
+  {
+    title: "Corporate & Hospital Programs",
+    links: [
+      {
+        title: "Corporate & Hospital Programs Overview",
+        href: "/corporate-hospital-programs",
       },
       {
         title: "Staff Trainings",
-        href: "/services/corporate/staff-trainings",
+        href: "/services/corporate-hospital-programs/staff-trainings",
       },
       {
         title: "Certifications",
-        href: "/services/corporate/certifications",
+        href: "/services/corporate-hospital-programs/certifications",
       },
       {
         title: "Hospital Referrals",
-        href: "/services/corporate/hospital-referrals",
+        href: "/services/corporate-hospital-programs/hospital-referrals",
       },
       {
-        title: "Sign Up",
-        href: "/sign-up/corporate",
+        title: "Sign Up for Corporate Programs",
+        href: "/sign-up/corporate-hospital-programs",
+        isPrimary: true,
       },
     ],
   },
@@ -100,7 +107,7 @@ const footerSections = [
     title: "About Us",
     links: [
       {
-        title: "Overview",
+        title: "About Three Trees",
         href: "/about",
       },
       {
@@ -174,11 +181,16 @@ const Footer = () => {
                 <div key={title} className="w-[160px] mb-6 min-[1300px]:mb-0">
                   <h6 className="font-semibold text-foreground">{title}</h6>
                   <ul className="space-y-3 mt-4">
-                    {links.map(({ title: linkTitle, href }) => (
+                    {links.map(({ title: linkTitle, href, isPrimary }) => (
                       <li key={linkTitle}>
                         <Link
                           href={href}
-                          className="text-muted-foreground hover:text-primary transition-colors"
+                          className={cn(
+                            "transition-colors",
+                            isPrimary 
+                              ? "text-primary hover:text-primary/80" 
+                              : "text-muted-foreground hover:text-primary"
+                          )}
                         >
                           {linkTitle}
                         </Link>
@@ -209,11 +221,16 @@ const Footer = () => {
                   </AccordionTrigger>
                   <AccordionContent>
                     <ul className="space-y-3 py-2">
-                      {links.map(({ title: linkTitle, href }) => (
+                      {links.map(({ title: linkTitle, href, isPrimary }) => (
                         <li key={linkTitle}>
                           <Link
                             href={href}
-                            className="text-muted-foreground hover:text-primary transition-colors"
+                            className={cn(
+                              "transition-colors",
+                              isPrimary 
+                                ? "text-primary hover:text-primary/80" 
+                                : "text-muted-foreground hover:text-primary"
+                            )}
                           >
                             {linkTitle}
                           </Link>
