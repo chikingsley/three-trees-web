@@ -11,12 +11,12 @@
   - [x] Configure MongoDB connection (or preferred database)
   - [x] Set up initial admin user
 
-- [ ] 3. Define core collection schemas
-  - [ ] Program types (court-ordered, college, corporate)
-  - [ ] Services
-  - [ ] Locations
-  - [ ] Blog posts
-  - [ ] Testimonials
+- [x] 3. Define core collection schemas
+  - [x] Program types (court-ordered, college, corporate)
+  - [x] Services
+  - [x] Locations
+  - [x] Blog posts
+  - [x] Testimonials
 
 - [ ] 4. Configure user roles and permissions
   - [ ] Admin users
