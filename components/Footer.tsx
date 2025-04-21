@@ -18,7 +18,7 @@ import {
 // Footer sitemap data - easily customizable
 const footerSections = [
   {
-    title: "Court-Ordered",
+    title: "Court-Ordered Programs",
     links: [
       {
         title: "Overview",
@@ -133,16 +133,17 @@ const legalLinks = [
 const Footer = () => {
   return (
     <footer className={cn("bg-background border-t")}>
-      <div className="max-w-screen-xl mx-auto">
+      <div className="max-w-screen-2xl mx-auto px-6 xl:px-16">
         {/* Desktop and Mobile Footer Content */}
-        <div className="py-12 px-6 xl:px-0">
-          {/* Desktop View - Grid Layout (Hidden on mobile) */}
-          <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-5 gap-8">
-            <div className="lg:col-span-2">
+        <div className="py-12">
+          {/* Desktop View - Flex Layout (Visible at 1300px and above) */}
+          <div className="hidden min-[1400px]:flex flex-col min-[1300px]:flex-row justify-between gap-8">
+            {/* Logo and description column */}
+            <div className="min-[1300px]:max-w-xs">
               {/* Logo and Description */}
               <div className="flex flex-col">
                 <LogoCard scrolled={true} />
-                <p className={cn("mt-4 text-muted-foreground max-w-xs")}>
+                <p className={cn("mt-4 text-muted-foreground")}>
                   Evidence-based behavioral change programs that create real, lasting impact.
                 </p>
                 {/* Social Media Icons */}
@@ -167,28 +168,30 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Desktop Sitemap Links */}
-            {footerSections.map(({ title, links }) => (
-              <div key={title} className="space-y-4">
-                <h6 className="font-semibold text-foreground">{title}</h6>
-                <ul className="space-y-3">
-                  {links.map(({ title: linkTitle, href }) => (
-                    <li key={linkTitle}>
-                      <Link
-                        href={href}
-                        className="text-muted-foreground hover:text-primary transition-colors"
-                      >
-                        {linkTitle}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            {/* Navigation columns - placed in a flex container */}
+            <div className="flex flex-wrap gap-8 min-[1300px]:gap-16 xl:gap-20 mt-6 min-[1300px]:mt-0 justify-between">
+              {footerSections.map(({ title, links }) => (
+                <div key={title} className="w-[160px] mb-6 min-[1300px]:mb-0">
+                  <h6 className="font-semibold text-foreground">{title}</h6>
+                  <ul className="space-y-3 mt-4">
+                    {links.map(({ title: linkTitle, href }) => (
+                      <li key={linkTitle}>
+                        <Link
+                          href={href}
+                          className="text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          {linkTitle}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Mobile View - Accordion (Visible only on mobile) */}
-          <div className="md:hidden space-y-6">
+          {/* Mobile View - Accordion (Visible only on screens below 1300px) */}
+          <div className="min-[1400px]:hidden space-y-6">
             {/* Logo and Description for Mobile */}
             <div className="flex flex-col">
               <LogoCard scrolled={true} />
@@ -246,16 +249,16 @@ const Footer = () => {
 
         {/* Full-width Copyright / Legal Links Bar */}
         <Separator />
-        <div className="py-6 px-6 xl:px-0">
+        <div className="py-6">
           <div className={cn("flex flex-col sm:flex-row items-center justify-between gap-4")}>
             <span className="text-sm text-muted-foreground">
               &copy; {new Date().getFullYear()} Three Trees Center for Change. All rights reserved.
             </span>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <div className="flex flex-wrap items-center justify-end gap-x-1 gap-y-2">
               {legalLinks.map(({ title, href }, index) => (
                 <div key={title} className="flex items-center">
                   {index > 0 && (
-                    <span className="mx-2 text-muted-foreground text-sm">•</span>
+                    <span className="mx-3 text-muted-foreground text-sm flex items-center justify-center w-1">•</span>
                   )}
                   <Link href={href} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                     {title}
