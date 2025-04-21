@@ -5,9 +5,51 @@ import { ArrowRight, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-const Hero = () => {
-  const headline = "Evidence-based behavioral change programs that work.";
-  const subHeadline = "Court‑mandated classes, campus interventions, and workplace training powered by our Cognitive Behavioral Inquiry (CBI) method.";
+// Define the props structure
+interface HeroProps {
+  backgroundImageUrl?: string;
+  headline?: string;
+  subHeadline?: string;
+  primaryButton?: {
+    text?: string;
+    link?: string;
+  };
+  secondaryButton?: {
+    text?: string;
+    link?: string;
+  };
+  scrollTargetId?: string;
+}
+
+// Default values
+const defaultProps: Required<HeroProps> = {
+  backgroundImageUrl: '/images/headerbg.jpg',
+  headline: "Evidence-based behavioral change programs that work.",
+  subHeadline: "Court‑mandated classes, campus interventions, and workplace training powered by our Cognitive Behavioral Inquiry (CBI) method.",
+  primaryButton: {
+    text: "Enroll Now",
+    link: "#enroll",
+  },
+  secondaryButton: {
+    text: "Contact Us",
+    link: "#contact-us",
+  },
+  scrollTargetId: 'why-choose-section',
+};
+
+const Hero = (props: HeroProps) => {
+  // Merge passed props with defaults
+  const {
+    backgroundImageUrl,
+    headline,
+    subHeadline,
+    scrollTargetId
+  } = { ...defaultProps, ...props };
+  
+  // Combine button defaults carefully if partially provided
+  const finalPrimaryButton = { ...defaultProps.primaryButton, ...props.primaryButton };
+  const finalSecondaryButton = { ...defaultProps.secondaryButton, ...props.secondaryButton };
+
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -21,7 +63,8 @@ const Hero = () => {
       {/* Full Bleed Background Image */}
       <div className="absolute inset-0 w-full h-full z-0">
         <div 
-          className="absolute inset-0 w-full h-full z-0 bg-[url('/images/headerbg.jpg')] bg-cover bg-center md:bg-fixed" 
+          className="absolute inset-0 w-full h-full z-0 bg-cover bg-center md:bg-fixed" 
+          style={{ backgroundImage: `url(${backgroundImageUrl})` }}
         />
         {/* Overlay to improve content visibility */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 to-black/60 z-10"></div>
@@ -57,13 +100,13 @@ const Hero = () => {
             className="mt-8 sm:mt-12 flex flex-row items-center justify-center gap-3 sm:gap-4"
           >
             <Button asChild size="default" className="rounded-full text-sm sm:text-base shadow-none hover:border-white hover:border-1">
-              <Link href="#enroll">
-                Enroll Now <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
+              <Link href={finalPrimaryButton.link!}>
+                {finalPrimaryButton.text} <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="default" className="rounded-full text-sm sm:text-base shadow-none bg-white border-white text-primary hover:bg-primary/50 hover:text-white">
-              <Link href="#contact-us">
-                Contact Us
+              <Link href={finalSecondaryButton.link!}>
+                {finalSecondaryButton.text}
               </Link>
             </Button>
           </motion.div>
@@ -79,7 +122,7 @@ const Hero = () => {
           opacity: { delay: 1.2, duration: 0.5 },
           y: { delay: 1.2, duration: 1.5, repeat: Infinity }
         }}
-        onClick={() => scrollToSection('why-choose-section')}
+        onClick={() => scrollToSection(scrollTargetId)}
       >
         <ChevronDown className="h-10 w-10 text-white" />
       </motion.div>

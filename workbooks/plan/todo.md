@@ -19,25 +19,17 @@
   - [x] Testimonials
 
 - [ ] 4. Configure user roles and permissions
-  - [ ] Admin users
-  - [ ] Staff/facilitators
-  - [ ] Clients
-  - [ ] Referral agencies/partners
+  - [x] Admin users
 
 ## Phase 2: Content Management
-- [ ] 5. Implement page builder components
-  - [ ] Define reusable content blocks
-  - [ ] Create flexible layouts
-  - [ ] Set up SEO fields and metadata
+- [ ] 5. Define Payload Blocks & Adapt Components
+  - [ ] Define reusable content block schemas in Payload (Hero, Testimonials, CTA, etc.)
+  - [ ] Specify editable fields for each block type
+  - [ ] Adapt existing frontend components (`@/components/*`) to accept props based on block schemas
 
-- [ ] 6. Build marketing page templates
-  - [ ] Homepage
-  - [ ] About page
-  - [ ] Method page
-  - [ ] Contact page
-  - [ ] Program overview pages
-  - [ ] Service detail pages
-  - [ ] Location pages
+- [ ] 6. Build Initial Page Content in Payload
+  - [ ] Create `Pages` collection in Payload (with `slug`, `layout` fields)
+  - [ ] Assemble initial content for core marketing pages (Homepage, About, Contact, etc.) using the defined blocks within the Payload admin UI
 
 - [ ] 7. Set up media management
   - [ ] Configure image storage and optimization
@@ -142,5 +134,10 @@
   - [ ] Gather user feedback
   - [ ] Performance optimization
   - [ ] Feature enhancements
+
+- [ ] 25. Complete user roles and permissions
+  - [ ] Staff/facilitators
+  - [ ] Clients
+  - [ ] Referral agencies/partners
 
 This checklist provides a structured approach to building the complete Three Trees platform with Payload CMS. Each phase builds on the previous one, ensuring you have a solid foundation before adding more complex functionality.

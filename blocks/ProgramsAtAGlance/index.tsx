@@ -13,16 +13,34 @@ import {
 } from "@/components/ui/carousel";
 import type { UseEmblaCarouselType } from "embla-carousel-react";
 
+// --- Type Definitions ---
+interface ProgramRow {
+  title: string;
+  cols: string[];
+}
+
+interface ProgramData {
+  categories: string[];
+  rows: ProgramRow[];
+  slugs: string[];
+}
+
+interface ProgramsGlanceProps {
+  title?: string;
+  programsData?: ProgramData;
+}
+
 // Define type for section refs
-type SectionRefs = {
-  [key: string]: (HTMLDivElement | null)[];
-};
+// type SectionRefs = { // Removed unused type
+//  [key: string]: (HTMLDivElement | null)[];
+// };
 
 type CarouselApi = UseEmblaCarouselType[1];
 
-const ProgramsGlance = () => {
-  // Data structure for the programs
-  const programsData = {
+// --- Default Values ---
+const defaultProps: Required<ProgramsGlanceProps> = {
+  title: "Programs at a Glance",
+  programsData: {
     categories: ["Courts & Probation", "Universities", "Employers"],
     rows: [
       {
@@ -51,19 +69,17 @@ const ProgramsGlance = () => {
       }
     ],
     slugs: ["court-mandated", "college", "corporate"]
-  };
+  }
+};
 
-  // State for active category in mobile view
+const ProgramsGlance = (props: ProgramsGlanceProps) => {
+  // --- HOOKS MUST BE CALLED UNCONDITIONALLY AT THE TOP ---
   const [activeCategory, setActiveCategory] = useState(0);
-
-  // Refs for each section type to match heights
-  const sectionRefs = useRef<SectionRefs>({});
-  
-  // Carousel setup
+  // Refs for each section type to match heights - REMOVED as height sync is commented out
+  // const sectionRefs = useRef<SectionRefs>({}); 
   const plugin = useRef(
     Autoplay({ delay: 5000, stopOnInteraction: true })
   );
-  
   const [api, setApi] = React.useState<CarouselApi>();
 
   // Handle carousel navigation
@@ -87,24 +103,40 @@ const ProgramsGlance = () => {
       setActiveCategory(api.selectedScrollSnap());
     });
   }, [api]);
+  // --- END OF HOOKS ---
+
+  // Merge props with defaults AFTER hooks
+  const { title, programsData } = { ...defaultProps, ...props };
+
+  // Early exit or default behavior if programsData is missing or invalid
+  if (!programsData || !programsData.categories || !programsData.rows || !programsData.slugs || programsData.categories.length === 0) {
+    console.warn("ProgramsGlance: Invalid or missing programsData prop.");
+    return null; 
+  }
 
   // Function to render content with points
   const renderContent = (content: string) => {
-    return content.split('. ').map((point, i) => (
+    // Basic check to prevent errors if content is not a string
+    if (typeof content !== 'string') return null;
+    return content.split('. ').map((point, i, arr) => (
       <p key={i} className={i > 0 ? 'mt-2' : ''}>
-        {point}{i < content.split('. ').length - 1 && point.trim().length > 0 ? '.' : ''}
+        {point}{i < arr.length - 1 && point.trim().length > 0 ? '.' : ''}
       </p>
     ));
   };
+
+  // Height sync effect commented out
 
   return (
     <section className="py-8 bg-background">
       <div className="mx-auto px-4 md:px-6 lg:px-8 max-w-screen-lg">
         <div className="h-1 w-20 bg-primary mx-auto mb-6"></div>
         <div className="text-center mb-8 md:mb-12">
-          <h2 className="text-3xl font-semibold tracking-tight text-evergreen-900 mb-6">
-            Programs at a Glance
-          </h2>
+          {title && (
+            <h2 className="text-3xl font-semibold tracking-tight text-evergreen-900 mb-6">
+              {title}
+            </h2>
+          )}
           <div className="h-1 w-20 bg-primary mx-auto mb-6"></div>
         </div>
 
@@ -112,8 +144,8 @@ const ProgramsGlance = () => {
         <div className="hidden md:grid md:grid-cols-3 gap-6">
           {programsData.categories.map((category, categoryIndex) => (
             <div
-              key={category}
-              className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200/50 transition-all hover:shadow-md hover:-translate-y-1 relative"
+              key={category} // Use category string as key
+              className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200/50 transition-all hover:shadow-md hover:-translate-y-1 relative flex flex-col" // Added flex flex-col
             >
               {/* Category Header with "More" link */}
               <div className="border-b border-primary/30 px-5 py-3 flex justify-between items-center">
@@ -128,19 +160,20 @@ const ProgramsGlance = () => {
               </div>
 
               {/* Category Content */}
-              <div className="p-5 flex flex-col h-full">
-                <dl className="space-y-4 flex-grow">
+              {/* Removed h-full here, added flex-grow below */}
+              <div className="p-5 flex flex-col flex-grow"> 
+                <dl className="space-y-4 flex-grow"> 
                   {programsData.rows.map((row) => (
                     <div
-                      key={row.title}
+                      key={row.title} // Use row title as key
                       className="pb-3 border-b border-gray-100 last:border-0"
-                      ref={el => {
-                        // Store ref to this section
-                        if (!sectionRefs.current[row.title]) {
-                          sectionRefs.current[row.title] = [];
-                        }
-                        sectionRefs.current[row.title][categoryIndex] = el;
-                      }}
+                      // Removed ref for simplicity, re-add if height sync is critical
+                      // ref={el => {
+                      //   if (!sectionRefs.current[row.title]) {
+                      //     sectionRefs.current[row.title] = [];
+                      //   }
+                      //   sectionRefs.current[row.title][categoryIndex] = el;
+                      // }}
                     >
                       <dt className="font-semibold mb-1 text-base">
                         {row.title}
@@ -153,7 +186,7 @@ const ProgramsGlance = () => {
                 </dl>
 
                 {/* Learn More button */}
-                <div className="pt-4 mt-auto">
+                <div className="pt-4 mt-auto"> {/* Ensured mt-auto pushes button down */} 
                   <Link
                     href={`/services/${programsData.slugs[categoryIndex]}`}
                     className="flex items-center justify-center px-4 py-2 bg-primary/10 text-primary hover:bg-primary/15 text-sm font-medium rounded-full transition-colors w-full"
@@ -172,7 +205,7 @@ const ProgramsGlance = () => {
           <div className="flex justify-center gap-2 mb-6 overflow-x-auto pb-2">
             {programsData.categories.map((category, index) => (
               <button
-                key={category}
+                key={category} // Use category string as key
                 onClick={() => {
                   api?.scrollTo(index);
                   setActiveCategory(index);
@@ -204,8 +237,8 @@ const ProgramsGlance = () => {
             >
               <CarouselContent>
                 {programsData.categories.map((category, categoryIndex) => (
-                  <CarouselItem key={category}>
-                    <div className="px-6">
+                  <CarouselItem key={category}> {/* Use category string as key */} 
+                    <div className="px-1"> {/* Reduced padding slightly */} 
                       <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200/50">
                         <div className="border-b border-primary/30 px-5 py-3">
                           <h3 className="text-lg font-semibold text-evergreen-900">{category}</h3>
@@ -241,7 +274,7 @@ const ProgramsGlance = () => {
               </CarouselContent>
 
               {/* Navigation Controls */}
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/3 z-10">
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10"> {/* Adjusted position */} 
                 <button
                   onClick={scrollPrev}
                   className="w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center text-primary hover:bg-gray-50 border border-gray-200"
@@ -251,7 +284,7 @@ const ProgramsGlance = () => {
                 </button>
               </div>
               
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/3 z-10">
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10"> {/* Adjusted position */} 
                 <button
                   onClick={scrollNext}
                   className="w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center text-primary hover:bg-gray-50 border border-gray-200"
@@ -267,7 +300,7 @@ const ProgramsGlance = () => {
           <div className="flex justify-center space-x-2 mt-4">
             {programsData.categories.map((_, index) => (
               <button
-                key={index}
+                key={`dot-${index}`} // Added unique key prefix
                 onClick={() => {
                   api?.scrollTo(index);
                   setActiveCategory(index);
