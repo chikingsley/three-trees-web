@@ -1,9 +1,10 @@
 'use client'
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import testimonialsData from "@/lib/testimonials.json";
 import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   Carousel,
   CarouselContent,
@@ -14,6 +15,8 @@ import type { UseEmblaCarouselType } from "embla-carousel-react";
 type CarouselApi = UseEmblaCarouselType[1];
 
 const Testimonials = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  
   const plugin = useRef(
     Autoplay({ delay: 4000, stopOnInteraction: true })
   );
@@ -27,6 +30,15 @@ const Testimonials = () => {
 
   const scrollNext = React.useCallback(() => {
     api?.scrollNext();
+  }, [api]);
+  
+  // Update activeIndex when slide changes
+  React.useEffect(() => {
+    if (!api) return;
+    
+    api.on("select", () => {
+      setActiveIndex(api.selectedScrollSnap());
+    });
   }, [api]);
 
   return (
@@ -95,6 +107,24 @@ const Testimonials = () => {
               </button>
             </div>
           </Carousel>
+          
+          {/* Pagination Dots */}
+          <div className="flex justify-center space-x-2 mt-6">
+            {testimonialsData.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  api?.scrollTo(index);
+                  setActiveIndex(index);
+                }}
+                className={cn(
+                  "w-2 h-2 rounded-full transition-colors",
+                  activeIndex === index ? "bg-primary" : "bg-gray-300 hover:bg-primary/30"
+                )}
+                aria-label={`Go to testimonial ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

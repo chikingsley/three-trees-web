@@ -1,14 +1,14 @@
 import { Navbar } from "@/components/navbar";
 import Hero from "@/components/01-hero-section";
-// import AboutCbi from '@/components/03-about-cbi';
 import WhyChooseSection from "@/components/04-why-choose-section";
 import ProgramsGlance from "@/components/05-programs-glance";
 import EnrollmentTimeline from "@/components/06-enrollment-timeline";
-import Testimonials from "@/components/07-testimonials-new";
+import Testimonials from "@/components/07-testimonials";
 import CTABanner from "@/components/08-cta-banner";
 import TrustIndicators from "@/components/02-trust-indicators";
 import ThreeTreesApproach from "@/components/05-three-trees-approach";
 import SectionDivider from '@/components/section-divider';
+import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
@@ -42,7 +42,7 @@ export default function Home() {
       <Testimonials />
       {/* 7. Final Call to Action (CTA) Section */}
       <CTABanner />
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }

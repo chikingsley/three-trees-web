@@ -34,14 +34,14 @@ const ThreeTreesApproach = () => {
   const activeTabData = tabs.find(tab => tab.id === activeTab);
 
   return (
-    <section className="py-16 bg-[#EEF0FC]" style={{ backgroundColor: 'rgba(91, 117, 235, 0.1)' }}>
+    <section className="py-8 bg-[#EEF0FC]" style={{ backgroundColor: 'rgba(91, 117, 235, 0.1)' }}>
       <div className="max-w-screen-lg mx-auto px-4 md:px-6 lg:px-8">
         <div className="h-1 w-20 bg-primary mx-auto mb-6"></div>
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-semibold text-black mb-6">
+          <h2 className="text-2xl md:text-4xl font-semibold text-black mb-6">
             The Three Pillars of Lasting Change
           </h2>
-          <p className="text-lg text-black max-w-3xl mx-auto mb-6">
+          <p className="text-md md:text-lg text-black max-w-3xl mx-auto mb-6">
             Our methodology addresses the essential elements of sustainable behavioral transformation. This evidence-based approach has helped over 40,000 individuals create meaningful, lasting change by addressing all three dimensions of human experience.
           </p>
           <div className="h-1 w-20 bg-primary mx-auto mb-6"></div>
