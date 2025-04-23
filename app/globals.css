@@ -48,19 +48,19 @@
   --radius: 0.625rem;
   --background: #FFFFFF;
   --foreground: #273472; /* Evergreen 900 for dark text */
-  
+
   /* Cards & Popovers */
   --card: #FFFFFF;
   --card-foreground: #273472;
   --popover: #FFFFFF;
   --popover-foreground: #273472;
-  
+
   /* Brand Colors */
   --primary: #396AF3; /* Primary 500 */
   --primary-foreground: #FFFFFF;
   --secondary: #243D8E; /* Primary 700 - darker shadow/hover */
   --secondary-foreground: #FFFFFF;
-  
+
   /* UI Colors */
   --muted: #F4F1EA; /* Sand 50 - light section bg */
   --muted-foreground: #4B5563; /* Gray 700 - body text */
@@ -68,19 +68,19 @@
   --accent-foreground: #FFFFFF;
   --destructive: #D84848; /* Error 500 - form errors */
   --destructive-foreground: #FFFFFF;
-  
+
   /* Borders & Inputs */
   --border: #E5E7EB; /* Gray 200 - dividers */
   --input: #E5E7EB;
   --ring: #396AF3; /* Primary 500 */
-  
+
   /* Charts (keeping for compatibility) */
   --chart-1: #396AF3; /* Primary 500 */
   --chart-2: #243D8E; /* Primary 700 */
   --chart-3: #273472; /* Evergreen 900 */
   --chart-4: #F4F1EA; /* Sand 50 */
   --chart-5: #D84848; /* Error 500 */
-  
+
   /* Sidebar (keeping for compatibility) */
   --sidebar: #FFFFFF;
   --sidebar-foreground: #273472;
@@ -96,19 +96,19 @@
   /* Base */
   --background: #273472; /* Evergreen 900 */
   --foreground: #FFFFFF;
-  
+
   /* Cards & Popovers */
   --card: #1A2E29; /* Slightly lighter than background */
   --card-foreground: #FFFFFF;
   --popover: #1A2E29;
   --popover-foreground: #FFFFFF;
-  
+
   /* Brand Colors */
   --primary: #396AF3; /* Primary 500 */
   --primary-foreground: #FFFFFF;
   --secondary: #243D8E; /* Primary 700 */
   --secondary-foreground: #FFFFFF;
-  
+
   /* UI Colors */
   --muted: #1F3932; /* Darker version of background */
   --muted-foreground: #9CA3AF; /* Lighter gray for dark mode */
@@ -116,19 +116,19 @@
   --accent-foreground: #FFFFFF;
   --destructive: #D84848; /* Error 500 */
   --destructive-foreground: #FFFFFF;
-  
+
   /* Borders & Inputs */
   --border: rgba(255, 255, 255, 0.1);
   --input: rgba(255, 255, 255, 0.15);
   --ring: #396AF3; /* Primary 500 */
-  
+
   /* Charts (keeping for compatibility) */
   --chart-1: #396AF3; /* Primary 500 */
   --chart-2: #243D8E; /* Primary 700 */
   --chart-3: #F4F1EA; /* Sand 50 */
   --chart-4: #D84848; /* Error 500 */
   --chart-5: #4B5563; /* Gray 700 */
-  
+
   /* Sidebar (keeping for compatibility) */
   --sidebar: #1A2E29; /* Slightly lighter than background */
   --sidebar-foreground: #FFFFFF;
