@@ -23,8 +23,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
+import { cn } from "@/lib/utils"
 
 // Define interface for step items
 interface StepItem {
@@ -102,72 +102,97 @@ const AnimatedStepper = ({ steps, currentStep }: { steps: StepItem[]; currentSte
   )
 }
 
-// Update the Welcome component to be more visually appealing
-const Welcome = () => (
-  <Card>
-    <CardContent className="pt-8">
-      <div className="text-center mb-8">
-        <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-          <MessageSquare size={36} className="text-primary" />
-        </div>
-        <h1 className="text-3xl font-bold mb-4">
-          Welcome to Three Trees
-        </h1>
-        <p className="text-xl text-muted-foreground mb-2">
-          Complete your enrollment in <span className="font-medium text-primary">5 minutes or less</span>
-        </p>
-        <p className="text-muted-foreground">We&apos;ll guide you through each step of the process</p>
-      </div>
+// WizardShell: provides a consistent white sheet/viewport for all steps
+const WizardShell = ({ children, className }: { children: React.ReactNode; className?: string }) => (
+  <div
+    className={cn(
+      "w-full max-w-lg md:max-w-2xl flex flex-col flex-1 mx-auto overflow-auto md:rounded-xl",
+      className
+    )}
+    // Ensure it fits in viewport on mobile but allows internal scrolling if necessary
+    style={{ minHeight: "calc(100vh - 3rem)" }} // 3rem accounts for small footer
+  >
+    {children}
+  </div>
+);
 
-      <div className="space-y-3 text-left mb-6">
-        <div className="flex items-start p-3 border rounded-lg bg-background">
-          <div className="bg-primary/10 p-2 rounded-full mr-3 shrink-0">
-            <UserIcon size={20} className="text-primary" />
-          </div>
-          <div>
-            <h3 className="font-medium">Personal Information</h3>
-            <p className="text-sm text-muted-foreground">Tell us about yourself and your referral source</p>
-          </div>
-        </div>
-        <div className="flex items-start p-3 border rounded-lg bg-background">
-          <div className="bg-primary/10 p-2 rounded-full mr-3 shrink-0">
-            <Calendar size={20} className="text-primary" />
-          </div>
-          <div>
-            <h3 className="font-medium">Schedule Your Sessions</h3>
-            <p className="text-sm text-muted-foreground">Choose from available time slots that work for you</p>
-          </div>
-        </div>
-        <div className="flex items-start p-3 border rounded-lg bg-background">
-          <div className="bg-primary/10 p-2 rounded-full mr-3 shrink-0">
-            <FileText size={20} className="text-primary" />
-          </div>
-          <div>
-            <h3 className="font-medium">Review Documents</h3>
-            <p className="text-sm text-muted-foreground">Review and sign necessary program agreements</p>
-          </div>
-        </div>
-        <div className="flex items-start p-3 border rounded-lg bg-background">
-          <div className="bg-primary/10 p-2 rounded-full mr-3 shrink-0">
-            <CircleDollarSign size={20} className="text-primary" />
-          </div>
-          <div>
-            <h3 className="font-medium">Complete Payment</h3>
-            <p className="text-sm text-muted-foreground">Pay enrollment fee and select prepayment options</p>
-          </div>
-        </div>
+// Step Item Component for Welcome section
+const StepItem = ({ icon, iconLarge, title, description }: { icon: React.ReactNode, iconLarge: React.ReactNode, title: string, description: string }) => (
+  <div className="flex items-start">
+    {/* Adjusted padding/margin with responsiveness */}
+    <div className="bg-primary/10 p-1.5 md:p-2 rounded-full mr-3 md:mr-4 shrink-0 flex items-center justify-center">
+      <div className="md:hidden">{icon}</div>
+      <div className="hidden md:block">{iconLarge}</div>
+    </div>
+    <div>
+      {/* Responsive text sizes */}
+      <h3 className="font-medium text-sm md:text-base">{title}</h3>
+      <p className="text-xs md:text-sm text-muted-foreground">{description}</p>
+    </div>
+  </div>
+);
+
+// Update the Welcome component using StepItem and responsive styles but without Card
+const Welcome = () => (
+  <div className="pt-6 md:pt-8 px-6 md:px-8 flex flex-col flex-1">
+    {/* Header Section - Added responsive styles */}
+    <div className="text-center mb-6 md:mb-8">
+      <div className="mx-auto w-16 h-16 md:w-20 md:h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 md:mb-6">
+        {/* Responsive icon size */}
+        <MessageSquare size={28} className="text-primary md:hidden" />
+        <MessageSquare size={36} className="text-primary hidden md:block" />
       </div>
-    </CardContent>
-  </Card>
+      {/* Responsive text sizes */}
+      <h1 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">
+        Welcome to Three Trees
+      </h1>
+      <p className="text-lg md:text-xl text-muted-foreground mb-2">
+        Complete your enrollment in <span className="font-medium text-primary">5 minutes or less</span>
+      </p>
+      <p className="text-sm md:text-base text-muted-foreground">We&apos;ll guide you through each step of the process</p>
+    </div>
+
+    {/* Steps Section - Using StepItem */}
+    <div className="space-y-4 text-left mb-6">
+      <StepItem 
+        icon={<UserIcon size={18} className="text-primary" />}
+        iconLarge={<UserIcon size={20} className="text-primary" />}
+        title="Personal Information"
+        description="Tell us about yourself and your referral source"
+      />
+      
+      <StepItem 
+        icon={<Calendar size={18} className="text-primary" />}
+        iconLarge={<Calendar size={20} className="text-primary" />}
+        title="Schedule Your Sessions"
+        description="Choose from available time slots that work for you"
+      />
+      
+      <StepItem 
+        icon={<FileText size={18} className="text-primary" />}
+        iconLarge={<FileText size={20} className="text-primary" />}
+        title="Review Documents"
+        description="Review and sign necessary program agreements"
+      />
+      
+      <StepItem 
+        icon={<CircleDollarSign size={18} className="text-primary" />}
+        iconLarge={<CircleDollarSign size={20} className="text-primary" />}
+        title="Complete Payment"
+        description="Pay enrollment fee and select prepayment options"
+      />
+    </div>
+    {/* Removed Get Started button - handled by main page navigation */}
+  </div>
 )
 
-// Update the PersonalInfoForm component to be more visually appealing
+// Update the PersonalInfoForm component to remove Card wrapper
 const PersonalInfoForm = () => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
-    className="max-w-2xl mx-auto"
+    className="pt-6 md:pt-8 px-6 md:px-8"
   >
     <div className="mb-6">
       <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
@@ -233,7 +258,7 @@ const PersonalInfoForm = () => (
   </motion.div>
 )
 
-// Update the SchedulingStep component to be more visually appealing
+// Update the SchedulingStep component wrapper classes
 const SchedulingStep = () => {
   const [selectedDay, setSelectedDay] = useState("")
   const [selectedTime, setSelectedTime] = useState("")
@@ -243,7 +268,7 @@ const SchedulingStep = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="max-w-2xl mx-auto"
+      className="pt-6 md:pt-8 px-6 md:px-8"
     >
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
@@ -303,13 +328,13 @@ const SchedulingStep = () => {
   )
 }
 
-// Update the DocumentsStep component to be more visually appealing
+// DocumentsStep wrapper adjustment
 const DocumentsStep = () => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
-    className="max-w-2xl mx-auto"
+    className="pt-6 md:pt-8 px-6 md:px-8"
   >
     <div className="mb-6">
       <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
@@ -361,7 +386,7 @@ const DocumentsStep = () => (
   </motion.div>
 )
 
-// Update the PaymentStep component to make all prepayment options selectable
+// PaymentStep wrapper adjustment
 const PaymentStep = () => {
   const [paymentOption, setPaymentOption] = useState("full-program")
 
@@ -370,7 +395,7 @@ const PaymentStep = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="max-w-2xl mx-auto"
+      className="pt-6 md:pt-8 px-6 md:px-8"
     >
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
@@ -502,13 +527,13 @@ const PaymentStep = () => {
   )
 }
 
-// Update the SuccessPage component to be more visually appealing
+// SuccessPage wrapper adjustment
 const SuccessPage = () => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
-    className="max-w-2xl mx-auto text-center"
+    className="pt-6 md:pt-8 px-6 md:px-8 text-center"
   >
     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
       <CheckCircle2 size={40} className="text-green-600" />
@@ -546,7 +571,7 @@ const SuccessPage = () => (
   </motion.div>
 )
 
-// Update the main EnrollmentForm component to fix spacing and layout issues
+// Update main render: wrap stepper, content and nav inside WizardShell for consistency
 export default function EnrollmentForm() {
   const [currentStep, setCurrentStep] = useState(0)
   const contentRef = useRef<HTMLDivElement>(null)
@@ -612,15 +637,16 @@ export default function EnrollmentForm() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <main className="flex-1 pt-12 pb-12 flex flex-col bg-muted" ref={contentRef}>
-        <div className="container mx-auto px-4 py-6 flex-1 flex flex-col max-w-4xl">
+      <main className="flex-1 pt-8 sm:pt-12 pb-8 sm:pb-12 flex flex-col bg-muted" ref={contentRef}>
+        <WizardShell className="py-4 sm:py-6 px-0 flex-1">
+          {/* Top padding handled in child components */}
           {currentStep > 0 && currentStep < stepComponents.length - 1 && (
-            <div className="mb-8">
+            <div className="mb-6 sm:mb-8">
               <AnimatedStepper steps={enrollmentSteps} currentStep={stepperIndex} />
             </div>
           )}
 
-          <div className="flex-1 flex justify-center py-4">
+          <div className="flex-1 flex justify-center py-2 sm:py-4">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStep}
@@ -636,7 +662,7 @@ export default function EnrollmentForm() {
           </div>
 
           {!isSuccessStep && (
-            <div className="max-w-2xl mx-auto w-full mt-auto pt-6 pb-2">
+            <div className="max-w-2xl mx-auto w-full mt-auto pt-4 sm:pt-6 pb-1 sm:pb-2">
               <div className="flex items-center justify-between">
                 {!isFirstStep ? (
                   <Button onClick={goToPreviousStep} variant="outline" className="mr-2">
@@ -653,13 +679,13 @@ export default function EnrollmentForm() {
               </div>
             </div>
           )}
-        </div>
+        </WizardShell>
       </main>
 
-      <footer className="bg-background border-t py-4">
-        <div className="container mx-auto px-4 text-sm text-muted-foreground flex flex-col sm:flex-row items-center justify-between gap-y-2">
+      <footer className="bg-background border-t py-3 sm:py-4">
+        <div className="container mx-auto px-4 text-xs sm:text-sm text-muted-foreground flex flex-col sm:flex-row items-center justify-between gap-y-2">
           <span>© {new Date().getFullYear()} Three Trees. All rights reserved.</span>
-          <div className="flex flex-wrap items-center justify-center gap-x-1 gap-y-1">
+          <div className="flex flex-wrap items-center justify-center gap-x-1 sm:gap-x-2 gap-y-1">
             {[ 
               { title: "Privacy Policy", href: "/privacy" },
               { title: "Terms of Service", href: "/terms" },
@@ -667,7 +693,7 @@ export default function EnrollmentForm() {
             ].map(({ title, href }, index) => (
               <div key={title} className="flex items-center">
                 {index > 0 && (
-                  <span className="mx-2 text-muted-foreground flex items-center justify-center w-1">•</span>
+                  <span className="mx-1 sm:mx-2 text-muted-foreground flex items-center justify-center w-1">•</span>
                 )}
                 <Link href={href} className="hover:text-primary transition-colors">
                   {title}
