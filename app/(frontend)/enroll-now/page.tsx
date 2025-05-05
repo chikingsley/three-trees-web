@@ -15,7 +15,6 @@ import {
   ArrowLeft,
   ArrowRight,
   MessageSquare,
-  Leaf,
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
@@ -24,6 +23,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Card, CardContent } from "@/components/ui/card"
+import Link from "next/link"
 
 // Define interface for step items
 interface StepItem {
@@ -103,64 +104,61 @@ const AnimatedStepper = ({ steps, currentStep }: { steps: StepItem[]; currentSte
 
 // Update the Welcome component to be more visually appealing
 const Welcome = () => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -20 }}
-    className="max-w-2xl mx-auto"
-  >
-    <div className="text-center mb-8">
-      <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-        <MessageSquare size={36} className="text-primary" />
+  <Card>
+    <CardContent className="pt-8">
+      <div className="text-center mb-8">
+        <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+          <MessageSquare size={36} className="text-primary" />
+        </div>
+        <h1 className="text-3xl font-bold mb-4">
+          Welcome to Three Trees
+        </h1>
+        <p className="text-xl text-muted-foreground mb-2">
+          Complete your enrollment in <span className="font-medium text-primary">5 minutes or less</span>
+        </p>
+        <p className="text-muted-foreground">We&apos;ll guide you through each step of the process</p>
       </div>
-      <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-        Welcome to Three Trees
-      </h1>
-      <p className="text-xl text-muted-foreground mb-2">
-        Complete your enrollment in <span className="font-medium text-primary">5 minutes or less</span>
-      </p>
-      <p className="text-muted-foreground">We&apos;ll guide you through each step of the process</p>
-    </div>
 
-    <div className="space-y-4 text-left mb-8">
-      <div className="flex items-start p-4 bg-white/60 rounded-lg transition-colors hover:bg-white/80 shadow-sm">
-        <div className="bg-primary/10 p-2 rounded-full mr-4 shrink-0">
-          <UserIcon size={20} className="text-primary" />
+      <div className="space-y-3 text-left mb-6">
+        <div className="flex items-start p-3 border rounded-lg bg-background">
+          <div className="bg-primary/10 p-2 rounded-full mr-3 shrink-0">
+            <UserIcon size={20} className="text-primary" />
+          </div>
+          <div>
+            <h3 className="font-medium">Personal Information</h3>
+            <p className="text-sm text-muted-foreground">Tell us about yourself and your referral source</p>
+          </div>
         </div>
-        <div>
-          <h3 className="font-medium">Personal Information</h3>
-          <p className="text-sm text-muted-foreground">Tell us about yourself and your referral source</p>
+        <div className="flex items-start p-3 border rounded-lg bg-background">
+          <div className="bg-primary/10 p-2 rounded-full mr-3 shrink-0">
+            <Calendar size={20} className="text-primary" />
+          </div>
+          <div>
+            <h3 className="font-medium">Schedule Your Sessions</h3>
+            <p className="text-sm text-muted-foreground">Choose from available time slots that work for you</p>
+          </div>
+        </div>
+        <div className="flex items-start p-3 border rounded-lg bg-background">
+          <div className="bg-primary/10 p-2 rounded-full mr-3 shrink-0">
+            <FileText size={20} className="text-primary" />
+          </div>
+          <div>
+            <h3 className="font-medium">Review Documents</h3>
+            <p className="text-sm text-muted-foreground">Review and sign necessary program agreements</p>
+          </div>
+        </div>
+        <div className="flex items-start p-3 border rounded-lg bg-background">
+          <div className="bg-primary/10 p-2 rounded-full mr-3 shrink-0">
+            <CircleDollarSign size={20} className="text-primary" />
+          </div>
+          <div>
+            <h3 className="font-medium">Complete Payment</h3>
+            <p className="text-sm text-muted-foreground">Pay enrollment fee and select prepayment options</p>
+          </div>
         </div>
       </div>
-      <div className="flex items-start p-4 bg-white/60 rounded-lg transition-colors hover:bg-white/80 shadow-sm">
-        <div className="bg-primary/10 p-2 rounded-full mr-4 shrink-0">
-          <Calendar size={20} className="text-primary" />
-        </div>
-        <div>
-          <h3 className="font-medium">Schedule Your Sessions</h3>
-          <p className="text-sm text-muted-foreground">Choose from available time slots that work for you</p>
-        </div>
-      </div>
-      <div className="flex items-start p-4 bg-white/60 rounded-lg transition-colors hover:bg-white/80 shadow-sm">
-        <div className="bg-primary/10 p-2 rounded-full mr-4 shrink-0">
-          <FileText size={20} className="text-primary" />
-        </div>
-        <div>
-          <h3 className="font-medium">Review Documents</h3>
-          <p className="text-sm text-muted-foreground">Review and sign necessary program agreements</p>
-        </div>
-      </div>
-      <div className="flex items-start p-4 bg-white/60 rounded-lg transition-colors hover:bg-white/80 shadow-sm">
-        <div className="bg-primary/10 p-2 rounded-full mr-4 shrink-0">
-          <CircleDollarSign size={20} className="text-primary" />
-        </div>
-        <div>
-          <h3 className="font-medium">Complete Payment</h3>
-          <p className="text-sm text-muted-foreground">Pay enrollment fee and select prepayment options</p>
-        </div>
-      </div>
-    </div>
-  </motion.div>
+    </CardContent>
+  </Card>
 )
 
 // Update the PersonalInfoForm component to be more visually appealing
@@ -612,47 +610,17 @@ export default function EnrollmentForm() {
   // Calculate which step to highlight in the stepper (welcome and success are not in the stepper)
   const stepperIndex = currentStep === 0 ? 0 : currentStep >= stepComponents.length - 1 ? 3 : currentStep - 1
 
-  // Calculate progress percentage
-  const progressPercentage = (currentStep / (stepComponents.length - 1)) * 100
-
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
-      {/* Header with logo */}
-      <header className="fixed top-0 left-0 right-0 z-10 bg-white/90 backdrop-blur-sm border-b">
-        <div className="container mx-auto px-4 h-14 flex items-center">
-          <div className="flex items-center">
-            <Leaf className="h-6 w-6 text-emerald-600 mr-2" />
-            <span className="font-bold text-lg">Three Trees</span>
-          </div>
-
-          {!isFirstStep && !isSuccessStep && (
-            <div className="ml-auto flex items-center">
-              <span className="text-xs text-muted-foreground mr-2">
-                {currentStep}/{stepComponents.length - 2}
-              </span>
-              <div className="w-24 h-1.5 bg-muted rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-primary transition-all duration-300 ease-out"
-                  style={{ width: `${progressPercentage}%` }}
-                />
-              </div>
-              <span className="text-xs text-muted-foreground ml-2">~5 min</span>
-            </div>
-          )}
-        </div>
-      </header>
-
-      <main className="flex-1 pt-14 flex flex-col" ref={contentRef}>
+    <div className="flex flex-col min-h-screen bg-background">
+      <main className="flex-1 pt-12 pb-12 flex flex-col bg-muted" ref={contentRef}>
         <div className="container mx-auto px-4 py-6 flex-1 flex flex-col max-w-4xl">
-          {/* Show stepper only after welcome screen and before success screen */}
           {currentStep > 0 && currentStep < stepComponents.length - 1 && (
-            <div className="mb-6">
+            <div className="mb-8">
               <AnimatedStepper steps={enrollmentSteps} currentStep={stepperIndex} />
             </div>
           )}
 
-          {/* Step Content Area */}
-          <div className="flex-1 flex items-start justify-center py-4">
+          <div className="flex-1 flex justify-center py-4">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStep}
@@ -667,17 +635,18 @@ export default function EnrollmentForm() {
             </AnimatePresence>
           </div>
 
-          {/* Navigation Buttons */}
           {!isSuccessStep && (
-            <div className="max-w-2xl mx-auto mt-auto pt-4 pb-2">
-              <div className="flex items-center">
-                {!isFirstStep && (
-                  <Button onClick={goToPreviousStep} variant="ghost" className="mr-2">
+            <div className="max-w-2xl mx-auto w-full mt-auto pt-6 pb-2">
+              <div className="flex items-center justify-between">
+                {!isFirstStep ? (
+                  <Button onClick={goToPreviousStep} variant="outline" className="mr-2">
                     <ArrowLeft size={16} className="mr-2" /> Back
                   </Button>
+                ) : (
+                  <div></div>
                 )}
 
-                <Button onClick={goToNextStep} className="ml-0" size={isFirstStep ? "lg" : "default"}>
+                <Button onClick={goToNextStep} size={isFirstStep ? "lg" : "default"}>
                   {isFirstStep ? "Start Enrollment" : "Continue"}
                   {!isLastStep && <ArrowRight size={16} className="ml-2" />}
                 </Button>
@@ -687,10 +656,25 @@ export default function EnrollmentForm() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-white/90 backdrop-blur-sm border-t py-3">
-        <div className="container mx-auto px-4 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Three Trees. All rights reserved.
+      <footer className="bg-background border-t py-4">
+        <div className="container mx-auto px-4 text-sm text-muted-foreground flex flex-col sm:flex-row items-center justify-between gap-y-2">
+          <span>© {new Date().getFullYear()} Three Trees. All rights reserved.</span>
+          <div className="flex flex-wrap items-center justify-center gap-x-1 gap-y-1">
+            {[ 
+              { title: "Privacy Policy", href: "/privacy" },
+              { title: "Terms of Service", href: "/terms" },
+              { title: "Accessibility", href: "/accessibility" },
+            ].map(({ title, href }, index) => (
+              <div key={title} className="flex items-center">
+                {index > 0 && (
+                  <span className="mx-2 text-muted-foreground flex items-center justify-center w-1">•</span>
+                )}
+                <Link href={href} className="hover:text-primary transition-colors">
+                  {title}
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
       </footer>
     </div>
