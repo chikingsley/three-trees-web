@@ -23,7 +23,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import Link from "next/link"
-import { cn } from "@/lib/utils"
 
 // Define interface for step items
 interface StepItem {
@@ -31,6 +30,40 @@ interface StepItem {
   title: string
   initialIcon: React.ElementType
   completedIcon: React.ElementType
+}
+
+// Define interfaces for form data
+interface PersonalInfoData {
+  firstName: string;
+  lastName: string;
+  city: string;
+  county: string;
+  referralSource: string;
+  programType: string;
+}
+
+interface SchedulingData {
+  selectedDay: string;
+  selectedTime: string;
+}
+
+interface DocumentsData {
+  agreedToTerms: boolean;
+  signature: string;
+}
+
+interface PaymentData {
+  paymentOption: string;
+  cardNumber: string;
+  expiry: string;
+  cvc: string;
+}
+
+interface FormData {
+  personalInfo: PersonalInfoData;
+  scheduling: SchedulingData;
+  documents: DocumentsData;
+  payment: PaymentData;
 }
 
 // Update the AnimatedStepper component to fix the centering and line positioning issues
@@ -101,18 +134,6 @@ const AnimatedStepper = ({ steps, currentStep }: { steps: StepItem[]; currentSte
   )
 }
 
-// WizardShell: provides a consistent white sheet/viewport for all steps
-const WizardShell = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-  <div
-    className={cn(
-      "w-full max-w-lg md:max-w-2xl bg-white flex flex-col flex-1 mx-auto overflow-auto md:rounded-xl flex-shrink-0",
-      className
-    )}
-  >
-    {children}
-  </div>
-);
-
 // Step Item Component for Welcome section
 const StepItem = ({ icon, iconLarge, title, description }: { icon: React.ReactNode, iconLarge: React.ReactNode, title: string, description: string }) => (
   <div className="flex items-start">
@@ -178,13 +199,16 @@ const Welcome = () => (
   </div>
 )
 
-// Update the PersonalInfoForm component to remove Card wrapper
-const PersonalInfoForm = () => (
+// Update the PersonalInfoForm component to use and update form data
+const PersonalInfoForm = ({ formData, updateFormData }: { 
+  formData: PersonalInfoData; 
+  updateFormData: (data: Partial<PersonalInfoData>) => void 
+}) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
-    className="pt-3 md:pt-4 px-6 md:px-8"
+    className="pt-3 md:pt-4 px-0"
   >
     <div className="mb-6">
       <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
@@ -193,33 +217,56 @@ const PersonalInfoForm = () => (
       <p className="text-muted-foreground">We&apos;ll use this information to set up your account</p>
     </div>
 
-    <div className="space-y-5 bg-white/60 p-6 rounded-lg shadow-sm">
+    <div className="space-y-5 p-6 rounded-lg shadow-sm">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="space-y-2">
           <Label htmlFor="firstName">First Name*</Label>
-          <Input id="firstName" placeholder="Enter your first name" className="bg-white" />
+          <Input 
+            id="firstName" 
+            placeholder="Enter your first name" 
+            value={formData.firstName}
+            onChange={(e) => updateFormData({ firstName: e.target.value })}
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="lastName">Last Name*</Label>
-          <Input id="lastName" placeholder="Enter your last name" className="bg-white" />
+          <Input 
+            id="lastName" 
+            placeholder="Enter your last name" 
+            value={formData.lastName}
+            onChange={(e) => updateFormData({ lastName: e.target.value })}
+          />
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="space-y-2">
           <Label htmlFor="city">City*</Label>
-          <Input id="city" placeholder="Your city" className="bg-white" />
+          <Input 
+            id="city" 
+            placeholder="Your city" 
+            value={formData.city}
+            onChange={(e) => updateFormData({ city: e.target.value })}
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="county">County*</Label>
-          <Input id="county" placeholder="Your county" className="bg-white" />
+          <Input 
+            id="county" 
+            placeholder="Your county" 
+            value={formData.county}
+            onChange={(e) => updateFormData({ county: e.target.value })}
+          />
         </div>
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="referralSource">Referral Source*</Label>
-        <Select>
-          <SelectTrigger id="referralSource" className="bg-white">
+        <Select 
+          value={formData.referralSource}
+          onValueChange={(value) => updateFormData({ referralSource: value })}
+        >
+          <SelectTrigger id="referralSource">
             <SelectValue placeholder="Select your referral source" />
           </SelectTrigger>
           <SelectContent>
@@ -233,8 +280,11 @@ const PersonalInfoForm = () => (
 
       <div className="space-y-2">
         <Label htmlFor="programType">Program Type*</Label>
-        <Select>
-          <SelectTrigger id="programType" className="bg-white">
+        <Select
+          value={formData.programType}
+          onValueChange={(value) => updateFormData({ programType: value })}
+        >
+          <SelectTrigger id="programType">
             <SelectValue placeholder="Select program type" />
           </SelectTrigger>
           <SelectContent>
@@ -250,17 +300,17 @@ const PersonalInfoForm = () => (
   </motion.div>
 )
 
-// Update the SchedulingStep component wrapper classes
-const SchedulingStep = () => {
-  const [selectedDay, setSelectedDay] = useState("")
-  const [selectedTime, setSelectedTime] = useState("")
-
+// Update the SchedulingStep component to use and update form data
+const SchedulingStep = ({ formData, updateFormData }: {
+  formData: SchedulingData;
+  updateFormData: (data: Partial<SchedulingData>) => void
+}) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="pt-3 md:pt-4 px-6 md:px-8"
+      className="pt-3 md:pt-4 px-0"
     >
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
@@ -269,16 +319,16 @@ const SchedulingStep = () => {
         <p className="text-muted-foreground">Choose a day and time that works best for your schedule</p>
       </div>
 
-      <div className="bg-white/60 p-6 rounded-lg shadow-sm space-y-6">
+      <div className="p-6 rounded-lg shadow-sm space-y-6">
         <div>
           <h3 className="text-lg font-medium mb-3">Choose a day of the week:</h3>
           <div className="grid grid-cols-3 md:grid-cols-7 gap-2">
             {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => (
               <Button
                 key={day}
-                variant={selectedDay === day ? "default" : "outline"}
+                variant={formData.selectedDay === day ? "default" : "outline"}
                 className="h-auto py-2 text-sm"
-                onClick={() => setSelectedDay(day)}
+                onClick={() => updateFormData({ selectedDay: day })}
               >
                 {day.substring(0, 3)}
               </Button>
@@ -300,14 +350,14 @@ const SchedulingStep = () => {
               <div
                 key={slot}
                 className={`
-                  border rounded-lg p-3 cursor-pointer transition-colors bg-white
-                  ${selectedTime === slot ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50"}
+                  border rounded-lg p-3 cursor-pointer transition-colors
+                  ${formData.selectedTime === slot ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50"}
                 `}
-                onClick={() => setSelectedTime(slot)}
+                onClick={() => updateFormData({ selectedTime: slot })}
               >
                 <div className="flex items-center">
                   <Calendar size={18} className="text-primary mr-2" />
-                  <span>{selectedDay || "Any day"}</span>
+                  <span>{formData.selectedDay || "Any day"}</span>
                 </div>
                 <div className="font-medium mt-1">{slot}</div>
                 <div className="text-xs text-muted-foreground mt-1">8 spots available</div>
@@ -320,13 +370,16 @@ const SchedulingStep = () => {
   )
 }
 
-// DocumentsStep wrapper adjustment
-const DocumentsStep = () => (
+// Update the DocumentsStep component to use and update form data
+const DocumentsStep = ({ formData, updateFormData }: {
+  formData: DocumentsData;
+  updateFormData: (data: Partial<DocumentsData>) => void
+}) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
-    className="pt-3 md:pt-4 px-6 md:px-8"
+    className="pt-3 md:pt-4 px-0"
   >
     <div className="mb-6">
       <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
@@ -335,8 +388,8 @@ const DocumentsStep = () => (
       <p className="text-muted-foreground">Please read and sign the following document</p>
     </div>
 
-    <div className="bg-white/60 p-6 rounded-lg shadow-sm space-y-5">
-      <div className="h-56 overflow-y-auto p-4 bg-white rounded-lg border border-border mb-2">
+    <div className="p-6 rounded-lg shadow-sm space-y-5">
+      <div className="h-56 overflow-y-auto p-4 rounded-lg border border-border mb-2">
         <p className="text-sm text-muted-foreground mb-3">
           This PROGRAM AGREEMENT (&quot;Agreement&quot;) is made and entered into as of the date of signature below, by
           and between the Participant and the Program Provider.
@@ -358,19 +411,27 @@ const DocumentsStep = () => (
         </p>
       </div>
 
-      <div className="flex items-center p-3 bg-white rounded-lg">
-        <Checkbox id="agree" />
+      <div className="flex items-center p-3 rounded-lg">
+        <Checkbox 
+          id="agree" 
+          checked={formData.agreedToTerms}
+          onCheckedChange={(checked) => updateFormData({ agreedToTerms: checked === true })}
+        />
         <Label htmlFor="agree" className="ml-2 text-muted-foreground">
           I have read and agree to the Program Agreement
         </Label>
       </div>
 
-      <div className="p-4 bg-white rounded-lg">
+      <div className="p-4 rounded-lg">
         <Label className="block text-lg font-medium mb-3">Electronic Signature</Label>
-        <div className="border border-border rounded-md h-24 bg-white flex items-center justify-center">
+        <div className="border border-border rounded-md h-24 flex items-center justify-center">
           <span className="text-muted-foreground">Sign here</span>
         </div>
-        <Button variant="ghost" className="mt-2 p-0 h-auto text-primary">
+        <Button 
+          variant="ghost" 
+          className="mt-2 p-0 h-auto text-primary"
+          onClick={() => updateFormData({ signature: "" })}
+        >
           Clear signature
         </Button>
       </div>
@@ -378,16 +439,17 @@ const DocumentsStep = () => (
   </motion.div>
 )
 
-// PaymentStep wrapper adjustment
-const PaymentStep = () => {
-  const [paymentOption, setPaymentOption] = useState("full-program")
-
+// Update the PaymentStep component to use and update form data
+const PaymentStep = ({ formData, updateFormData }: {
+  formData: PaymentData;
+  updateFormData: (data: Partial<PaymentData>) => void
+}) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="pt-3 md:pt-4 px-6 md:px-8"
+      className="pt-3 md:pt-4 px-0"
     >
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
@@ -396,10 +458,10 @@ const PaymentStep = () => {
         <p className="text-muted-foreground">Choose a payment option and enter your details</p>
       </div>
 
-      <div className="bg-white/60 p-6 rounded-lg shadow-sm space-y-6">
+      <div className="p-6 rounded-lg shadow-sm space-y-6">
         <div>
           <h3 className="text-lg font-medium mb-3">Enrollment Fee</h3>
-          <div className="p-4 bg-white rounded-lg">
+          <div className="p-4 rounded-lg border border-border">
             <div className="flex justify-between items-center">
               <div>
                 <div className="font-medium">Program Enrollment Fee</div>
@@ -416,13 +478,16 @@ const PaymentStep = () => {
             Save by prepaying for multiple sessions. Select an option below:
           </p>
 
-          <RadioGroup value={paymentOption} onValueChange={setPaymentOption}>
+          <RadioGroup 
+            value={formData.paymentOption} 
+            onValueChange={(value) => updateFormData({ paymentOption: value })}
+          >
             <div className="space-y-3">
               <div
                 className={`rounded-lg p-3 hover:bg-muted/50 cursor-pointer transition-colors border ${
-                  paymentOption === "per-session" ? "border-primary bg-primary/5" : "border-border"
-                } bg-white`}
-                onClick={() => setPaymentOption("per-session")}
+                  formData.paymentOption === "per-session" ? "border-primary bg-primary/5" : "border-border"
+                }`}
+                onClick={() => updateFormData({ paymentOption: "per-session" })}
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-start">
@@ -440,9 +505,9 @@ const PaymentStep = () => {
 
               <div
                 className={`rounded-lg p-3 hover:bg-muted/50 cursor-pointer transition-colors border ${
-                  paymentOption === "four-sessions" ? "border-primary bg-primary/5" : "border-border"
-                } bg-white`}
-                onClick={() => setPaymentOption("four-sessions")}
+                  formData.paymentOption === "four-sessions" ? "border-primary bg-primary/5" : "border-border"
+                }`}
+                onClick={() => updateFormData({ paymentOption: "four-sessions" })}
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-start">
@@ -459,10 +524,10 @@ const PaymentStep = () => {
               </div>
 
               <div
-                className={`rounded-lg p-3 hover:bg-muted/70 cursor-pointer transition-colors border-2 ${
-                  paymentOption === "full-program" ? "border-primary bg-primary/5" : "border-border bg-white"
+                className={`rounded-lg p-3 hover:bg-muted/70 cursor-pointer transition-colors border ${
+                  formData.paymentOption === "full-program" ? "border-primary bg-primary/5" : "border-border"
                 }`}
-                onClick={() => setPaymentOption("full-program")}
+                onClick={() => updateFormData({ paymentOption: "full-program" })}
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-start">
@@ -484,7 +549,7 @@ const PaymentStep = () => {
 
         <div>
           <h3 className="text-lg font-medium mb-3">Payment Method</h3>
-          <div className="p-4 bg-white rounded-lg space-y-4">
+          <div className="p-4 border border-border rounded-lg space-y-4">
             <RadioGroup defaultValue="credit-card" className="flex mb-4">
               <div className="border rounded-md px-4 py-2 flex items-center mr-2 bg-primary/5 border-primary">
                 <RadioGroupItem value="credit-card" id="credit-card" className="mr-2" />
@@ -499,16 +564,31 @@ const PaymentStep = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="card-number">Card Number</Label>
-                <Input id="card-number" placeholder="1234 5678 9012 3456" className="bg-white" />
+                <Input 
+                  id="card-number" 
+                  placeholder="1234 5678 9012 3456" 
+                  value={formData.cardNumber}
+                  onChange={(e) => updateFormData({ cardNumber: e.target.value })}
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="expiry">Expiry Date</Label>
-                  <Input id="expiry" placeholder="MM/YY" className="bg-white" />
+                  <Input 
+                    id="expiry" 
+                    placeholder="MM/YY" 
+                    value={formData.expiry}
+                    onChange={(e) => updateFormData({ expiry: e.target.value })}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="cvc">CVC</Label>
-                  <Input id="cvc" placeholder="123" className="bg-white" />
+                  <Input 
+                    id="cvc" 
+                    placeholder="123" 
+                    value={formData.cvc}
+                    onChange={(e) => updateFormData({ cvc: e.target.value })}
+                  />
                 </div>
               </div>
             </div>
@@ -519,13 +599,13 @@ const PaymentStep = () => {
   )
 }
 
-// SuccessPage wrapper adjustment
-const SuccessPage = () => (
+// Update the SuccessPage component to use form data
+const SuccessPage = ({ formData }: { formData: FormData }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
-    className="pt-3 md:pt-4 px-6 md:px-8 text-center"
+    className="pt-3 md:pt-4 px-0 text-center"
   >
     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
       <CheckCircle2 size={40} className="text-green-600" />
@@ -534,9 +614,9 @@ const SuccessPage = () => (
       Enrollment Complete!
     </h2>
     <p className="text-xl text-muted-foreground mb-6">
-      Thank you for completing your enrollment. We&apos;ve sent a confirmation email with all the details.
+      Thank you for completing your enrollment{formData.personalInfo.firstName ? `, ${formData.personalInfo.firstName}` : ''}. We&apos;ve sent a confirmation email with all the details.
     </p>
-    <div className="max-w-md mx-auto bg-white/60 rounded-lg p-5 text-left mb-6 shadow-sm">
+    <div className="max-w-md mx-auto border border-border rounded-lg p-5 text-left mb-6 shadow-sm">
       <h3 className="font-medium text-lg mb-4">Your Next Steps:</h3>
       <ul className="space-y-3">
         <li className="flex items-center">
@@ -549,7 +629,7 @@ const SuccessPage = () => (
           <div className="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center mr-3 shrink-0">
             <span className="text-green-600 text-sm font-bold">2</span>
           </div>
-          <span>Attend your first session at the scheduled time</span>
+          <span>Attend your first session {formData.scheduling.selectedDay ? `on ${formData.scheduling.selectedDay}` : ''} {formData.scheduling.selectedTime ? `at ${formData.scheduling.selectedTime.split(' - ')[0]}` : ''}</span>
         </li>
         <li className="flex items-center">
           <div className="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center mr-3 shrink-0">
@@ -563,8 +643,75 @@ const SuccessPage = () => (
   </motion.div>
 )
 
-// Update main render: wrap stepper, content and nav inside WizardShell for consistency
+// Update main render: remove WizardShell and implement state management and history
 export default function EnrollmentForm() {
+  // Form data state to persist between steps
+  const [formData, setFormData] = useState({
+    personalInfo: {
+      firstName: "",
+      lastName: "",
+      city: "",
+      county: "",
+      referralSource: "",
+      programType: ""
+    },
+    scheduling: {
+      selectedDay: "",
+      selectedTime: ""
+    },
+    documents: {
+      agreedToTerms: false,
+      signature: ""
+    },
+    payment: {
+      paymentOption: "full-program",
+      cardNumber: "",
+      expiry: "",
+      cvc: ""
+    }
+  });
+
+  // Update form data handlers
+  const updatePersonalInfo = (data: Partial<typeof formData.personalInfo>) => {
+    setFormData(prev => ({
+      ...prev,
+      personalInfo: {
+        ...prev.personalInfo,
+        ...data
+      }
+    }));
+  };
+
+  const updateScheduling = (data: Partial<typeof formData.scheduling>) => {
+    setFormData(prev => ({
+      ...prev,
+      scheduling: {
+        ...prev.scheduling,
+        ...data
+      }
+    }));
+  };
+
+  const updateDocuments = (data: Partial<typeof formData.documents>) => {
+    setFormData(prev => ({
+      ...prev,
+      documents: {
+        ...prev.documents,
+        ...data
+      }
+    }));
+  };
+
+  const updatePayment = (data: Partial<typeof formData.payment>) => {
+    setFormData(prev => ({
+      ...prev,
+      payment: {
+        ...prev.payment,
+        ...data
+      }
+    }));
+  };
+
   const [currentStep, setCurrentStep] = useState(0)
   const contentRef = useRef<HTMLDivElement>(null)
 
@@ -595,87 +742,128 @@ export default function EnrollmentForm() {
     },
   ]
 
-  // Array of components for each step
+  // Array of components for each step with props for form data
   const stepComponents = [
     <Welcome key="welcome" />,
-    <PersonalInfoForm key="personal" />,
-    <SchedulingStep key="scheduling" />,
-    <DocumentsStep key="documents" />,
-    <PaymentStep key="payment" />,
-    <SuccessPage key="success" />,
+    <PersonalInfoForm 
+      key="personal" 
+      formData={formData.personalInfo} 
+      updateFormData={updatePersonalInfo} 
+    />,
+    <SchedulingStep 
+      key="scheduling" 
+      formData={formData.scheduling} 
+      updateFormData={updateScheduling} 
+    />,
+    <DocumentsStep 
+      key="documents" 
+      formData={formData.documents} 
+      updateFormData={updateDocuments} 
+    />,
+    <PaymentStep 
+      key="payment" 
+      formData={formData.payment} 
+      updateFormData={updatePayment} 
+    />,
+    <SuccessPage key="success" formData={formData} />,
   ]
 
+  // Handle browser history navigation
+  useEffect(() => {
+    // Add current step to history state when it changes
+    window.history.pushState({ step: currentStep }, "", "");
+
+    // Handle popstate (browser back/forward buttons)
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && typeof event.state.step === 'number') {
+        setCurrentStep(event.state.step);
+      } else if (currentStep > 0) {
+        // If no state but we're not at the first step, go back
+        setCurrentStep(prev => prev - 1);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [currentStep]);
+
   const goToNextStep = () => {
-    setCurrentStep((prev) => Math.min(prev + 1, stepComponents.length - 1))
+    const nextStep = Math.min(currentStep + 1, stepComponents.length - 1);
+    setCurrentStep(nextStep);
+    // Add to history
+    window.history.pushState({ step: nextStep }, "", "");
   }
 
   const goToPreviousStep = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0))
+    const prevStep = Math.max(currentStep - 1, 0);
+    setCurrentStep(prevStep);
+    // Add to history
+    window.history.pushState({ step: prevStep }, "", "");
   }
 
   // Scroll to top when changing steps
   useEffect(() => {
     if (contentRef.current) {
-      contentRef.current.scrollTo(0, 0)
+      contentRef.current.scrollTo(0, 0);
     }
-  }, [currentStep])
+  }, [currentStep]);
 
-  const isFirstStep = currentStep === 0
-  const isLastStep = currentStep === stepComponents.length - 1
-  const isSuccessStep = currentStep === stepComponents.length - 1
+  const isFirstStep = currentStep === 0;
+  const isLastStep = currentStep === stepComponents.length - 1;
+  const isSuccessStep = currentStep === stepComponents.length - 1;
 
   // Calculate which step to highlight in the stepper (welcome and success are not in the stepper)
-  const stepperIndex = currentStep === 0 ? 0 : currentStep >= stepComponents.length - 1 ? 3 : currentStep - 1
+  const stepperIndex = currentStep === 0 ? 0 : currentStep >= stepComponents.length - 1 ? 3 : currentStep - 1;
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <main className="flex-1 pt-4 sm:pt-6 pb-4 sm:pb-6 flex flex-col bg-muted" ref={contentRef}>
-        <WizardShell className="px-0 flex-1 flex">
-          {/* Top padding handled in child components */}
-          {currentStep > 0 && currentStep < stepComponents.length - 1 && (
-            <div className="mb-3 sm:mb-4">
-              <AnimatedStepper steps={enrollmentSteps} currentStep={stepperIndex} />
-            </div>
-          )}
-
-          <div className="flex-1 flex justify-center py-2 sm:py-4">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentStep}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.25 }}
-                className="w-full max-w-2xl mx-auto"
-              >
-                {stepComponents[currentStep]}
-              </motion.div>
-            </AnimatePresence>
+    <div className="flex flex-col min-h-screen bg-muted">
+      <main className="flex-1 pt-4 sm:pt-8 pb-4 sm:pb-6 flex flex-col" ref={contentRef}>
+        {/* Full-width stepper without card wrapper */}
+        {currentStep > 0 && currentStep < stepComponents.length - 1 && (
+          <div className="mb-6 sm:mb-8 container mx-auto px-4">
+            <AnimatedStepper steps={enrollmentSteps} currentStep={stepperIndex} />
           </div>
+        )}
 
-          {!isSuccessStep && (
-            <div className="max-w-2xl mx-auto w-full mt-auto pt-2 sm:pt-3 pb-0">
-              <div className={isFirstStep ? "flex justify-center" : "flex items-center justify-between"}>
-                {!isFirstStep ? (
-                  <Button onClick={goToPreviousStep} variant="outline" className="mr-2">
-                    <ArrowLeft size={16} className="mr-2" /> Back
-                  </Button>
-                ) : (
-                  <div></div>
-                )}
+        {/* Content area - removed card wrapper */}
+        <div className="flex-1 flex justify-center py-2 sm:py-4 container mx-auto px-4">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStep}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25 }}
+              className="w-full max-w-2xl mx-auto"
+            >
+              {stepComponents[currentStep]}
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
-                <Button 
-                  onClick={goToNextStep} 
-                  size={isFirstStep ? "lg" : "default"} 
-                  className={isFirstStep ? "px-8 py-2 h-auto text-base" : "w-auto"}
-                >
-                  {isFirstStep ? "Start Enrollment" : "Continue"}
-                  {!isLastStep && <ArrowRight size={16} className="ml-2" />}
+        {/* Navigation buttons */}
+        {!isSuccessStep && (
+          <div className="container mx-auto px-4 max-w-2xl mt-auto pt-4 sm:pt-6 pb-2">
+            <div className={isFirstStep ? "flex justify-center" : "flex items-center justify-between"}>
+              {!isFirstStep ? (
+                <Button onClick={goToPreviousStep} variant="outline" className="mr-2">
+                  <ArrowLeft size={16} className="mr-2" /> Back
                 </Button>
-              </div>
+              ) : (
+                <div></div>
+              )}
+
+              <Button 
+                onClick={goToNextStep} 
+                size={isFirstStep ? "lg" : "default"} 
+                className={isFirstStep ? "px-8 py-2 h-auto text-base" : "w-auto"}
+              >
+                {isFirstStep ? "Start Enrollment" : "Continue"}
+                {!isLastStep && <ArrowRight size={16} className="ml-2" />}
+              </Button>
             </div>
-          )}
-        </WizardShell>
+          </div>
+        )}
       </main>
 
       <footer className="bg-background border-t py-3 sm:py-4">
