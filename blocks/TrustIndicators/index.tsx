@@ -77,10 +77,10 @@ const TrustIndicators = (props: TrustIndicatorsProps) => {
             if (!IconComponent) return null; // Handle cases where icon name might be invalid
             
             return (
-              <div key={index} className="flex flex-col items-center justify-center text-center px-2">
+            <div key={index} className="flex flex-col items-center justify-center text-center px-2">
                 <IconComponent className="h-5 w-5 mb-1.5 text-primary" />
-                <span className="text-xs md:text-sm font-medium text-gray-700">{item.text}</span>
-              </div>
+              <span className="text-xs md:text-sm font-medium text-gray-700">{item.text}</span>
+            </div>
             );
           })}
         </div>

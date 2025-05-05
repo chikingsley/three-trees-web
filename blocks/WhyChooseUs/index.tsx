@@ -63,23 +63,23 @@ const WhyChooseSection = (props: WhyChooseSectionProps) => {
     <section id={id} className="py-8 md:py-12 lg:py-20 bg-sand-50">
       <div className="mx-auto px-4 md:px-6 lg:px-8 max-w-screen-lg">
         {/* Decorative Line */} 
-        <div className="h-0 w-20 bg-primary mx-auto mb-6"></div> 
+        <div className="h-0 w-20 bg-primary mx-auto mb-6"></div>
         
         <div className="text-center mb-8 md:mb-12">
           {/* Title */}
           {title && (
-            <h2 className="text-2xl md:text-4xl font-semibold tracking-tight text-black mb-6">
+          <h2 className="text-2xl md:text-4xl font-semibold tracking-tight text-black mb-6">
               {title}
-            </h2>
+          </h2>
           )}
           {/* Subtitle */}
           {subtitle && (
-            <p className="text-md md:text-lg text-black max-w-2xl mx-auto mb-6">
+          <p className="text-md md:text-lg text-black max-w-2xl mx-auto mb-6">
               {subtitle}
-            </p>
+          </p>
           )}
           {/* Decorative Line */} 
-          <div className="h-1 w-20 bg-primary mx-auto mb-6"></div> 
+          <div className="h-1 w-20 bg-primary mx-auto mb-6"></div>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -88,22 +88,22 @@ const WhyChooseSection = (props: WhyChooseSectionProps) => {
             if (!IconComponent) return null; // Skip if icon name is invalid
 
             return (
-              <div
-                key={index}
-                className="bg-background rounded-lg p-6 shadow-sm border border-gray-200/50 hover:border-black/20 hover:shadow-md transition-all h-full"
-              >
-                <div className="flex items-center mb-3">
-                  <div className="mr-3">
+            <div
+              key={index}
+              className="bg-background rounded-lg p-6 shadow-sm border border-gray-200/50 hover:border-black/20 hover:shadow-md transition-all h-full"
+            >
+              <div className="flex items-center mb-3">
+                <div className="mr-3">
                     <IconComponent className={iconClass} />
-                  </div>
-                  <h3 className="text-lg font-semibold text-black">
-                    {feature.title}
-                  </h3>
                 </div>
-                <p className="text-muted-foreground text-sm md:text-md">
-                  {feature.description}
-                </p>
+                <h3 className="text-lg font-semibold text-black">
+                  {feature.title}
+                </h3>
               </div>
+              <p className="text-muted-foreground text-sm md:text-md">
+                {feature.description}
+              </p>
+            </div>
             );
           })}
         </div>

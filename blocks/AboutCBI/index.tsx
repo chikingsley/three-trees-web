@@ -71,41 +71,41 @@ export default function AboutCbiMethod(props: AboutCbiProps) {
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="order-2 md:order-1">
             {tagline && (
-              <p className="text-sm font-semibold text-primary dark:text-blue-400 uppercase tracking-wider mb-2">
+            <p className="text-sm font-semibold text-primary dark:text-blue-400 uppercase tracking-wider mb-2">
                 {tagline}
-              </p>
+            </p>
             )}
             {headline && (
-              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
                 {headline}
-              </h2>
+            </h2>
             )}
             {paragraph && (
-              <p className="text-base text-gray-700 dark:text-gray-300 mb-4">
+            <p className="text-base text-gray-700 dark:text-gray-300 mb-4">
                 {paragraph}
-              </p>
+            </p>
             )}
 
             {/* Stats Section */}
             {(stat1?.value || stat2?.value) && (
-              <div className="mt-8 grid grid-cols-2 gap-8">
+            <div className="mt-8 grid grid-cols-2 gap-8">
                 {stat1?.value && (
-                  <div>
+              <div>
                     <p className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">{stat1.value}</p>
                     {stat1.description && (
-                      <p className="mt-1 text-sm sm:text-base text-muted-foreground">
+                <p className="mt-1 text-sm sm:text-base text-muted-foreground">
                         {stat1.description}
-                      </p>
+                </p>
                     )}
-                  </div>
+              </div>
                 )}
                 {stat2?.value && (
-                  <div>
+              <div>
                     <p className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">{stat2.value}</p>
                     {stat2.description && (
-                      <p className="mt-1 text-sm sm:text-base text-muted-foreground">
+                <p className="mt-1 text-sm sm:text-base text-muted-foreground">
                         {stat2.description}
-                      </p>
+                </p>
                     )}
                   </div>
                 )}
@@ -114,26 +114,26 @@ export default function AboutCbiMethod(props: AboutCbiProps) {
 
             {/* Learn More Button */}
             {button?.href && (
-              <div className="mt-8">
-                <Button variant="outline" size="sm" asChild className="font-semibold">
+            <div className="mt-8">
+              <Button variant="outline" size="sm" asChild className="font-semibold">
                   <Link href={button.href}> 
                     {button.text} <ArrowRight className="ml-1 h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
+                </Link>
+              </Button>
+            </div>
             )}
 
           </div>
           {image?.src && (
-            <div className="order-1 md:order-2 flex justify-center">
-              <Image
+          <div className="order-1 md:order-2 flex justify-center">
+            <Image
                 src={image.src}
                 alt={image.alt || ''} // Provide empty string default for alt
                 width={450} // Keep explicit width/height or make them props too?
                 height={320}
                 priority
-              />
-            </div>
+            />
+          </div>
           )}
         </div>
       </div>

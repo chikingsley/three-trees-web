@@ -92,7 +92,7 @@ const defaultProps: Required<NavbarProps> = {
   aboutUsLinks: [], // Default to empty, hide section
   enrollButton: {
     text: "Enroll Now",
-    href: "/enroll-now",
+    href: "/enroll-now", // Path to the new enrollment form
   },
   signInButton: {
     text: "Sign In Portal",

@@ -64,15 +64,15 @@ const ThreeTreesApproach = (props: ThreePillarsProps) => {
         <div className="text-center mb-10">
           {/* Title */}
           {title && (
-            <h2 className="text-2xl md:text-4xl font-semibold text-black mb-6">
+          <h2 className="text-2xl md:text-4xl font-semibold text-black mb-6">
               {title}
-            </h2>
+          </h2>
           )}
           {/* Subtitle */}
           {subtitle && (
-            <p className="text-md md:text-lg text-black max-w-3xl mx-auto mb-6">
+          <p className="text-md md:text-lg text-black max-w-3xl mx-auto mb-6">
               {subtitle}
-            </p>
+          </p>
           )}
           {/* Decorative line */}
           <div className="h-1 w-20 bg-primary mx-auto mb-6"></div>
@@ -80,70 +80,70 @@ const ThreeTreesApproach = (props: ThreePillarsProps) => {
         
         {/* Desktop Version - Hidden on mobile */}
         {finalTabs.length > 0 && (
-          <div className="hidden md:flex flex-col md:flex-row gap-8 mt-12">
-            {/* Tab Navigation */} 
-            <div className="md:w-1/3">
-              <div className="flex flex-col gap-3">
+        <div className="hidden md:flex flex-col md:flex-row gap-8 mt-12">
+          {/* Tab Navigation */}
+          <div className="md:w-1/3">
+            <div className="flex flex-col gap-3">
                 {finalTabs.map((tab) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={cn(
-                      "text-left p-4 rounded-lg transition-all",
-                      activeTab === tab.id
-                        ? "bg-white border-l-4 border-primary shadow-md"
-                        : "bg-white/60 hover:bg-white"
-                    )}
-                  >
-                    <h3 className={cn(
-                      "text-lg font-semibold mb-1",
-                      activeTab === tab.id ? "text-primary" : "text-black"
-                    )}>
-                      {tab.title}
-                    </h3>
-                  </button>
-                ))}
-              </div>
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    "text-left p-4 rounded-lg transition-all",
+                    activeTab === tab.id
+                      ? "bg-white border-l-4 border-primary shadow-md"
+                      : "bg-white/60 hover:bg-white"
+                  )}
+                >
+                  <h3 className={cn(
+                    "text-lg font-semibold mb-1",
+                    activeTab === tab.id ? "text-primary" : "text-black"
+                  )}>
+                    {tab.title}
+                  </h3>
+                </button>
+              ))}
             </div>
+          </div>
 
-            {/* Tab Content */}
+          {/* Tab Content */}
             {activeTabData && (
-              <div className="md:w-2/3 bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="flex flex-col md:flex-row">
-                  <div className="md:w-1/2 p-6">
-                    <h3 className="text-xl font-bold mb-4 text-primary">
+          <div className="md:w-2/3 bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="flex flex-col md:flex-row">
+              <div className="md:w-1/2 p-6">
+                <h3 className="text-xl font-bold mb-4 text-primary">
                       {activeTabData.title}
-                    </h3>
-                    <p className="text-gray-700">
+                </h3>
+                <p className="text-gray-700">
                       {activeTabData.content}
-                    </p>
-                  </div>
-                  <div className="md:w-1/2 relative min-h-[300px]">
-                    <Image
+                </p>
+              </div>
+              <div className="md:w-1/2 relative min-h-[300px]">
+                <Image
                       src={activeTabData.image || '/images/placeholder1.jpg'} // Fallback just in case
                       alt={activeTabData.title || "Pillar visual representation"}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
+                  fill
+                  className="object-cover"
+                />
               </div>
-            )}
+            </div>
           </div>
+            )}
+        </div>
         )}
 
         {/* Mobile View Cards - Only visible on small screens */}
         {finalTabs.length > 0 && (
-          <div className="md:hidden flex flex-col gap-4 mt-8">
+        <div className="md:hidden flex flex-col gap-4 mt-8">
             {finalTabs.map((tab) => (
-              <div key={tab.id} className="bg-white rounded-lg shadow-md p-6 text-center">
-                <h3 className="text-xl font-bold mb-3 text-primary">{tab.title}</h3>
-                <p className="text-gray-600">
-                  {tab.content}
-                </p>
-              </div>
-            ))}
-          </div>
+            <div key={tab.id} className="bg-white rounded-lg shadow-md p-6 text-center">
+              <h3 className="text-xl font-bold mb-3 text-primary">{tab.title}</h3>
+              <p className="text-gray-600">
+                {tab.content}
+              </p>
+            </div>
+          ))}
+        </div>
         )}
       </div>
     </section>

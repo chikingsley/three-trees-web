@@ -28,7 +28,7 @@ const defaultProps: Required<HeroProps> = {
   subHeadline: "Court‑mandated classes, campus interventions, and workplace training powered by our Cognitive Behavioral Inquiry (CBI) method.",
   primaryButton: {
     text: "Enroll Now",
-    link: "#enroll",
+    link: "/enroll-now",
   },
   secondaryButton: {
     text: "Contact Us",

@@ -14,7 +14,6 @@ import {
   ShieldCheck,
   ArrowLeft,
   ArrowRight,
-  MessageSquare,
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
@@ -106,11 +105,9 @@ const AnimatedStepper = ({ steps, currentStep }: { steps: StepItem[]; currentSte
 const WizardShell = ({ children, className }: { children: React.ReactNode; className?: string }) => (
   <div
     className={cn(
-      "w-full max-w-lg md:max-w-2xl flex flex-col flex-1 mx-auto overflow-auto md:rounded-xl",
+      "w-full max-w-lg md:max-w-2xl bg-white flex flex-col flex-1 mx-auto overflow-auto md:rounded-xl flex-shrink-0",
       className
     )}
-    // Ensure it fits in viewport on mobile but allows internal scrolling if necessary
-    style={{ minHeight: "calc(100vh - 3rem)" }} // 3rem accounts for small footer
   >
     {children}
   </div>
@@ -134,26 +131,21 @@ const StepItem = ({ icon, iconLarge, title, description }: { icon: React.ReactNo
 
 // Update the Welcome component using StepItem and responsive styles but without Card
 const Welcome = () => (
-  <div className="pt-6 md:pt-8 px-6 md:px-8 flex flex-col flex-1">
+  <div className="pt-6 md:pt-10 px-6 md:px-8 flex flex-col flex-1 items-center justify-center">
     {/* Header Section - Added responsive styles */}
-    <div className="text-center mb-6 md:mb-8">
-      <div className="mx-auto w-16 h-16 md:w-20 md:h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 md:mb-6">
-        {/* Responsive icon size */}
-        <MessageSquare size={28} className="text-primary md:hidden" />
-        <MessageSquare size={36} className="text-primary hidden md:block" />
-      </div>
-      {/* Responsive text sizes */}
-      <h1 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">
+    <div className="text-center mb-8 md:mb-10 max-w-md mx-auto">
+      {/* Removed message square icon */}
+      <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-5 text-primary">
         Welcome to Three Trees
       </h1>
-      <p className="text-lg md:text-xl text-muted-foreground mb-2">
+      <p className="text-lg md:text-xl text-muted-foreground mb-3">
         Complete your enrollment in <span className="font-medium text-primary">5 minutes or less</span>
       </p>
       <p className="text-sm md:text-base text-muted-foreground">We&apos;ll guide you through each step of the process</p>
     </div>
 
     {/* Steps Section - Using StepItem */}
-    <div className="space-y-4 text-left mb-6">
+    <div className="space-y-4 text-left mb-8 max-w-md mx-auto w-full">
       <StepItem 
         icon={<UserIcon size={18} className="text-primary" />}
         iconLarge={<UserIcon size={20} className="text-primary" />}
@@ -192,7 +184,7 @@ const PersonalInfoForm = () => (
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
-    className="pt-6 md:pt-8 px-6 md:px-8"
+    className="pt-3 md:pt-4 px-6 md:px-8"
   >
     <div className="mb-6">
       <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
@@ -268,7 +260,7 @@ const SchedulingStep = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="pt-6 md:pt-8 px-6 md:px-8"
+      className="pt-3 md:pt-4 px-6 md:px-8"
     >
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
@@ -334,7 +326,7 @@ const DocumentsStep = () => (
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
-    className="pt-6 md:pt-8 px-6 md:px-8"
+    className="pt-3 md:pt-4 px-6 md:px-8"
   >
     <div className="mb-6">
       <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
@@ -395,7 +387,7 @@ const PaymentStep = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="pt-6 md:pt-8 px-6 md:px-8"
+      className="pt-3 md:pt-4 px-6 md:px-8"
     >
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
@@ -533,7 +525,7 @@ const SuccessPage = () => (
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
-    className="pt-6 md:pt-8 px-6 md:px-8 text-center"
+    className="pt-3 md:pt-4 px-6 md:px-8 text-center"
   >
     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
       <CheckCircle2 size={40} className="text-green-600" />
@@ -637,11 +629,11 @@ export default function EnrollmentForm() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <main className="flex-1 pt-8 sm:pt-12 pb-8 sm:pb-12 flex flex-col bg-muted" ref={contentRef}>
-        <WizardShell className="py-4 sm:py-6 px-0 flex-1">
+      <main className="flex-1 pt-4 sm:pt-6 pb-4 sm:pb-6 flex flex-col bg-muted" ref={contentRef}>
+        <WizardShell className="px-0 flex-1 flex">
           {/* Top padding handled in child components */}
           {currentStep > 0 && currentStep < stepComponents.length - 1 && (
-            <div className="mb-6 sm:mb-8">
+            <div className="mb-3 sm:mb-4">
               <AnimatedStepper steps={enrollmentSteps} currentStep={stepperIndex} />
             </div>
           )}
@@ -662,8 +654,8 @@ export default function EnrollmentForm() {
           </div>
 
           {!isSuccessStep && (
-            <div className="max-w-2xl mx-auto w-full mt-auto pt-4 sm:pt-6 pb-1 sm:pb-2">
-              <div className="flex items-center justify-between">
+            <div className="max-w-2xl mx-auto w-full mt-auto pt-2 sm:pt-3 pb-0">
+              <div className={isFirstStep ? "flex justify-center" : "flex items-center justify-between"}>
                 {!isFirstStep ? (
                   <Button onClick={goToPreviousStep} variant="outline" className="mr-2">
                     <ArrowLeft size={16} className="mr-2" /> Back
@@ -672,7 +664,11 @@ export default function EnrollmentForm() {
                   <div></div>
                 )}
 
-                <Button onClick={goToNextStep} size={isFirstStep ? "lg" : "default"}>
+                <Button 
+                  onClick={goToNextStep} 
+                  size={isFirstStep ? "lg" : "default"} 
+                  className={isFirstStep ? "px-8 py-2 h-auto text-base" : "w-auto"}
+                >
                   {isFirstStep ? "Start Enrollment" : "Continue"}
                   {!isLastStep && <ArrowRight size={16} className="ml-2" />}
                 </Button>

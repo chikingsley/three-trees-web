@@ -62,7 +62,7 @@ const defaultProps: Required<CTABannerProps> = {
   paragraph: "Take the first step toward lasting change with Three Trees. Our programs are designed to help you succeed.",
   primaryButton: {
     text: "Enroll Now",
-    href: "/enroll"
+    href: "/enroll-now"
   },
   secondaryButton: {
     text: "Contact Us",
@@ -102,14 +102,14 @@ export default function CTABanner(props: CTABannerProps) {
         />
         <div className="relative z-0 flex flex-col gap-3">
           {headline && (
-            <h3 className="text-3xl md:text-4xl font-semibold text-white">
+          <h3 className="text-3xl md:text-4xl font-semibold text-white">
               {headline}
-            </h3>
+          </h3>
           )}
           {paragraph && (
-            <p className="mt-2 text-base md:text-lg text-white/90">
+          <p className="mt-2 text-base md:text-lg text-white/90">
               {paragraph}
-            </p>
+          </p>
           )}
         </div>
         <div className="relative z-0 mt-8 md:mt-12 flex flex-col sm:flex-row gap-4">
@@ -117,15 +117,15 @@ export default function CTABanner(props: CTABannerProps) {
             <Button asChild size="lg" className="bg-white text-primary border-2 border-white hover:bg-white hover:border-foreground hover:text-primary">
               <Link href={primaryButton.href} className="flex items-center">
                 {primaryButton.text} <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+            </Link>
+          </Button>
           )}
           {secondaryButton?.href && (
             <Button asChild size="lg" className="bg-secondary text-secondary-foreground border-2 border-secondary hover:bg-secondary/90 hover:text-secondary-foreground">
               <Link href={secondaryButton.href} className="flex items-center">
                 {secondaryButton.text} <Calendar className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+            </Link>
+          </Button>
           )}
         </div>
       </div>

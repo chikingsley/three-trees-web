@@ -70,7 +70,7 @@ const defaultProps: Required<ProgramsGlanceProps> = {
     ],
     slugs: ["court-mandated", "college", "corporate"]
   }
-};
+  };
 
 const ProgramsGlance = (props: ProgramsGlanceProps) => {
   // --- HOOKS MUST BE CALLED UNCONDITIONALLY AT THE TOP ---
@@ -133,9 +133,9 @@ const ProgramsGlance = (props: ProgramsGlanceProps) => {
         <div className="h-1 w-20 bg-primary mx-auto mb-6"></div>
         <div className="text-center mb-8 md:mb-12">
           {title && (
-            <h2 className="text-3xl font-semibold tracking-tight text-evergreen-900 mb-6">
+          <h2 className="text-3xl font-semibold tracking-tight text-evergreen-900 mb-6">
               {title}
-            </h2>
+          </h2>
           )}
           <div className="h-1 w-20 bg-primary mx-auto mb-6"></div>
         </div>
@@ -162,7 +162,7 @@ const ProgramsGlance = (props: ProgramsGlanceProps) => {
               {/* Category Content */}
               {/* Removed h-full here, added flex-grow below */}
               <div className="p-5 flex flex-col flex-grow"> 
-                <dl className="space-y-4 flex-grow"> 
+                <dl className="space-y-4 flex-grow">
                   {programsData.rows.map((row) => (
                     <div
                       key={row.title} // Use row title as key
