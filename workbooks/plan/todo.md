@@ -1,6 +1,7 @@
 # Three Trees Implementation Checklist with Payload CMS
 
 ## Phase 1: Initial Setup & Foundation
+
 - [x] 1. Set up development environment
   - [x] Install Node.js and necessary development tools
   - [x] Create GitHub repository for version control
@@ -22,6 +23,7 @@
   - [x] Admin users
 
 ## Phase 2: Content Management
+
 - [ ] 5. Define Payload Blocks & Adapt Components
   - [ ] Define reusable content block schemas in Payload (Hero, Testimonials, CTA, etc.)
   - [ ] Specify editable fields for each block type
@@ -36,6 +38,7 @@
   - [ ] Implement document storage for PDFs and resources
 
 ## Phase 3: Core Functionality
+
 - [ ] 8. Create class and attendance system
   - [ ] Class/program collection schema
   - [ ] Session tracking
@@ -54,6 +57,7 @@
   - [ ] Document generation hooks
 
 ## Phase 4: Client Portal & Experience
+
 - [ ] 11. Develop enrollment workflow
   - [ ] Multi-step signup forms
   - [ ] Service selection interface
@@ -72,6 +76,7 @@
   - [ ] Client notes and reporting
 
 ## Phase 5: Integrations
+
 - [ ] 14. Set up payment processing
   - [ ] Integrate Polar.sh or Stripe
   - [ ] Configure payment webhooks
@@ -88,6 +93,7 @@
   - [ ] Implement automated notifications
 
 ## Phase 6: Front-End Development
+
 - [ ] 17. Set up Next.js frontend
   - [ ] Configure API connection to Payload
   - [ ] Implement authentication on frontend
@@ -104,6 +110,7 @@
   - [ ] Implement analytics tracking
 
 ## Phase 7: Testing & Launch
+
 - [ ] 20. Comprehensive testing
   - [ ] Content management functionality
   - [ ] User authentication flows
@@ -124,6 +131,7 @@
   - [ ] Document maintenance procedures
 
 ## Phase 8: Post-Launch
+
 - [ ] 23. Training and documentation
   - [ ] Admin user training
   - [ ] Content editor documentation
