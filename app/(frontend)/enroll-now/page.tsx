@@ -210,15 +210,15 @@ const PersonalInfoForm = ({ formData, updateFormData }: {
     exit={{ opacity: 0, y: -20 }}
     className="pt-3 md:pt-4 px-0"
   >
-    <div className="mb-6">
-      <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+    <div className="mb-4 text-center">
+      <h2 className="text-2xl font-bold mb-1 text-primary">
         Tell us about yourself
       </h2>
-      <p className="text-muted-foreground">We&apos;ll use this information to set up your account</p>
+      <p className="text-muted-foreground text-sm">We&apos;ll use this information to set up your account</p>
     </div>
 
-    <div className="space-y-5 p-6 rounded-lg shadow-sm">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div className="space-y-4 p-2 rounded-lg">
+      <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="firstName">First Name*</Label>
           <Input 
@@ -239,7 +239,7 @@ const PersonalInfoForm = ({ formData, updateFormData }: {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="city">City*</Label>
           <Input 
@@ -312,14 +312,14 @@ const SchedulingStep = ({ formData, updateFormData }: {
       exit={{ opacity: 0, y: -20 }}
       className="pt-3 md:pt-4 px-0"
     >
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+      <div className="mb-4 text-center">
+        <h2 className="text-2xl font-bold mb-1 text-primary">
           When would you like to attend?
         </h2>
-        <p className="text-muted-foreground">Choose a day and time that works best for your schedule</p>
+        <p className="text-muted-foreground text-sm">Choose a day and time that works best for your schedule</p>
       </div>
 
-      <div className="p-6 rounded-lg shadow-sm space-y-6">
+      <div className="p-2 rounded-lg space-y-4">
         <div>
           <h3 className="text-lg font-medium mb-3">Choose a day of the week:</h3>
           <div className="grid grid-cols-3 md:grid-cols-7 gap-2">
@@ -381,14 +381,14 @@ const DocumentsStep = ({ formData, updateFormData }: {
     exit={{ opacity: 0, y: -20 }}
     className="pt-3 md:pt-4 px-0"
   >
-    <div className="mb-6">
-      <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+    <div className="mb-4 text-center">
+      <h2 className="text-2xl font-bold mb-1 text-primary">
         Review Program Agreement
       </h2>
-      <p className="text-muted-foreground">Please read and sign the following document</p>
+      <p className="text-muted-foreground text-sm">Please read and sign the following document</p>
     </div>
 
-    <div className="p-6 rounded-lg shadow-sm space-y-5">
+    <div className="p-2 rounded-lg space-y-4">
       <div className="h-56 overflow-y-auto p-4 rounded-lg border border-border mb-2">
         <p className="text-sm text-muted-foreground mb-3">
           This PROGRAM AGREEMENT (&quot;Agreement&quot;) is made and entered into as of the date of signature below, by
@@ -451,14 +451,14 @@ const PaymentStep = ({ formData, updateFormData }: {
       exit={{ opacity: 0, y: -20 }}
       className="pt-3 md:pt-4 px-0"
     >
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+      <div className="mb-4 text-center">
+        <h2 className="text-2xl font-bold mb-1 text-primary">
           Complete Your Payment
         </h2>
-        <p className="text-muted-foreground">Choose a payment option and enter your details</p>
+        <p className="text-muted-foreground text-sm">Choose a payment option and enter your details</p>
       </div>
 
-      <div className="p-6 rounded-lg shadow-sm space-y-6">
+      <div className="p-2 rounded-lg space-y-4">
         <div>
           <h3 className="text-lg font-medium mb-3">Enrollment Fee</h3>
           <div className="p-4 rounded-lg border border-border">
@@ -610,7 +610,7 @@ const SuccessPage = ({ formData }: { formData: FormData }) => (
     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
       <CheckCircle2 size={40} className="text-green-600" />
     </div>
-    <h2 className="text-3xl font-bold mb-3 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+    <h2 className="text-3xl font-bold mb-3 text-primary">
       Enrollment Complete!
     </h2>
     <p className="text-xl text-muted-foreground mb-6">
