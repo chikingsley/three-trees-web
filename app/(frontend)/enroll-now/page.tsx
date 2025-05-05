@@ -312,8 +312,8 @@ const SchedulingStep = ({ formData, updateFormData }: {
       exit={{ opacity: 0, y: -20 }}
       className="pt-3 md:pt-4 px-0"
     >
-      <div className="mb-4 text-center">
-        <h2 className="text-2xl font-bold mb-1 text-primary">
+      <div className="mb-2 text-center">
+        <h2 className="text-2xl font-bold text-primary">
           When would you like to attend?
         </h2>
         <p className="text-muted-foreground text-sm">Choose a day and time that works best for your schedule</p>
@@ -321,7 +321,7 @@ const SchedulingStep = ({ formData, updateFormData }: {
 
       <div className="p-2 rounded-lg space-y-4">
         <div>
-          <h3 className="text-lg font-medium mb-3">Choose a day of the week:</h3>
+          <h3 className="text-base font-medium mb-2">Choose a day of the week:</h3>
           <div className="grid grid-cols-3 md:grid-cols-7 gap-2">
             {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => (
               <Button
@@ -337,7 +337,7 @@ const SchedulingStep = ({ formData, updateFormData }: {
         </div>
 
         <div>
-          <h3 className="text-lg font-medium mb-3">Available time slots:</h3>
+          <h3 className="text-base font-medium mb-2">Available time slots:</h3>
           <div className="grid grid-cols-3 gap-3">
             {[
               "9:00 AM - 10:30 AM",
@@ -813,10 +813,10 @@ export default function EnrollmentForm() {
 
   return (
     <div className="flex flex-col min-h-screen bg-muted">
-      <main className="flex-1 pt-4 sm:pt-8 pb-4 sm:pb-6 flex flex-col" ref={contentRef}>
+      <main className="flex-1 pt-4 sm:pt-4 pb-4 sm:pb-6 flex flex-col" ref={contentRef}>
         {/* Full-width stepper without card wrapper */}
         {currentStep > 0 && currentStep < stepComponents.length - 1 && (
-          <div className="mb-6 sm:mb-8 container mx-auto px-4">
+          <div className="mb-2 sm:mb-4 container mx-auto px-4">
             <AnimatedStepper steps={enrollmentSteps} currentStep={stepperIndex} />
           </div>
         )}
