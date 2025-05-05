@@ -338,7 +338,7 @@ const SchedulingStep = ({ formData, updateFormData }: {
 
         <div>
           <h3 className="text-lg font-medium mb-3">Available time slots:</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             {[
               "9:00 AM - 10:30 AM",
               "11:00 AM - 12:30 PM",
@@ -350,17 +350,13 @@ const SchedulingStep = ({ formData, updateFormData }: {
               <div
                 key={slot}
                 className={`
-                  border rounded-lg p-3 cursor-pointer transition-colors
+                  border rounded-lg p-2 cursor-pointer transition-colors text-center
                   ${formData.selectedTime === slot ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50"}
                 `}
                 onClick={() => updateFormData({ selectedTime: slot })}
               >
-                <div className="flex items-center">
-                  <Calendar size={18} className="text-primary mr-2" />
-                  <span>{formData.selectedDay || "Any day"}</span>
-                </div>
-                <div className="font-medium mt-1">{slot}</div>
-                <div className="text-xs text-muted-foreground mt-1">8 spots available</div>
+                <div className="font-medium text-sm">{slot}</div>
+                <div className="text-xs text-muted-foreground mt-1">8 spots left</div>
               </div>
             ))}
           </div>
