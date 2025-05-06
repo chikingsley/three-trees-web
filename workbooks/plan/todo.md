@@ -3,7 +3,7 @@
 ## Phase 1: Initial Setup & Foundation
 
 - [x] 1. Set up development environment
-  - [x] Install Node.js and necessary development tools
+  - [x] Install NodeJS and necessary development tools
   - [x] Create GitHub repository for version control
   - [x] Set up local environment variables
 
@@ -79,7 +79,7 @@
 
 - [ ] 14. Set up payment processing
   - [ ] Integrate Polar.sh or Stripe
-  - [ ] Configure payment webhooks
+  - [ ] Configure payment web-hooks
   - [ ] Implement payment status tracking
 
 - [ ] 15. Implement video conferencing
@@ -94,7 +94,7 @@
 
 ## Phase 6: Front-End Development
 
-- [ ] 17. Set up Next.js frontend
+- [ ] 17. Set up NextJS frontend
   - [ ] Configure API connection to Payload
   - [ ] Implement authentication on frontend
   - [ ] Create responsive layouts and components

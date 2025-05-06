@@ -19,10 +19,27 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import Link from "next/link"
+
+// Add Square type definition
+declare global {
+  interface Window {
+    Square: {
+      payments: (applicationId: string, locationId: string) => {
+        card: () => Promise<{
+          attach: (selector: string) => Promise<void>;
+          tokenize: () => Promise<{ 
+            status: string; 
+            token?: string; 
+            errors?: Record<string, unknown> 
+          }>;
+        }>;
+      };
+    };
+  }
+}
 
 // Define interface for step items
 interface StepItem {
@@ -33,7 +50,7 @@ interface StepItem {
 }
 
 // Define interfaces for form data
-interface PersonalInfoData {
+interface PersonalInfo {
   firstName: string;
   lastName: string;
   city: string;
@@ -42,27 +59,27 @@ interface PersonalInfoData {
   programType: string;
 }
 
-interface SchedulingData {
+interface SchedulingInfo {
   selectedDay: string;
   selectedTime: string;
 }
 
-interface DocumentsData {
+interface DocumentInfo {
   agreedToTerms: boolean;
   signature: string;
 }
 
 interface PaymentData {
   paymentOption: string;
-  cardNumber: string;
-  expiry: string;
-  cvc: string;
+  cardNumber?: string;
+  expiry?: string;
+  cvc?: string;
 }
 
 interface FormData {
-  personalInfo: PersonalInfoData;
-  scheduling: SchedulingData;
-  documents: DocumentsData;
+  personalInfo: PersonalInfo;
+  scheduling: SchedulingInfo;
+  documents: DocumentInfo;
   payment: PaymentData;
 }
 
@@ -201,8 +218,8 @@ const Welcome = () => (
 
 // Update the PersonalInfoForm component to use and update form data
 const PersonalInfoForm = ({ formData, updateFormData }: { 
-  formData: PersonalInfoData; 
-  updateFormData: (data: Partial<PersonalInfoData>) => void 
+  formData: PersonalInfo; 
+  updateFormData: (data: Partial<PersonalInfo>) => void 
 }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -302,8 +319,8 @@ const PersonalInfoForm = ({ formData, updateFormData }: {
 
 // Update the SchedulingStep component to use and update form data
 const SchedulingStep = ({ formData, updateFormData }: {
-  formData: SchedulingData;
-  updateFormData: (data: Partial<SchedulingData>) => void
+  formData: SchedulingInfo;
+  updateFormData: (data: Partial<SchedulingInfo>) => void
 }) => {
   return (
     <motion.div
@@ -368,8 +385,8 @@ const SchedulingStep = ({ formData, updateFormData }: {
 
 // Update the DocumentsStep component to use and update form data
 const DocumentsStep = ({ formData, updateFormData }: {
-  formData: DocumentsData;
-  updateFormData: (data: Partial<DocumentsData>) => void
+  formData: DocumentInfo;
+  updateFormData: (data: Partial<DocumentInfo>) => void
 }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -437,9 +454,56 @@ const DocumentsStep = ({ formData, updateFormData }: {
 
 // Update the PaymentStep component to use and update form data
 const PaymentStep = ({ formData, updateFormData }: {
-  formData: PaymentData;
-  updateFormData: (data: Partial<PaymentData>) => void
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void
 }) => {
+  const [isSquareLoading, setIsSquareLoading] = useState(true);
+  const [cardPaymentStatus, setCardPaymentStatus] = useState("");
+  
+  // Calculate program duration and cost based on the selected program type
+  const getProgramDetails = () => {
+    const programType = formData.personalInfo?.programType || "";
+    
+    switch (programType) {
+      case "dv":
+        return { name: "Domestic Violence Intervention", weeks: 26, baseCost: 35 };
+      case "sort":
+        return { name: "Sex Offender Responsible Thinking", weeks: 78, baseCost: 45 };
+      case "am":
+        return { name: "Anger Management", weeks: 12, baseCost: 35 };
+      case "sa":
+        return { name: "Substance Abuse + Critical Thinking", weeks: 12, baseCost: 35 };
+      case "pp":
+        return { name: "Positive Parenting", weeks: 12, baseCost: 35 };
+      default:
+        return { name: "Selected Program", weeks: 12, baseCost: 35 };
+    }
+  };
+
+  const { name: programName, weeks: programWeeks, baseCost } = getProgramDetails();
+  const perSessionCost = baseCost;
+  const fullProgramCost = Math.floor(programWeeks * perSessionCost * 0.8); // 20% discount
+  
+  // Simplified payment handling
+  const handlePaymentClick = () => {
+    setCardPaymentStatus("Processing payment...");
+    
+    // Simulate payment processing
+    setTimeout(() => {
+      setCardPaymentStatus("Payment Successful");
+      // Move to the next step after successful payment
+      if (typeof window !== "undefined") {
+        const event = new CustomEvent("payment-complete");
+        window.dispatchEvent(event);
+      }
+    }, 1500);
+  };
+
+  // Clear loading state after component mounts
+  useEffect(() => {
+    setTimeout(() => setIsSquareLoading(false), 500);
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -451,142 +515,119 @@ const PaymentStep = ({ formData, updateFormData }: {
         <h2 className="text-2xl font-bold mb-1 text-primary">
           Complete Your Payment
         </h2>
-        <p className="text-muted-foreground text-sm">Choose a payment option and enter your details</p>
+        <p className="text-muted-foreground text-sm">Choose a payment option to complete your enrollment</p>
       </div>
 
-      <div className="p-2 rounded-lg space-y-4">
-        <div>
-          <h3 className="text-lg font-medium mb-3">Enrollment Fee</h3>
-          <div className="p-4 rounded-lg border border-border">
-            <div className="flex justify-between items-center">
-              <div>
-                <div className="font-medium">Program Enrollment Fee</div>
-                <div className="text-sm text-muted-foreground">One-time registration fee</div>
-              </div>
-              <div className="font-bold text-lg">$75.00</div>
+      <div className="p-2 rounded-lg space-y-6">
+        {/* Program summary and enrollment fee */}
+        <div className="p-4 rounded-lg border border-border space-y-3">
+          <div className="flex justify-between items-center pb-3 border-b">
+            <div>
+              <div className="font-medium">{programName}</div>
+              <div className="text-sm text-muted-foreground">{programWeeks} weeks duration</div>
+            </div>
+          </div>
+          <div className="flex justify-between items-center">
+            <div>
+              <div className="font-medium">Program Enrollment Fee</div>
+              <div className="text-sm text-muted-foreground">One-time registration fee</div>
+            </div>
+            <div className="font-bold text-lg">$75.00</div>
+          </div>
+          
+          {/* Payment choice buttons */}
+          <div className="pt-4 border-t mt-3">
+            <div className="text-sm font-medium mb-3">Choose a payment option:</div>
+            <div className="grid grid-cols-2 gap-3">
+              <button 
+                className={`p-3 rounded-lg border transition-colors ${
+                  formData.payment.paymentOption === "per-session" 
+                    ? "bg-primary/5 border-primary" 
+                    : "hover:bg-muted/50 border-border"
+                }`}
+                onClick={() => updateFormData({ payment: { ...formData.payment, paymentOption: "per-session" } })}
+              >
+                <div className="font-medium">Pay Per Session</div>
+                <div className="text-sm text-muted-foreground">${perSessionCost}/session</div>
+                <div className="text-xs mt-1">
+                  Total: ${(programWeeks * perSessionCost).toLocaleString()}
+                </div>
+              </button>
+              
+              <button 
+                className={`p-3 rounded-lg border transition-colors ${
+                  formData.payment.paymentOption === "full-program" 
+                    ? "bg-primary/5 border-primary" 
+                    : "hover:bg-muted/50 border-border"
+                }`}
+                onClick={() => updateFormData({ payment: { ...formData.payment, paymentOption: "full-program" } })}
+              >
+                <div className="font-medium">Pay in Full</div>
+                <div className="text-sm text-muted-foreground">Save 20%</div>
+                <div className="text-xs text-primary mt-1 font-medium">
+                  Total: ${fullProgramCost.toLocaleString()}
+                </div>
+              </button>
             </div>
           </div>
         </div>
 
-        <div>
-          <h3 className="text-lg font-medium mb-3">Prepayment Options</h3>
-          <p className="text-sm text-muted-foreground mb-3">
-            Save by prepaying for multiple sessions. Select an option below:
-          </p>
-
-          <RadioGroup 
-            value={formData.paymentOption} 
-            onValueChange={(value) => updateFormData({ paymentOption: value })}
-          >
-            <div className="space-y-3">
-              <div
-                className={`rounded-lg p-3 hover:bg-muted/50 cursor-pointer transition-colors border ${
-                  formData.paymentOption === "per-session" ? "border-primary bg-primary/5" : "border-border"
-                }`}
-                onClick={() => updateFormData({ paymentOption: "per-session" })}
-              >
-                <div className="flex justify-between items-center">
-                  <div className="flex items-start">
-                    <RadioGroupItem value="per-session" id="per-session" className="mt-1" />
-                    <div className="ml-3">
-                      <Label htmlFor="per-session" className="font-medium">
-                        Pay per session
-                      </Label>
-                      <p className="text-sm text-muted-foreground">$35 per session, paid weekly</p>
-                    </div>
-                  </div>
-                  <div className="font-medium">$35/session</div>
-                </div>
-              </div>
-
-              <div
-                className={`rounded-lg p-3 hover:bg-muted/50 cursor-pointer transition-colors border ${
-                  formData.paymentOption === "four-sessions" ? "border-primary bg-primary/5" : "border-border"
-                }`}
-                onClick={() => updateFormData({ paymentOption: "four-sessions" })}
-              >
-                <div className="flex justify-between items-center">
-                  <div className="flex items-start">
-                    <RadioGroupItem value="four-sessions" id="four-sessions" className="mt-1" />
-                    <div className="ml-3">
-                      <Label htmlFor="four-sessions" className="font-medium">
-                        4 Sessions (10% discount)
-                      </Label>
-                      <p className="text-sm text-muted-foreground">Prepay for 4 sessions</p>
-                    </div>
-                  </div>
-                  <div className="font-medium">$126.00</div>
-                </div>
-              </div>
-
-              <div
-                className={`rounded-lg p-3 hover:bg-muted/70 cursor-pointer transition-colors border ${
-                  formData.paymentOption === "full-program" ? "border-primary bg-primary/5" : "border-border"
-                }`}
-                onClick={() => updateFormData({ paymentOption: "full-program" })}
-              >
-                <div className="flex justify-between items-center">
-                  <div className="flex items-start">
-                    <RadioGroupItem value="full-program" id="full-program" className="mt-1" />
-                    <div className="ml-3">
-                      <Label htmlFor="full-program" className="font-medium">
-                        Full Program (20% discount)
-                      </Label>
-                      <p className="text-sm text-muted-foreground">Prepay for all 12 sessions</p>
-                      <p className="text-xs text-primary mt-1 font-medium">BEST VALUE</p>
-                    </div>
-                  </div>
-                  <div className="font-medium">$336.00</div>
-                </div>
-              </div>
-            </div>
-          </RadioGroup>
-        </div>
-
+        {/* Square Payments Integration */}
         <div>
           <h3 className="text-lg font-medium mb-3">Payment Method</h3>
           <div className="p-4 border border-border rounded-lg space-y-4">
-            <RadioGroup defaultValue="credit-card" className="flex mb-4">
-              <div className="border rounded-md px-4 py-2 flex items-center mr-2 bg-primary/5 border-primary">
-                <RadioGroupItem value="credit-card" id="credit-card" className="mr-2" />
-                <Label htmlFor="credit-card">Credit Card</Label>
-              </div>
-              <div className="border rounded-md px-4 py-2 flex items-center">
-                <RadioGroupItem value="paypal" id="paypal" className="mr-2" />
-                <Label htmlFor="paypal">PayPal</Label>
-              </div>
-            </RadioGroup>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="card-number">Card Number</Label>
-                <Input 
-                  id="card-number" 
-                  placeholder="1234 5678 9012 3456" 
-                  value={formData.cardNumber}
-                  onChange={(e) => updateFormData({ cardNumber: e.target.value })}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="expiry">Expiry Date</Label>
-                  <Input 
-                    id="expiry" 
-                    placeholder="MM/YY" 
-                    value={formData.expiry}
-                    onChange={(e) => updateFormData({ expiry: e.target.value })}
-                  />
+            <div className="mb-4 text-sm text-muted-foreground">
+              Total due today: <span className="font-bold text-foreground">
+                ${formData.payment.paymentOption === "per-session" ? 75 + perSessionCost : 75 + fullProgramCost}.00
+              </span>
+            </div>
+            
+            {/* Simplified payment form */}
+            <div>
+              {isSquareLoading ? (
+                <div className="mb-4 min-h-[100px] border border-border rounded-lg p-4 flex items-center justify-center">
+                  <p className="text-sm text-muted-foreground">Loading payment form...</p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="cvc">CVC</Label>
-                  <Input 
-                    id="cvc" 
-                    placeholder="123" 
-                    value={formData.cvc}
-                    onChange={(e) => updateFormData({ cvc: e.target.value })}
-                  />
+              ) : (
+                <div className="mb-4 min-h-[100px] border border-border rounded-lg p-4">
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="card-number">Card Number</Label>
+                      <Input id="card-number" placeholder="4111 1111 1111 1111" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="expiry">Expiry Date</Label>
+                        <Input id="expiry" placeholder="MM/YY" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="cvc">CVC</Label>
+                        <Input id="cvc" placeholder="123" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
+              
+              {cardPaymentStatus && (
+                <p className={`text-sm ${
+                  cardPaymentStatus.includes("Success") 
+                    ? "text-green-600" 
+                    : cardPaymentStatus.includes("Processing") 
+                      ? "text-blue-600" 
+                      : "text-red-600"
+                } mt-2 text-center`}>
+                  {cardPaymentStatus}
+                </p>
+              )}
+              
+              <button 
+                onClick={handlePaymentClick}
+                className="w-full mt-4 bg-primary text-white py-2 rounded-md font-medium hover:bg-primary/90 transition-colors"
+                disabled={isSquareLoading || cardPaymentStatus.includes("Processing") || cardPaymentStatus.includes("Success")}
+              >
+                Pay Now
+              </button>
             </div>
           </div>
         </div>
@@ -642,7 +683,7 @@ const SuccessPage = ({ formData }: { formData: FormData }) => (
 // Update main render: remove WizardShell and implement state management and history
 export default function EnrollmentForm() {
   // Form data state to persist between steps
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     personalInfo: {
       firstName: "",
       lastName: "",
@@ -698,13 +739,10 @@ export default function EnrollmentForm() {
     }));
   };
 
-  const updatePayment = (data: Partial<typeof formData.payment>) => {
+  const updatePayment = (data: Partial<FormData>) => {
     setFormData(prev => ({
       ...prev,
-      payment: {
-        ...prev.payment,
-        ...data
-      }
+      ...data
     }));
   };
 
@@ -758,7 +796,7 @@ export default function EnrollmentForm() {
     />,
     <PaymentStep 
       key="payment" 
-      formData={formData.payment} 
+      formData={formData} 
       updateFormData={updatePayment} 
     />,
     <SuccessPage key="success" formData={formData} />,
@@ -810,6 +848,20 @@ export default function EnrollmentForm() {
 
   // Calculate which step to highlight in the stepper (welcome and success are not in the stepper)
   const stepperIndex = currentStep === 0 ? 0 : currentStep >= stepComponents.length - 1 ? 3 : currentStep - 1;
+
+  // Handle payment completion
+  useEffect(() => {
+    const handlePaymentComplete = () => {
+      // Move to the success page
+      setCurrentStep(stepComponents.length - 1);
+    };
+    
+    window.addEventListener("payment-complete", handlePaymentComplete);
+    
+    return () => {
+      window.removeEventListener("payment-complete", handlePaymentComplete);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen bg-muted">
