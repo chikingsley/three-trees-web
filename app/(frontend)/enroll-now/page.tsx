@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   ArrowLeft,
   ArrowRight,
+  CreditCard,
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
@@ -21,25 +22,67 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import Link from "next/link"
 
-// Add Square type definition
-declare global {
-  interface Window {
-    Square: {
-      payments: (applicationId: string, locationId: string) => {
-        card: () => Promise<{
-          attach: (selector: string) => Promise<void>;
-          tokenize: () => Promise<{ 
-            status: string; 
-            token?: string; 
-            errors?: Record<string, unknown> 
-          }>;
-        }>;
-      };
-    };
-  }
+// Program data with durations from the provided list
+type Program = {
+  id: string
+  name: string
+  duration: string
+  description: string
+  weeks: number
+  costPerSession: number
+  enrollmentFee: number
 }
+
+type PaymentOption = 'per-session' | 'full-program'
+
+const PROGRAM_DATA: Program[] = [
+  {
+    id: "dv",
+    name: "Domestic Violence",
+    duration: "26 weeks",
+    description: "For individuals addressing domestic violence issues",
+    weeks: 26,
+    costPerSession: 35,
+    enrollmentFee: 50,
+  },
+  {
+    id: "sort",
+    name: "Sex Offender Responsible Thinking",
+    duration: "18 months",
+    description: "Specialized program for sex offender rehabilitation",
+    weeks: 78,
+    costPerSession: 40,
+    enrollmentFee: 90,
+  },
+  {
+    id: "am",
+    name: "Anger Management",
+    duration: "12 weeks",
+    description: "Learn to manage anger and emotional responses",
+    weeks: 12,
+    costPerSession: 35,
+    enrollmentFee: 50,
+  },
+  {
+    id: "sact",
+    name: "Substance Abuse + Critical Thinking",
+    duration: "12 weeks",
+    description: "Address substance abuse issues with critical thinking skills",
+    weeks: 12,
+    costPerSession: 35,
+    enrollmentFee: 50,
+  },
+  {
+    id: "pp",
+    name: "Positive Parenting",
+    duration: "12 weeks",
+    description: "Develop effective parenting skills and techniques",
+    weeks: 12,
+    costPerSession: 35,
+    enrollmentFee: 50,
+  },
+]
 
 // Define interface for step items
 interface StepItem {
@@ -51,43 +94,43 @@ interface StepItem {
 
 // Define interfaces for form data
 interface PersonalInfo {
-  firstName: string;
-  lastName: string;
-  city: string;
-  county: string;
-  referralSource: string;
-  programType: string;
+  firstName: string
+  lastName: string
+  city: string
+  county: string
+  referralSource: string
 }
 
 interface SchedulingInfo {
-  selectedDay: string;
-  selectedTime: string;
+  selectedDay: string
+  selectedTime: string
 }
 
 interface DocumentInfo {
-  agreedToTerms: boolean;
-  signature: string;
+  agreedToTerms: boolean
+  signature: string
 }
 
 interface PaymentData {
-  paymentOption: string;
-  cardNumber?: string;
-  expiry?: string;
-  cvc?: string;
+  paymentOption: string
+  cardNumber?: string
+  expiry?: string
+  cvc?: string
 }
 
 interface FormData {
-  personalInfo: PersonalInfo;
-  scheduling: SchedulingInfo;
-  documents: DocumentInfo;
-  payment: PaymentData;
+  personalInfo: PersonalInfo
+  scheduling: SchedulingInfo
+  documents: DocumentInfo
+  payment: PaymentData
+  selectedPrograms: string[]
 }
 
-// Update the AnimatedStepper component to fix the centering and line positioning issues
+// Update the AnimatedStepper component to be more responsive down to 320px
 const AnimatedStepper = ({ steps, currentStep }: { steps: StepItem[]; currentStep: number }) => {
   return (
-    <div className="w-full max-w-3xl mx-auto">
-      <ol className="flex items-center justify-between">
+    <div className="w-full max-w-3xl mx-auto overflow-x-auto pb-2">
+      <ol className="flex items-center justify-between min-w-[500px]">
         {steps.map((step, index) => {
           const isCompleted = index < currentStep
           const isActive = index === currentStep
@@ -98,7 +141,7 @@ const AnimatedStepper = ({ steps, currentStep }: { steps: StepItem[]; currentSte
 
           return (
             <li key={step.id} className="flex items-center flex-1 relative">
-              {/* Connecting Line - Positioned BEHIND the icon with absolute positioning */}
+              {/* Connecting Line */}
               {!isLastStep && (
                 <div className="absolute top-6 left-1/2 right-0 h-[2px] bg-gray-200 w-full z-0">
                   <div
@@ -111,7 +154,7 @@ const AnimatedStepper = ({ steps, currentStep }: { steps: StepItem[]; currentSte
                 </div>
               )}
 
-              {/* Icon Container - Positioned ABOVE the line with z-index */}
+              {/* Icon Container */}
               <div className="flex flex-col items-center w-full relative z-10">
                 <div
                   className={`
@@ -152,85 +195,99 @@ const AnimatedStepper = ({ steps, currentStep }: { steps: StepItem[]; currentSte
 }
 
 // Step Item Component for Welcome section
-const StepItem = ({ icon, iconLarge, title, description }: { icon: React.ReactNode, iconLarge: React.ReactNode, title: string, description: string }) => (
+const StepItem = ({
+  icon,
+  iconLarge,
+  title,
+  description,
+}: {
+  icon: React.ReactNode
+  iconLarge: React.ReactNode
+  title: string
+  description: string
+}) => (
   <div className="flex items-start">
-    {/* Adjusted padding/margin with responsiveness */}
     <div className="bg-primary/10 p-1.5 md:p-2 rounded-full mr-3 md:mr-4 shrink-0 flex items-center justify-center">
       <div className="md:hidden">{icon}</div>
       <div className="hidden md:block">{iconLarge}</div>
     </div>
     <div>
-      {/* Responsive text sizes */}
       <h3 className="font-medium text-sm md:text-base">{title}</h3>
       <p className="text-xs md:text-sm text-muted-foreground">{description}</p>
     </div>
   </div>
-);
+)
 
-// Update the Welcome component using StepItem and responsive styles but without Card
+// Welcome component
 const Welcome = () => (
-  <div className="pt-6 md:pt-10 px-6 md:px-8 flex flex-col flex-1 items-center justify-center">
-    {/* Header Section - Added responsive styles */}
+  <div className="pt-10 md:pt-10 px-6 md:px-8 flex flex-col flex-1 items-center justify-center">
+    {/* Header Section */}
     <div className="text-center mb-8 md:mb-10 max-w-md mx-auto">
-      {/* Removed message square icon */}
-      <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-5 text-primary">
-        Welcome to Three Trees
-      </h1>
+      <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-5 text-primary">Welcome to Three Trees</h1>
       <p className="text-lg md:text-xl text-muted-foreground mb-3">
-        Complete your enrollment in <span className="font-medium text-primary">5 minutes or less</span>
+        Complete your enrollment in <span className="font-medium text-primary">less than 2 minutes</span>
       </p>
-      <p className="text-sm md:text-base text-muted-foreground">We&apos;ll guide you through each step of the process</p>
+      <p className="text-sm md:text-base text-muted-foreground">
+        We&apos;ll guide you through each step of the process
+      </p>
     </div>
 
-    {/* Steps Section - Using StepItem */}
+    {/* Steps Section */}
     <div className="space-y-4 text-left mb-8 max-w-md mx-auto w-full">
-      <StepItem 
+      <StepItem
         icon={<UserIcon size={18} className="text-primary" />}
         iconLarge={<UserIcon size={20} className="text-primary" />}
         title="Personal Information"
         description="Tell us about yourself and your referral source"
       />
-      
-      <StepItem 
-        icon={<Calendar size={18} className="text-primary" />}
-        iconLarge={<Calendar size={20} className="text-primary" />}
-        title="Schedule Your Sessions"
-        description="Choose from available time slots that work for you"
-      />
-      
-      <StepItem 
+
+      <StepItem
         icon={<FileText size={18} className="text-primary" />}
         iconLarge={<FileText size={20} className="text-primary" />}
-        title="Review Documents"
-        description="Review and sign necessary program agreements"
+        title="Program Selection"
+        description="Choose the programs you need to enroll in"
       />
-      
-      <StepItem 
+
+      <StepItem
         icon={<CircleDollarSign size={18} className="text-primary" />}
         iconLarge={<CircleDollarSign size={20} className="text-primary" />}
         title="Complete Payment"
         description="Pay enrollment fee and select prepayment options"
       />
+
+      <StepItem
+        icon={<Calendar size={18} className="text-primary" />}
+        iconLarge={<Calendar size={20} className="text-primary" />}
+        title="Schedule Your Sessions"
+        description="Choose from available time slots that work for you"
+      />
+
+      <StepItem
+        icon={<FileText size={18} className="text-primary" />}
+        iconLarge={<FileText size={20} className="text-primary" />}
+        title="Review Documents"
+        description="Review and sign necessary program agreements"
+      />
     </div>
-    {/* Removed Get Started button - handled by main page navigation */}
   </div>
 )
 
-// Update the PersonalInfoForm component to use and update form data
-const PersonalInfoForm = ({ formData, updateFormData }: { 
-  formData: PersonalInfo; 
-  updateFormData: (data: Partial<PersonalInfo>) => void 
+// Personal Info Form component
+const PersonalInfoForm = ({
+  formData,
+  updateFormData,
+}: {
+  formData: PersonalInfo
+  updateFormData: (data: Partial<PersonalInfo>) => void
 }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
-    className="pt-3 md:pt-4 px-0"
+    className="pt-2 md:pt-2 px-0"
   >
     <div className="mb-4 text-center">
-      <h2 className="text-2xl font-bold mb-1 text-primary">
-        Tell us about yourself
-      </h2>
+      <h2 className="text-2xl font-bold mb-1 text-primary">Tell us about yourself</h2>
       <p className="text-muted-foreground text-sm">We&apos;ll use this information to set up your account</p>
     </div>
 
@@ -238,18 +295,18 @@ const PersonalInfoForm = ({ formData, updateFormData }: {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="firstName">First Name*</Label>
-          <Input 
-            id="firstName" 
-            placeholder="Enter your first name" 
+          <Input
+            id="firstName"
+            placeholder="Enter your first name"
             value={formData.firstName}
             onChange={(e) => updateFormData({ firstName: e.target.value })}
           />
         </div>
         <div className="space-y-2">
           <Label htmlFor="lastName">Last Name*</Label>
-          <Input 
-            id="lastName" 
-            placeholder="Enter your last name" 
+          <Input
+            id="lastName"
+            placeholder="Enter your last name"
             value={formData.lastName}
             onChange={(e) => updateFormData({ lastName: e.target.value })}
           />
@@ -259,18 +316,18 @@ const PersonalInfoForm = ({ formData, updateFormData }: {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="city">City*</Label>
-          <Input 
-            id="city" 
-            placeholder="Your city" 
+          <Input
+            id="city"
+            placeholder="Your city"
             value={formData.city}
             onChange={(e) => updateFormData({ city: e.target.value })}
           />
         </div>
         <div className="space-y-2">
           <Label htmlFor="county">County*</Label>
-          <Input 
-            id="county" 
-            placeholder="Your county" 
+          <Input
+            id="county"
+            placeholder="Your county"
             value={formData.county}
             onChange={(e) => updateFormData({ county: e.target.value })}
           />
@@ -279,47 +336,351 @@ const PersonalInfoForm = ({ formData, updateFormData }: {
 
       <div className="space-y-2">
         <Label htmlFor="referralSource">Referral Source*</Label>
-        <Select 
-          value={formData.referralSource}
-          onValueChange={(value) => updateFormData({ referralSource: value })}
-        >
-          <SelectTrigger id="referralSource">
-            <SelectValue placeholder="Select your referral source" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="court">Court Mandated</SelectItem>
-            <SelectItem value="probation">Probation Officer</SelectItem>
-            <SelectItem value="attorney">Attorney</SelectItem>
-            <SelectItem value="self">Self Referral</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="programType">Program Type*</Label>
-        <Select
-          value={formData.programType}
-          onValueChange={(value) => updateFormData({ programType: value })}
-        >
-          <SelectTrigger id="programType">
-            <SelectValue placeholder="Select program type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="dv">Domestic Violence Intervention</SelectItem>
-            <SelectItem value="sa">Substance Abuse Treatment</SelectItem>
-            <SelectItem value="am">Anger Management</SelectItem>
-            <SelectItem value="pc">Parenting Classes</SelectItem>
-            <SelectItem value="dui">DUI Education Program</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="w-full">
+          <Select value={formData.referralSource} onValueChange={(value) => updateFormData({ referralSource: value })}>
+            <SelectTrigger id="referralSource" className="w-full min-w-0 text-sm md:text-base px-3 py-2 md:py-2.5">
+              <SelectValue placeholder="Select your referral source" />
+            </SelectTrigger>
+            <SelectContent className="w-full min-w-0">
+              <SelectItem value="court">Court Mandated</SelectItem>
+              <SelectItem value="probation">Probation Officer</SelectItem>
+              <SelectItem value="attorney">Attorney</SelectItem>
+              <SelectItem value="self">Self Referral</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </div>
   </motion.div>
 )
 
-// Update the SchedulingStep component to use and update form data
-const SchedulingStep = ({ formData, updateFormData }: {
-  formData: SchedulingInfo;
+// Program Selection component
+const ProgramSelection = ({
+  selectedPrograms,
+  updateSelectedPrograms,
+}: {
+  selectedPrograms: string[]
+  updateSelectedPrograms: (programs: string[]) => void
+}) => {
+  const toggleProgram = (programId: string) => {
+    if (selectedPrograms.includes(programId)) {
+      updateSelectedPrograms(selectedPrograms.filter((id) => id !== programId))
+    } else {
+      updateSelectedPrograms([...selectedPrograms, programId])
+    }
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="pt-8 md:pt-8 px-0"
+    >
+      <div className="mb-4 text-center">
+        <h2 className="text-2xl font-bold mb-1 text-primary">Select Your Programs</h2>
+        <p className="text-muted-foreground text-sm">
+          Choose the programs you need to enroll in (you can select multiple)
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+        {PROGRAM_DATA.map((program) => (
+          <div
+            key={program.id}
+            className={`
+              border rounded-lg p-3 cursor-pointer transition-all
+              ${selectedPrograms.includes(program.id) ? "bg-white border-green-500" : "hover:bg-gray-50 border-border"}
+            `}
+            onClick={() => toggleProgram(program.id)}
+          >
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="font-medium text-sm">{program.name}</h3>
+                <p className="text-xs text-muted-foreground mt-1">{program.description}</p>
+                <div className="flex items-center mt-1 text-xs">
+                  <span className="text-muted-foreground">Duration:</span>
+                  <span className="ml-1 font-medium">{program.duration}</span>
+                </div>
+              </div>
+              <div className="ml-2 shrink-0">
+                {selectedPrograms.includes(program.id) ? (
+                  <div className="h-5 w-5 rounded-full bg-green-100 flex items-center justify-center">
+                    <CheckCircle2 size={14} className="text-green-600" />
+                  </div>
+                ) : (
+                  <div className="h-5 w-5 rounded-full border-2 border-muted"></div>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  )
+}
+
+// Payment Step component
+const PaymentStep = ({ formData, updateFormData }: { formData: FormData; updateFormData: (data: Partial<FormData>) => void }) => {
+  // Calculate total enrollment fees
+  const totalEnrollmentFees = formData.selectedPrograms.reduce((acc, programId) => {
+    const program = PROGRAM_DATA.find((p) => p.id === programId)
+    return acc + (program ? program.enrollmentFee : 0)
+  }, 0)
+
+  // Calculate costs for each program
+  const calculateTotalCost = (program: Program, method: PaymentOption) => {
+    const sessionCost = program.weeks * program.costPerSession
+    if (method === "full-program") {
+      return sessionCost * 0.95 // 5% discount
+    }
+    return sessionCost
+  }
+
+  // Calculate original total (before discount)
+  const calculateOriginalTotal = () => {
+    return formData.selectedPrograms.reduce((acc, programId) => {
+      const program = PROGRAM_DATA.find((p) => p.id === programId)
+      return acc + (program ? program.weeks * program.costPerSession : 0)
+    }, 0)
+  }
+
+  // Calculate total due today
+  const calculateDueToday = (method: PaymentOption) => {
+    if (method === "full-program") {
+      return (
+        totalEnrollmentFees +
+        formData.selectedPrograms.reduce((acc, programId) => {
+          const program = PROGRAM_DATA.find((p) => p.id === programId)
+          return acc + (program ? calculateTotalCost(program, method) : 0)
+        }, 0)
+      )
+    }
+
+    // For per-session, it's only enrollment fees
+    return totalEnrollmentFees
+  }
+
+  const originalTotal = calculateOriginalTotal()
+  const discountedTotal = originalTotal * 0.95
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="pt-8 md:pt-8 px-0"
+    >
+      <div className="mb-4 text-center">
+        <h2 className="text-2xl font-bold mb-1 text-primary">Complete Your Payment</h2>
+        <p className="text-muted-foreground text-sm">Choose a payment option to complete your enrollment</p>
+      </div>
+
+      <div className="space-y-6">
+        <div className="border rounded-lg overflow-hidden">
+          {/* Program Cards - Compact Version */}
+          <div className="p-0">
+            <table className="w-full">
+              <thead className="bg-white rounded-t-lg">
+                <tr>
+                  <th className="text-left py-2 px-3 text-sm font-medium">Program</th>
+                  <th className="text-center py-2 px-3 text-sm font-medium">Duration</th>
+                  <th className="text-right py-2 px-3 text-sm font-medium">Per Session</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y p-4">
+                {formData.selectedPrograms.map((programId) => {
+                  const program = PROGRAM_DATA.find((p) => p.id === programId)
+                  if (!program) return null
+
+                  return (
+                    <tr key={program.id}>
+                      <td className="py-3 px-4">
+                        <div className="font-medium">{program.name}</div>
+                        <div className="text-xs text-muted-foreground mt-1 pl-1">
+                          Enrollment fee: ${program.enrollmentFee.toFixed(2)}
+                        </div>
+                      </td>
+                      <td className="py-3 px-3 text-center">{program.duration}</td>
+                      <td className="py-3 px-3 text-right">${program.costPerSession.toFixed(2)}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+              <tfoot className="bg-muted/10">
+                <tr>
+                  <td colSpan={2} className="py-3 px-3 text-right text-sm">
+                    Total Enrollment Fees (due today):
+                  </td>
+                  <td className="py-3 px-3 text-right font-medium">${totalEnrollmentFees.toFixed(2)}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        {/* Payment Options */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <button
+            className={`relative p-5 rounded-lg border transition-colors ${
+              formData.payment.paymentOption === "per-session"
+                ? "bg-white border-green-500"
+                : "bg-muted/10 border-border"
+            }`}
+            onClick={() =>
+              updateFormData({
+                payment: { ...formData.payment, paymentOption: "per-session" },
+              })
+            }
+          >
+            <div className="text-center">
+              <Calendar className="w-8 h-8 mx-auto mb-3 text-primary" />
+              <div className="font-medium mb-1">Pay Per Session</div>
+              <div className="text-sm text-muted-foreground mb-2">
+                Pay enrollment fee(s) now, remaining sessions as you attend
+              </div>
+              <div
+                className={`text-base font-semibold ${formData.payment.paymentOption === "per-session" ? "text-green-600" : "text-primary"}`}
+              >
+                Due today: ${calculateDueToday(formData.payment.paymentOption as PaymentOption).toFixed(2)}
+              </div>
+            </div>
+            {formData.payment.paymentOption === "per-session" && (
+              <div className="absolute top-3 right-3">
+                <div className="h-5 w-5 rounded-full bg-green-100 flex items-center justify-center">
+                  <CheckCircle2 className="w-4 h-4 text-green-600" />
+                </div>
+              </div>
+            )}
+          </button>
+
+          <button
+            className={`relative p-5 rounded-lg border transition-colors ${
+              formData.payment.paymentOption === "full-program"
+                ? "bg-white border-green-500"
+                : "bg-muted/10 border-border"
+            }`}
+            onClick={() =>
+              updateFormData({
+                payment: { ...formData.payment, paymentOption: "full-program" },
+              })
+            }
+          >
+            <div className="text-center">
+              <CircleDollarSign className="w-8 h-8 mx-auto mb-3 text-primary" />
+              <div className="font-medium mb-1">
+                Prepay All Sessions <span className="text-green-600">(Save 5%)</span>
+              </div>
+              <div className="text-sm text-muted-foreground mb-2">
+                <span className="line-through">${originalTotal.toFixed(2)}</span>{" "}
+                <span>${discountedTotal.toFixed(2)}</span> + ${totalEnrollmentFees.toFixed(2)} enrollment fee(s)
+              </div>
+              <div
+                className={`text-base font-semibold ${formData.payment.paymentOption === "full-program" ? "text-green-600" : "text-primary"}`}
+              >
+                Due today: ${calculateDueToday(formData.payment.paymentOption as PaymentOption).toFixed(2)}
+              </div>
+            </div>
+            {formData.payment.paymentOption === "full-program" && (
+              <div className="absolute top-3 right-3">
+                <div className="h-5 w-5 rounded-full bg-green-100 flex items-center justify-center">
+                  <CheckCircle2 className="w-4 h-4 text-green-600" />
+                </div>
+              </div>
+            )}
+          </button>
+        </div>
+
+        {/* Payment Form */}
+        <div className="border rounded-lg overflow-hidden">
+          <div className="p-4 bg-muted/30 border-b">
+            <div className="flex justify-between items-center">
+              <h3 className="font-medium">Payment Method</h3>
+              <div className="text-sm">
+                <span className="text-muted-foreground">Total due today:</span>{" "}
+                <span className="font-bold ml-1 text-primary">
+                  ${calculateDueToday(formData.payment.paymentOption as PaymentOption).toFixed(2)}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4">
+            <div className="space-y-4">
+              {/* Clean Card Input */}
+              <div className="space-y-4">
+                <div className="flex items-center mb-3">
+                  <CreditCard size={20} className="text-muted-foreground mr-2" />
+                  <span className="font-medium">Card Information</span>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm mb-1">Card Number</label>
+                    <input
+                      type="text"
+                      placeholder="1234 5678 9012 3456"
+                      className="w-full p-3 border rounded-md text-sm"
+                      value={formData.payment.cardNumber || ""}
+                      onChange={(e) =>
+                        updateFormData({
+                          payment: { ...formData.payment, cardNumber: e.target.value },
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm mb-1">Expiration Date</label>
+                      <input
+                        type="text"
+                        placeholder="MM/YY"
+                        className="w-full p-3 border rounded-md text-sm"
+                        value={formData.payment.expiry || ""}
+                        onChange={(e) =>
+                          updateFormData({
+                            payment: { ...formData.payment, expiry: e.target.value },
+                          })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm mb-1">CVC</label>
+                      <input
+                        type="text"
+                        placeholder="123"
+                        className="w-full p-3 border rounded-md text-sm"
+                        value={formData.payment.cvc || ""}
+                        onChange={(e) =>
+                          updateFormData({
+                            payment: { ...formData.payment, cvc: e.target.value },
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button className="w-full bg-primary text-white py-3 rounded-md font-medium hover:bg-primary/90 transition-colors mt-4 flex items-center justify-center">
+                Pay ${calculateDueToday(formData.payment.paymentOption as PaymentOption).toFixed(2)} Now
+                <ArrowRight size={16} className="ml-2" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+// Scheduling Step component
+const SchedulingStep = ({
+  formData,
+  updateFormData,
+}: {
+  formData: SchedulingInfo
   updateFormData: (data: Partial<SchedulingInfo>) => void
 }) => {
   return (
@@ -327,12 +688,10 @@ const SchedulingStep = ({ formData, updateFormData }: {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="pt-3 md:pt-4 px-0"
+      className="pt-8 md:pt-8 px-0"
     >
       <div className="mb-2 text-center">
-        <h2 className="text-2xl font-bold text-primary">
-          When would you like to attend?
-        </h2>
+        <h2 className="text-2xl font-bold text-primary">When would you like to attend?</h2>
         <p className="text-muted-foreground text-sm">Choose a day and time that works best for your schedule</p>
       </div>
 
@@ -383,21 +742,22 @@ const SchedulingStep = ({ formData, updateFormData }: {
   )
 }
 
-// Update the DocumentsStep component to use and update form data
-const DocumentsStep = ({ formData, updateFormData }: {
-  formData: DocumentInfo;
+// Documents Step component
+const DocumentsStep = ({
+  formData,
+  updateFormData,
+}: {
+  formData: DocumentInfo
   updateFormData: (data: Partial<DocumentInfo>) => void
 }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
-    className="pt-3 md:pt-4 px-0"
+    className="pt-8 md:pt-8 px-0"
   >
     <div className="mb-4 text-center">
-      <h2 className="text-2xl font-bold mb-1 text-primary">
-        Review Program Agreement
-      </h2>
+      <h2 className="text-2xl font-bold mb-1 text-primary">Review Program Agreement</h2>
       <p className="text-muted-foreground text-sm">Please read and sign the following document</p>
     </div>
 
@@ -425,8 +785,8 @@ const DocumentsStep = ({ formData, updateFormData }: {
       </div>
 
       <div className="flex items-center p-3 rounded-lg">
-        <Checkbox 
-          id="agree" 
+        <Checkbox
+          id="agree"
           checked={formData.agreedToTerms}
           onCheckedChange={(checked) => updateFormData({ agreedToTerms: checked === true })}
         />
@@ -440,8 +800,8 @@ const DocumentsStep = ({ formData, updateFormData }: {
         <div className="border border-border rounded-md h-24 flex items-center justify-center">
           <span className="text-muted-foreground">Sign here</span>
         </div>
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           className="mt-2 p-0 h-auto text-primary"
           onClick={() => updateFormData({ signature: "" })}
         >
@@ -452,206 +812,22 @@ const DocumentsStep = ({ formData, updateFormData }: {
   </motion.div>
 )
 
-// Update the PaymentStep component to use and update form data
-const PaymentStep = ({ formData, updateFormData }: {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void
-}) => {
-  const [isSquareLoading, setIsSquareLoading] = useState(true);
-  const [cardPaymentStatus, setCardPaymentStatus] = useState("");
-  
-  // Calculate program duration and cost based on the selected program type
-  const getProgramDetails = () => {
-    const programType = formData.personalInfo?.programType || "";
-    
-    switch (programType) {
-      case "dv":
-        return { name: "Domestic Violence Intervention", weeks: 26, baseCost: 35 };
-      case "sort":
-        return { name: "Sex Offender Responsible Thinking", weeks: 78, baseCost: 45 };
-      case "am":
-        return { name: "Anger Management", weeks: 12, baseCost: 35 };
-      case "sa":
-        return { name: "Substance Abuse + Critical Thinking", weeks: 12, baseCost: 35 };
-      case "pp":
-        return { name: "Positive Parenting", weeks: 12, baseCost: 35 };
-      default:
-        return { name: "Selected Program", weeks: 12, baseCost: 35 };
-    }
-  };
-
-  const { name: programName, weeks: programWeeks, baseCost } = getProgramDetails();
-  const perSessionCost = baseCost;
-  const fullProgramCost = Math.floor(programWeeks * perSessionCost * 0.8); // 20% discount
-  
-  // Simplified payment handling
-  const handlePaymentClick = () => {
-    setCardPaymentStatus("Processing payment...");
-    
-    // Simulate payment processing
-    setTimeout(() => {
-      setCardPaymentStatus("Payment Successful");
-      // Move to the next step after successful payment
-      if (typeof window !== "undefined") {
-        const event = new CustomEvent("payment-complete");
-        window.dispatchEvent(event);
-      }
-    }, 1500);
-  };
-
-  // Clear loading state after component mounts
-  useEffect(() => {
-    setTimeout(() => setIsSquareLoading(false), 500);
-  }, []);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="pt-3 md:pt-4 px-0"
-    >
-      <div className="mb-4 text-center">
-        <h2 className="text-2xl font-bold mb-1 text-primary">
-          Complete Your Payment
-        </h2>
-        <p className="text-muted-foreground text-sm">Choose a payment option to complete your enrollment</p>
-      </div>
-
-      <div className="p-2 rounded-lg space-y-6">
-        {/* Program summary and enrollment fee */}
-        <div className="p-4 rounded-lg border border-border space-y-3">
-          <div className="flex justify-between items-center pb-3 border-b">
-            <div>
-              <div className="font-medium">{programName}</div>
-              <div className="text-sm text-muted-foreground">{programWeeks} weeks duration</div>
-            </div>
-          </div>
-          <div className="flex justify-between items-center">
-            <div>
-              <div className="font-medium">Program Enrollment Fee</div>
-              <div className="text-sm text-muted-foreground">One-time registration fee</div>
-            </div>
-            <div className="font-bold text-lg">$75.00</div>
-          </div>
-          
-          {/* Payment choice buttons */}
-          <div className="pt-4 border-t mt-3">
-            <div className="text-sm font-medium mb-3">Choose a payment option:</div>
-            <div className="grid grid-cols-2 gap-3">
-              <button 
-                className={`p-3 rounded-lg border transition-colors ${
-                  formData.payment.paymentOption === "per-session" 
-                    ? "bg-primary/5 border-primary" 
-                    : "hover:bg-muted/50 border-border"
-                }`}
-                onClick={() => updateFormData({ payment: { ...formData.payment, paymentOption: "per-session" } })}
-              >
-                <div className="font-medium">Pay Per Session</div>
-                <div className="text-sm text-muted-foreground">${perSessionCost}/session</div>
-                <div className="text-xs mt-1">
-                  Total: ${(programWeeks * perSessionCost).toLocaleString()}
-                </div>
-              </button>
-              
-              <button 
-                className={`p-3 rounded-lg border transition-colors ${
-                  formData.payment.paymentOption === "full-program" 
-                    ? "bg-primary/5 border-primary" 
-                    : "hover:bg-muted/50 border-border"
-                }`}
-                onClick={() => updateFormData({ payment: { ...formData.payment, paymentOption: "full-program" } })}
-              >
-                <div className="font-medium">Pay in Full</div>
-                <div className="text-sm text-muted-foreground">Save 20%</div>
-                <div className="text-xs text-primary mt-1 font-medium">
-                  Total: ${fullProgramCost.toLocaleString()}
-                </div>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Square Payments Integration */}
-        <div>
-          <h3 className="text-lg font-medium mb-3">Payment Method</h3>
-          <div className="p-4 border border-border rounded-lg space-y-4">
-            <div className="mb-4 text-sm text-muted-foreground">
-              Total due today: <span className="font-bold text-foreground">
-                ${formData.payment.paymentOption === "per-session" ? 75 + perSessionCost : 75 + fullProgramCost}.00
-              </span>
-            </div>
-            
-            {/* Simplified payment form */}
-            <div>
-              {isSquareLoading ? (
-                <div className="mb-4 min-h-[100px] border border-border rounded-lg p-4 flex items-center justify-center">
-                  <p className="text-sm text-muted-foreground">Loading payment form...</p>
-                </div>
-              ) : (
-                <div className="mb-4 min-h-[100px] border border-border rounded-lg p-4">
-                  <div className="grid grid-cols-1 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="card-number">Card Number</Label>
-                      <Input id="card-number" placeholder="4111 1111 1111 1111" />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="expiry">Expiry Date</Label>
-                        <Input id="expiry" placeholder="MM/YY" />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="cvc">CVC</Label>
-                        <Input id="cvc" placeholder="123" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              {cardPaymentStatus && (
-                <p className={`text-sm ${
-                  cardPaymentStatus.includes("Success") 
-                    ? "text-green-600" 
-                    : cardPaymentStatus.includes("Processing") 
-                      ? "text-blue-600" 
-                      : "text-red-600"
-                } mt-2 text-center`}>
-                  {cardPaymentStatus}
-                </p>
-              )}
-              
-              <button 
-                onClick={handlePaymentClick}
-                className="w-full mt-4 bg-primary text-white py-2 rounded-md font-medium hover:bg-primary/90 transition-colors"
-                disabled={isSquareLoading || cardPaymentStatus.includes("Processing") || cardPaymentStatus.includes("Success")}
-              >
-                Pay Now
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  )
-}
-
-// Update the SuccessPage component to use form data
+// Success Page component
 const SuccessPage = ({ formData }: { formData: FormData }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
-    className="pt-3 md:pt-4 px-0 text-center"
+    className="pt-8 md:pt-8 px-0 text-center"
   >
     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
       <CheckCircle2 size={40} className="text-green-600" />
     </div>
-    <h2 className="text-3xl font-bold mb-3 text-primary">
-      Enrollment Complete!
-    </h2>
+    <h2 className="text-3xl font-bold mb-3 text-primary">Enrollment Complete!</h2>
     <p className="text-xl text-muted-foreground mb-6">
-      Thank you for completing your enrollment{formData.personalInfo.firstName ? `, ${formData.personalInfo.firstName}` : ''}. We&apos;ve sent a confirmation email with all the details.
+      Thank you for completing your enrollment
+      {formData.personalInfo.firstName ? `, ${formData.personalInfo.firstName}` : ""}. We&apos;ve sent a confirmation
+      email with all the details.
     </p>
     <div className="max-w-md mx-auto border border-border rounded-lg p-5 text-left mb-6 shadow-sm">
       <h3 className="font-medium text-lg mb-4">Your Next Steps:</h3>
@@ -666,7 +842,10 @@ const SuccessPage = ({ formData }: { formData: FormData }) => (
           <div className="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center mr-3 shrink-0">
             <span className="text-green-600 text-sm font-bold">2</span>
           </div>
-          <span>Attend your first session {formData.scheduling.selectedDay ? `on ${formData.scheduling.selectedDay}` : ''} {formData.scheduling.selectedTime ? `at ${formData.scheduling.selectedTime.split(' - ')[0]}` : ''}</span>
+          <span>
+            Attend your first session {formData.scheduling.selectedDay ? `on ${formData.scheduling.selectedDay}` : ""}{" "}
+            {formData.scheduling.selectedTime ? `at ${formData.scheduling.selectedTime.split(" - ")[0]}` : ""}
+          </span>
         </li>
         <li className="flex items-center">
           <div className="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center mr-3 shrink-0">
@@ -680,9 +859,9 @@ const SuccessPage = ({ formData }: { formData: FormData }) => (
   </motion.div>
 )
 
-// Update main render: remove WizardShell and implement state management and history
+// Main enrollment form component
 export default function EnrollmentForm() {
-  // Form data state to persist between steps
+  // Form data state
   const [formData, setFormData] = useState<FormData>({
     personalInfo: {
       firstName: "",
@@ -690,61 +869,68 @@ export default function EnrollmentForm() {
       city: "",
       county: "",
       referralSource: "",
-      programType: ""
     },
     scheduling: {
       selectedDay: "",
-      selectedTime: ""
+      selectedTime: "",
     },
     documents: {
       agreedToTerms: false,
-      signature: ""
+      signature: "",
     },
     payment: {
       paymentOption: "full-program",
       cardNumber: "",
       expiry: "",
-      cvc: ""
-    }
-  });
+      cvc: "",
+    },
+    selectedPrograms: [],
+  })
 
   // Update form data handlers
   const updatePersonalInfo = (data: Partial<typeof formData.personalInfo>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       personalInfo: {
         ...prev.personalInfo,
-        ...data
-      }
-    }));
-  };
+        ...data,
+      },
+    }))
+  }
 
   const updateScheduling = (data: Partial<typeof formData.scheduling>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       scheduling: {
         ...prev.scheduling,
-        ...data
-      }
-    }));
-  };
+        ...data,
+      },
+    }))
+  }
 
   const updateDocuments = (data: Partial<typeof formData.documents>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       documents: {
         ...prev.documents,
-        ...data
-      }
-    }));
-  };
+        ...data,
+      },
+    }))
+  }
 
-  const updatePayment = (data: Partial<FormData>) => {
-    setFormData(prev => ({
+  const updateSelectedPrograms = (programs: string[]) => {
+    setFormData((prev) => ({
       ...prev,
-      ...data
-    }));
-  };
+      selectedPrograms: programs,
+    }))
+  }
+
+  const updateFormData = (data: Partial<FormData>) => {
+    setFormData((prev) => ({
+      ...prev,
+      ...data,
+    }))
+  }
 
   const [currentStep, setCurrentStep] = useState(0)
   const contentRef = useRef<HTMLDivElement>(null)
@@ -755,6 +941,18 @@ export default function EnrollmentForm() {
       title: "Personal Info",
       initialIcon: UserIcon,
       completedIcon: CheckCircle2,
+    },
+    {
+      id: "program-selection",
+      title: "Programs",
+      initialIcon: FileText,
+      completedIcon: FileCheck,
+    },
+    {
+      id: "payment",
+      title: "Payment",
+      initialIcon: CircleDollarSign,
+      completedIcon: ShieldCheck,
     },
     {
       id: "scheduling",
@@ -768,104 +966,73 @@ export default function EnrollmentForm() {
       initialIcon: FileText,
       completedIcon: FileCheck,
     },
-    {
-      id: "payment",
-      title: "Payment",
-      initialIcon: CircleDollarSign,
-      completedIcon: ShieldCheck,
-    },
   ]
 
   // Array of components for each step with props for form data
   const stepComponents = [
     <Welcome key="welcome" />,
-    <PersonalInfoForm 
-      key="personal" 
-      formData={formData.personalInfo} 
-      updateFormData={updatePersonalInfo} 
+    <PersonalInfoForm key="personal" formData={formData.personalInfo} updateFormData={updatePersonalInfo} />,
+    <ProgramSelection
+      key="programs"
+      selectedPrograms={formData.selectedPrograms}
+      updateSelectedPrograms={updateSelectedPrograms}
     />,
-    <SchedulingStep 
-      key="scheduling" 
-      formData={formData.scheduling} 
-      updateFormData={updateScheduling} 
-    />,
-    <DocumentsStep 
-      key="documents" 
-      formData={formData.documents} 
-      updateFormData={updateDocuments} 
-    />,
-    <PaymentStep 
-      key="payment" 
-      formData={formData} 
-      updateFormData={updatePayment} 
-    />,
+    <PaymentStep key="payment" formData={formData} updateFormData={updateFormData} />,
+    <SchedulingStep key="scheduling" formData={formData.scheduling} updateFormData={updateScheduling} />,
+    <DocumentsStep key="documents" formData={formData.documents} updateFormData={updateDocuments} />,
     <SuccessPage key="success" formData={formData} />,
   ]
 
   // Handle browser history navigation
   useEffect(() => {
     // Add current step to history state when it changes
-    window.history.pushState({ step: currentStep }, "", "");
+    window.history.pushState({ step: currentStep }, "", "")
 
     // Handle popstate (browser back/forward buttons)
     const handlePopState = (event: PopStateEvent) => {
-      if (event.state && typeof event.state.step === 'number') {
-        setCurrentStep(event.state.step);
+      if (event.state && typeof event.state.step === "number") {
+        setCurrentStep(event.state.step)
       } else if (currentStep > 0) {
         // If no state but we're not at the first step, go back
-        setCurrentStep(prev => prev - 1);
+        setCurrentStep((prev) => prev - 1)
       }
-    };
+    }
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [currentStep]);
+    window.addEventListener("popstate", handlePopState)
+    return () => window.removeEventListener("popstate", handlePopState)
+  }, [currentStep])
 
   const goToNextStep = () => {
-    const nextStep = Math.min(currentStep + 1, stepComponents.length - 1);
-    setCurrentStep(nextStep);
+    const nextStep = Math.min(currentStep + 1, stepComponents.length - 1)
+    setCurrentStep(nextStep)
     // Add to history
-    window.history.pushState({ step: nextStep }, "", "");
+    window.history.pushState({ step: nextStep }, "", "")
   }
 
   const goToPreviousStep = () => {
-    const prevStep = Math.max(currentStep - 1, 0);
-    setCurrentStep(prevStep);
+    const prevStep = Math.max(currentStep - 1, 0)
+    setCurrentStep(prevStep)
     // Add to history
-    window.history.pushState({ step: prevStep }, "", "");
+    window.history.pushState({ step: prevStep }, "", "")
   }
 
   // Scroll to top when changing steps
   useEffect(() => {
     if (contentRef.current) {
-      contentRef.current.scrollTo(0, 0);
+      contentRef.current.scrollTo(0, 0)
     }
-  }, [currentStep]);
+  }, [currentStep])
 
-  const isFirstStep = currentStep === 0;
-  const isLastStep = currentStep === stepComponents.length - 1;
-  const isSuccessStep = currentStep === stepComponents.length - 1;
+  const isFirstStep = currentStep === 0
+  const isLastStep = currentStep === stepComponents.length - 1
+  const isSuccessStep = currentStep === stepComponents.length - 1
 
   // Calculate which step to highlight in the stepper (welcome and success are not in the stepper)
-  const stepperIndex = currentStep === 0 ? 0 : currentStep >= stepComponents.length - 1 ? 3 : currentStep - 1;
-
-  // Handle payment completion
-  useEffect(() => {
-    const handlePaymentComplete = () => {
-      // Move to the success page
-      setCurrentStep(stepComponents.length - 1);
-    };
-    
-    window.addEventListener("payment-complete", handlePaymentComplete);
-    
-    return () => {
-      window.removeEventListener("payment-complete", handlePaymentComplete);
-    };
-  }, []);
+  const stepperIndex = currentStep === 0 ? 0 : currentStep >= stepComponents.length - 1 ? 4 : currentStep - 1
 
   return (
     <div className="flex flex-col min-h-screen bg-muted">
-      <main className="flex-1 pt-4 sm:pt-4 pb-4 sm:pb-6 flex flex-col" ref={contentRef}>
+      <main className="flex-1 pt-8 sm:pt-8 pb-4 sm:pb-6 flex flex-col" ref={contentRef}>
         {/* Full-width stepper without card wrapper */}
         {currentStep > 0 && currentStep < stepComponents.length - 1 && (
           <div className="mb-2 sm:mb-4 container mx-auto px-4">
@@ -901,9 +1068,9 @@ export default function EnrollmentForm() {
                 <div></div>
               )}
 
-              <Button 
-                onClick={goToNextStep} 
-                size={isFirstStep ? "lg" : "default"} 
+              <Button
+                onClick={goToNextStep}
+                size={isFirstStep ? "lg" : "default"}
                 className={isFirstStep ? "px-8 py-2 h-auto text-base" : "w-auto"}
               >
                 {isFirstStep ? "Start Enrollment" : "Continue"}
@@ -917,22 +1084,6 @@ export default function EnrollmentForm() {
       <footer className="bg-background border-t py-3 sm:py-4">
         <div className="container mx-auto px-4 text-xs sm:text-sm text-muted-foreground flex flex-col sm:flex-row items-center justify-between gap-y-2">
           <span>© {new Date().getFullYear()} Three Trees. All rights reserved.</span>
-          <div className="flex flex-wrap items-center justify-center gap-x-1 sm:gap-x-2 gap-y-1">
-            {[ 
-              { title: "Privacy Policy", href: "/privacy" },
-              { title: "Terms of Service", href: "/terms" },
-              { title: "Accessibility", href: "/accessibility" },
-            ].map(({ title, href }, index) => (
-              <div key={title} className="flex items-center">
-                {index > 0 && (
-                  <span className="mx-1 sm:mx-2 text-muted-foreground flex items-center justify-center w-1">•</span>
-                )}
-                <Link href={href} className="hover:text-primary transition-colors">
-                  {title}
-                </Link>
-              </div>
-            ))}
-          </div>
         </div>
       </footer>
     </div>
