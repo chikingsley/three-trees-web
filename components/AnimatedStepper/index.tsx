@@ -31,13 +31,9 @@ const AnimatedStepper: React.FC<AnimatedStepperProps> = ({ steps, currentStep, c
               {!isLastStep && (
                 <div className="absolute top-6 left-1/2 right-0 h-[2px] bg-gray-200 w-full z-0">
                   <div
-                    className="absolute inset-0 h-full bg-green-500 transition-all duration-500 ease-in-out"
-                    style={{
-                      WebkitTransform: `scaleX(${isCompleted ? 1 : 0})`,
-                      transform: `scaleX(${isCompleted ? 1 : 0})`,
-                      WebkitTransformOrigin: "left",
-                      transformOrigin: "left",
-                    }}
+                    className={`absolute inset-0 h-full bg-green-500 transition-all duration-500 ease-in-out origin-left ${
+                      isCompleted ? "scale-x-100" : "scale-x-0"
+                    }`}
                   />
                 </div>
               )}
@@ -50,16 +46,12 @@ const AnimatedStepper: React.FC<AnimatedStepperProps> = ({ steps, currentStep, c
                     transition-all duration-300 bg-white
                     ${
                       isActive
-                        ? "border-primary bg-primary/10 -webkit-transform:scale(1.1) transform:scale(1.1)"
+                        ? "border-primary bg-primary/10 scale-110"
                         : isCompleted
-                          ? "border-green-500 bg-green-50"
-                          : "border-gray-200 opacity-70 -webkit-transform:scale(0.9) transform:scale(0.9)"
+                          ? "border-green-500 bg-green-50 scale-100"
+                          : "border-gray-200 opacity-70 scale-90"
                     }
                   `}
-                  style={{
-                    WebkitTransform: isActive ? 'scale(1.1)' : isCompleted ? 'scale(1)' : 'scale(0.9)',
-                    transform: isActive ? 'scale(1.1)' : isCompleted ? 'scale(1)' : 'scale(0.9)',
-                  }}
                 >
                   {isCompleted ? (
                     <CompletedIcon size={22} className="text-green-600" />
