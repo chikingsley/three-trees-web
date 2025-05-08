@@ -82,31 +82,66 @@ interface FormData {
   selectedPrograms: string[]
 }
 
+const LOCAL_STORAGE_KEY = 'threeTreesEnrollmentFormData';
+
+// Define step IDs for URL hash (Welcome and Success are special)
+const STEP_ID_WELCOME = "welcome";
+const STEP_ID_SUCCESS = "success";
+
 export default function EnrollmentForm() {
-  const [formData, setFormData] = useState<FormData>({
-    personalInfo: {
-      firstName: "",
-      lastName: "",
-      city: "",
-      county: "",
-      referralSource: "",
-    },
-    scheduling: {
-      selectedDay: "",
-      selectedTime: "",
-    },
-    documents: {
-      agreedToTerms: false,
-      signature: "",
-    },
-    payment: {
-      paymentOption: "full-program",
-      cardNumber: "",
-      expiry: "",
-      cvc: "",
-    },
-    selectedPrograms: [],
-  })
+  const [formData, setFormData] = useState<FormData>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const savedData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (savedData) {
+          // Basic validation: Check if it's an object and has personalInfo (as a simple check)
+          const parsedData = JSON.parse(savedData);
+          if (typeof parsedData === 'object' && parsedData !== null && 'personalInfo' in parsedData) {
+            return parsedData as FormData; // Assume it matches FormData structure
+          }
+        }
+      } catch (error) {
+        console.error("Error loading form data from localStorage:", error);
+        // Fallback to default if loading or parsing fails
+      }
+    }
+    // Default initial state if nothing in localStorage or if SSR
+    return {
+      personalInfo: {
+        firstName: "",
+        lastName: "",
+        city: "",
+        county: "",
+        referralSource: "",
+      },
+      scheduling: {
+        selectedDay: "",
+        selectedTime: "",
+      },
+      documents: {
+        agreedToTerms: false,
+        signature: "",
+      },
+      payment: {
+        paymentOption: "full-program", // Default value
+        cardNumber: "",
+        expiry: "",
+        cvc: "",
+      },
+      selectedPrograms: [],
+    };
+  });
+
+  // Effect to save formData to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(formData));
+      } catch (error) {
+        console.error("Error saving form data to localStorage:", error);
+      }
+    }
+  }, [formData]);
 
   // Update form data handlers
   const updatePersonalInfo = (data: Partial<typeof formData.personalInfo>) => {
@@ -153,8 +188,8 @@ export default function EnrollmentForm() {
     }))
   }
 
-  const [currentStep, setCurrentStep] = useState(0)
-  const contentRef = useRef<HTMLDivElement>(null)
+  const [currentStep, setCurrentStep] = useState(0); // Initial step is 0 (Welcome)
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const enrollmentSteps = [
     {
@@ -205,45 +240,94 @@ export default function EnrollmentForm() {
     <SuccessStep key="success" formData={formData} />,
   ]
 
-  // Handle browser history navigation
-  useEffect(() => {
-    // Add current step to history state when it changes
-    window.history.pushState({ step: currentStep }, "", "")
+  // Helper to get step ID/hash for a given index
+  const getStepIdForIndex = (index: number): string | undefined => {
+    if (index === 0) return STEP_ID_WELCOME;
+    if (index === stepComponents.length - 1) return STEP_ID_SUCCESS;
+    // For steps in between, use the ID from enrollmentSteps (adjusting index)
+    // enrollmentSteps maps to stepComponents[1] through stepComponents[length-2]
+    const mappedIndex = index - 1;
+    if (mappedIndex >= 0 && mappedIndex < enrollmentSteps.length) {
+      return enrollmentSteps[mappedIndex].id;
+    }
+    return undefined;
+  };
 
-    // Handle popstate (browser back/forward buttons)
+  // Helper to get step index for a given ID/hash
+  const getIndexForStepId = (id: string): number | undefined => {
+    if (id === STEP_ID_WELCOME) return 0;
+    if (id === STEP_ID_SUCCESS) return stepComponents.length - 1;
+    const mappedIndex = enrollmentSteps.findIndex(step => step.id === id);
+    if (mappedIndex !== -1) return mappedIndex + 1; // Adjust back to stepComponents index
+    return undefined;
+  };
+
+  // Handle initial load from URL hash and browser history navigation
+  useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
-      if (event.state && typeof event.state.step === "number") {
-        setCurrentStep(event.state.step)
-      } else if (currentStep > 0) {
-        // If no state but we're not at the first step, go back
-        setCurrentStep((prev) => prev - 1)
+      const hash = window.location.hash.substring(1); // Remove #
+      let targetStep = 0; // Default to first step
+      if (event.state && typeof event.state.step === 'number') {
+        targetStep = event.state.step;
+      } else if (hash) {
+        const indexFromHash = getIndexForStepId(hash);
+        if (indexFromHash !== undefined) {
+          targetStep = indexFromHash;
+        }
+      }
+      setCurrentStep(targetStep);
+    };
+
+    // Initial load: set step based on hash
+    const initialHash = window.location.hash.substring(1);
+    if (initialHash) {
+      const indexFromHash = getIndexForStepId(initialHash);
+      if (indexFromHash !== undefined) {
+        setCurrentStep(indexFromHash);
+      } else {
+        // If hash is invalid, push default state (welcome step) to history
+        const defaultStepId = getStepIdForIndex(0);
+        if (defaultStepId) {
+          window.history.replaceState({ step: 0, id: defaultStepId }, "", `#${defaultStepId}`);
+        }
+      }
+    } else {
+      // No hash, ensure history state is set for the initial step (Welcome)
+      const defaultStepId = getStepIdForIndex(0);
+        if (defaultStepId) {
+         window.history.replaceState({ step: 0, id: defaultStepId }, "", `#${defaultStepId}`);
       }
     }
 
-    window.addEventListener("popstate", handlePopState)
-    return () => window.removeEventListener("popstate", handlePopState)
-  }, [currentStep])
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
+  }, []); // Run only on mount and unmount
 
   const goToNextStep = () => {
-    const nextStep = Math.min(currentStep + 1, stepComponents.length - 1)
-    setCurrentStep(nextStep)
-    // Add to history
-    window.history.pushState({ step: nextStep }, "", "")
-  }
+    const nextStep = Math.min(currentStep + 1, stepComponents.length - 1);
+    const stepId = getStepIdForIndex(nextStep);
+    setCurrentStep(nextStep);
+    if (stepId) {
+      window.history.pushState({ step: nextStep, id: stepId }, "", `#${stepId}`);
+    }
+  };
 
   const goToPreviousStep = () => {
-    const prevStep = Math.max(currentStep - 1, 0)
-    setCurrentStep(prevStep)
-    // Add to history
-    window.history.pushState({ step: prevStep }, "", "")
-  }
+    const prevStep = Math.max(currentStep - 1, 0);
+    const stepId = getStepIdForIndex(prevStep);
+    setCurrentStep(prevStep);
+    if (stepId) {
+      window.history.pushState({ step: prevStep, id: stepId }, "", `#${stepId}`);
+    }
+  };
 
   // Scroll to top when changing steps
   useEffect(() => {
     if (contentRef.current) {
-      contentRef.current.scrollTo(0, 0)
+      contentRef.current.scrollTo(0, 0);
     }
-  }, [currentStep])
+  }, [currentStep]);
 
   const isFirstStep = currentStep === 0
   const isLastStep = currentStep === stepComponents.length - 1
