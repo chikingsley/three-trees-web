@@ -16,7 +16,7 @@ interface AnimatedStepperProps {
 const AnimatedStepper: React.FC<AnimatedStepperProps> = ({ steps, currentStep, className }) => {
   return (
     <div className={`w-full max-w-3xl mx-auto overflow-x-auto py-2 pb-4 border-b border-gray-300 ${className ?? ""}`}>
-      <ol className="flex items-center justify-between min-w-[500px]">
+      <ol className="flex items-center justify-center min-w-[320px] max-w-[500px] mx-auto">
         {steps.map((step, index) => {
           const isCompleted = index < currentStep;
           const isActive = index === currentStep;
@@ -42,7 +42,7 @@ const AnimatedStepper: React.FC<AnimatedStepperProps> = ({ steps, currentStep, c
               <div className="flex flex-col items-center w-full relative z-10">
                 <div
                   className={`
-                    flex h-12 w-12 items-center justify-center rounded-full border-2 shadow-sm
+                    flex h-10 w-10 items-center justify-center rounded-full border-2 shadow-sm
                     transition-all duration-300 bg-white
                     ${
                       isActive
@@ -61,14 +61,14 @@ const AnimatedStepper: React.FC<AnimatedStepperProps> = ({ steps, currentStep, c
                 </div>
 
                 {/* Step Title */}
-                <span
+                {/* <span
                   className={`
                   text-xs font-medium mt-2 text-center w-full
                   ${isActive ? "text-primary" : isCompleted ? "text-green-600" : "text-muted-foreground"}
                 `}
                 >
                   {step.title}
-                </span>
+                </span> */}
               </div>
             </li>
           );

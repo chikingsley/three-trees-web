@@ -10,6 +10,7 @@
     "generate:types": "NODE_OPTIONS='--import tsx' npx payload generate:types"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.0.1",
     "@legendapp/state": "^3.0.0-beta.30",
     "@payloadcms/db-postgres": "^3.35.1",
     "@payloadcms/next": "^3.35.1",
@@ -40,11 +41,13 @@
     "payload": "^3.35.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-hook-form": "^7.56.3",
     "react-icons": "^5.5.0",
     "sharp": "^0.34.1",
     "simple-icons": "^14.12.3",
     "tailwind-merge": "^3.2.0",
-    "tw-animate-css": "^1.2.7"
+    "tw-animate-css": "^1.2.7",
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
