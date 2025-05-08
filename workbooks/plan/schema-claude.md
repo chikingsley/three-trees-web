@@ -14,6 +14,7 @@ For a content-managed site like this, I recommend:
 ## Improved Sanity Schema Recommendations
 
 ### Program Type Schema (for Overview Pages)
+
 ```typescript
 {
   title: string;                 // e.g., "Court-Ordered Programs"
@@ -42,6 +43,7 @@ For a content-managed site like this, I recommend:
 ```
 
 ### Enhanced Service Schema
+
 ```typescript
 {
   title: string;                 // Service name
@@ -103,6 +105,7 @@ For a content-managed site like this, I recommend:
 ```
 
 ### Location Schema (Enhanced)
+
 ```typescript
 {
   name: string;                  // e.g., "California" or "Orange County"
@@ -169,6 +172,7 @@ For a content-managed site like this, I recommend:
 ```
 
 ### Homepage Schema
+
 ```typescript
 {
   hero: {
@@ -236,6 +240,7 @@ For a content-managed site like this, I recommend:
 ```
 
 ### About Page Schema
+
 ```typescript
 {
   hero: {
@@ -295,6 +300,7 @@ For a content-managed site like this, I recommend:
 ```
 
 ### Method Page Schema
+
 ```typescript
 {
   hero: {
@@ -367,6 +373,7 @@ For a content-managed site like this, I recommend:
 ```
 
 ### Contact Page Schema
+
 ```typescript
 {
   hero: {
@@ -422,6 +429,7 @@ For a content-managed site like this, I recommend:
 ```
 
 ### Testimonial Schema
+
 ```typescript
 {
   name: string;

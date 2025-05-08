@@ -3,6 +3,7 @@
 ## Site Architecture
 
 ### 1. Marketing Pages (Static/Hard-Coded Initially, Sanity Later)
+
 - Homepage (`/`)
 - About Us (`/about`)
 - Contact (`/contact`)
@@ -10,12 +11,15 @@
 - Presence Overview (`/about/presence`)
 
 ### 2. Program Structure
+
 #### Overview Pages (Custom Template)
+
 - Court-Ordered Programs (`/court-ordered-programs`)
 - College & University Programs (`/college-university-programs`)
 - Corporate & Hospital Programs (`/corporate-hospital-programs`)
 
 #### Service Pages (Standard Template)
+
 - Court-Ordered Services
   - `/court-ordered-programs/domestic-violence`
   - `/court-ordered-programs/anger-management`
@@ -30,16 +34,20 @@
   - etc.
 
 ### 3. Geographic Presence Pages
+
 Base structure: `/locations/[state]/[county?]/[city?]`
 
 Initial implementation:
+
 - State level only: `/locations/california`
 - Prepared for expansion:
   - County level: `/locations/california/orange-county`
   - City level: `/locations/california/orange-county/irvine`
 
 ### 4. Blog System
+
 Structure: `/blog/[category]/[slug]`
+
 - Main blog page (`/blog`)
 - Category pages (`/blog/mental-health`, `/blog/research`, etc.)
 - Individual posts (`/blog/mental-health/understanding-cognitive-behavioral-therapy`)
@@ -47,6 +55,7 @@ Structure: `/blog/[category]/[slug]`
 ## Development Phases
 
 ### Phase 1: Core Structure
+
 - [x] Basic routing setup
 - [x] Service page template
 - [ ] Overview page template
@@ -54,6 +63,7 @@ Structure: `/blog/[category]/[slug]`
 - [ ] Footer system
 
 ### Phase 2: Content Management (Sanity Integration)
+
 - [ ] Set up Sanity Studio
 - [ ] Define schemas:
   - [ ] Services
@@ -63,12 +73,14 @@ Structure: `/blog/[category]/[slug]`
 - [ ] Content migration plan for marketing pages
 
 ### Phase 3: Geographic System
+
 - [ ] State-level pages
 - [ ] Location finder
 - [ ] Prepare county/city structure
 - [ ] SEO optimization for location pages
 
 ### Phase 4: Blog System
+
 - [ ] Blog homepage
 - [ ] Category system
 - [ ] Author pages
@@ -76,12 +88,14 @@ Structure: `/blog/[category]/[slug]`
 - [ ] Search functionality
 
 ### Phase 5: Marketing Pages Migration
+
 - [ ] Homepage components in Sanity
 - [ ] About page sections
 - [ ] Method page
 - [ ] Presence page
 
 ### Phase 6: Advanced Features
+
 - [ ] Search system
 - [ ] Program finder
 - [ ] Location-based service recommendations
@@ -91,6 +105,7 @@ Structure: `/blog/[category]/[slug]`
 ## Sanity Schema Planning
 
 ### Service Schema
+
 ```typescript
 {
   title: string;
@@ -115,6 +130,7 @@ Structure: `/blog/[category]/[slug]`
 ```
 
 ### Location Schema
+
 ```typescript
 {
   name: string;
@@ -136,6 +152,7 @@ Structure: `/blog/[category]/[slug]`
 ```
 
 ### Blog Post Schema
+
 ```typescript
 {
   title: string;
@@ -156,6 +173,7 @@ Structure: `/blog/[category]/[slug]`
 ```
 
 ## Next Steps
+
 1. Complete service page template implementation
 2. Create overview page template
 3. Set up Sanity schemas
@@ -163,9 +181,10 @@ Structure: `/blog/[category]/[slug]`
 5. Begin blog system development
 
 ## Questions to Resolve
+
 - [ ] Geographic targeting strategy
 - [ ] Content migration approach
 - [ ] SEO strategy for location pages
 - [ ] Blog categories structure
 - [ ] Service finder algorithm
-- [ ] Analytics requirements 
+- [ ] Analytics requirements

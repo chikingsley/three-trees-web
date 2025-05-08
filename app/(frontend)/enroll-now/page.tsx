@@ -22,6 +22,8 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
+import AnimatedStepper from "@/components/AnimatedStepper";
+
 
 // Program data with durations from the provided list
 type Program = {
@@ -126,73 +128,6 @@ interface FormData {
   selectedPrograms: string[]
 }
 
-// Update the AnimatedStepper component to be more responsive down to 320px
-const AnimatedStepper = ({ steps, currentStep }: { steps: StepItem[]; currentStep: number }) => {
-  return (
-    <div className="w-full max-w-3xl mx-auto overflow-x-auto pb-2">
-      <ol className="flex items-center justify-between min-w-[500px]">
-        {steps.map((step, index) => {
-          const isCompleted = index < currentStep
-          const isActive = index === currentStep
-          const isLastStep = index === steps.length - 1
-
-          const InitialIcon = step.initialIcon
-          const CompletedIcon = step.completedIcon
-
-          return (
-            <li key={step.id} className="flex items-center flex-1 relative">
-              {/* Connecting Line */}
-              {!isLastStep && (
-                <div className="absolute top-6 left-1/2 right-0 h-[2px] bg-gray-200 w-full z-0">
-                  <div
-                    className="absolute inset-0 h-full bg-green-500 transition-transform duration-500 ease-in-out"
-                    style={{
-                      transform: `scaleX(${isCompleted ? 1 : 0})`,
-                      transformOrigin: "left",
-                    }}
-                  />
-                </div>
-              )}
-
-              {/* Icon Container */}
-              <div className="flex flex-col items-center w-full relative z-10">
-                <div
-                  className={`
-                    flex h-12 w-12 items-center justify-center rounded-full border-2 shadow-sm
-                    transition-all duration-300 transform bg-white
-                    ${
-                      isActive
-                        ? "border-primary bg-primary/10 scale-110"
-                        : isCompleted
-                          ? "border-green-500 bg-green-50"
-                          : "border-gray-200 opacity-70 scale-90"
-                    }
-                  `}
-                >
-                  {isCompleted ? (
-                    <CompletedIcon size={22} className="text-green-600" />
-                  ) : (
-                    <InitialIcon size={22} className={isActive ? "text-primary" : "text-muted-foreground"} />
-                  )}
-                </div>
-
-                {/* Step Title */}
-                <span
-                  className={`
-                  text-xs font-medium mt-2 text-center w-full
-                  ${isActive ? "text-primary" : isCompleted ? "text-green-600" : "text-muted-foreground"}
-                `}
-                >
-                  {step.title}
-                </span>
-              </div>
-            </li>
-          )
-        })}
-      </ol>
-    </div>
-  )
-}
 
 // Step Item Component for Welcome section
 const StepItem = ({
@@ -220,12 +155,15 @@ const StepItem = ({
 
 // Welcome component
 const Welcome = () => (
-  <div className="pt-10 md:pt-10 px-6 md:px-8 flex flex-col flex-1 items-center justify-center">
+  <div className="pt-6 md:pt-6 px-6 md:px-8 flex flex-col flex-1 items-center justify-center">
     {/* Header Section */}
-    <div className="text-center mb-8 md:mb-10 max-w-md mx-auto">
+    <div className="text-center mb-8 md:mb-10 mx-auto">
       <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-5 text-primary">Welcome to Three Trees</h1>
+      <p className="text-lg md:text-xl text-muted-foreground">
+        Complete your enrollment in
+      </p>
       <p className="text-lg md:text-xl text-muted-foreground mb-3">
-        Complete your enrollment in <span className="font-medium text-primary">less than 2 minutes</span>
+        <span className="font-medium text-primary">less than 2 minutes</span>
       </p>
       <p className="text-sm md:text-base text-muted-foreground">
         We&apos;ll guide you through each step of the process
@@ -233,7 +171,7 @@ const Welcome = () => (
     </div>
 
     {/* Steps Section */}
-    <div className="space-y-4 text-left mb-8 max-w-md mx-auto w-full">
+    <div className="space-y-4 text-left mb-2 max-w-md mx-auto w-full">
       <StepItem
         icon={<UserIcon size={18} className="text-primary" />}
         iconLarge={<UserIcon size={20} className="text-primary" />}
@@ -375,7 +313,7 @@ const ProgramSelection = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="pt-8 md:pt-8 px-0"
+      className="pt-2 md:pt-2 px-0"
     >
       <div className="mb-4 text-center">
         <h2 className="text-2xl font-bold mb-1 text-primary">Select Your Programs</h2>

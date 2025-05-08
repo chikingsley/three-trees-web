@@ -1,41 +1,49 @@
 # Programs Component Improvements
 
 ## Container Width
+
 - [ ] Replace `max-w-screen-lg` with `max-w-screen-xl` to increase width
 - [ ] Ensure consistency with header width
 - [ ] Apply consistently to all main content sections
 
 ## Card Styling
+
 - [ ] Update card padding from `p-5` to `p-6`
 - [ ] Apply consistent hover effects: `hover:border-primary/20 hover:shadow-md transition-all`
 - [ ] Ensure consistent border styling with WhyChooseSection cards
 
 ## Layout & Spacing
+
 - [ ] Ensure consistent vertical rhythm between sections
 - [ ] Add subtle dividers between sections with appropriate spacing
 - [ ] Update grid gap to `gap-6` for mobile and desktop
 
 ## Button Styling
+
 - [ ] Standardize button styles:
   - [ ] Desktop: Subtle primary/10 background with primary text
   - [ ] Mobile: Solid primary background with white text
 
 ## Content Optimization
+
 - [ ] Ensure content is concise to prevent overflow
 - [ ] Balance content length across cards
 - [ ] Consider truncating long descriptions on mobile
 
 ## Accessibility
+
 - [ ] Ensure sufficient color contrast
 - [ ] Add `aria-label` attributes to interactive elements
 - [ ] Ensure focus states are clearly visible
 
 ## Responsive Behavior
+
 - [ ] Fine-tune mobile carousel transitions
 - [ ] Consider snap-scroll for carousel items
 - [ ] Test on various screen sizes
 
 ## Hover States
+
 - [ ] Apply consistent hover transitions
 - [ ] Use consistent timing functions
 - [ ] Ensure hover states are obvious but not distracting
