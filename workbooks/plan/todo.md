@@ -24,8 +24,8 @@ This document outlines the phased development plan for the Three Trees platform,
   * [x] `npx create-payload-app` to bootstrap project
   * [x] Configure database (Supabase/PostgreSQL)
   * [x] Set up initial admin user
-* [x] 3. Set up Next.js application
-  * [x] Next.js app scaffolded and running
+* [x] 3. Set up NextJS application
+  * [x] NextJS app scaffolded and running
   * [x] `globals.css` theme and section divider established
 * [x] 4. Install and configure core libraries
   * [x] ShadCN UI installed
@@ -119,8 +119,8 @@ This document outlines the phased development plan for the Three Trees platform,
     * [ ] Integrate Square Web Payments SDK into `#card-container`.
     * [ ] On "Pay" button click: Validate RHF step, then `card.tokenize()`.
     * [ ] Send `cardNonce` and RHF form data to `/api/enroll`.
-  * **Backend (`/api/enroll` using Square Node.js SDK):**
-    * [ ] Use Square Node.js SDK.
+  * **Backend (`/api/enroll` using Square NodeJS SDK):**
+    * [ ] Use Square NodeJS SDK.
     * [ ] One-Time Payments ("Prepay All Sessions"): Create Square charge using `cardNonce`. Record in `Payments`.
     * [ ] Recurring Payments ("Pay Per Session"):
       * [ ] 1. Charge Enrollment Fee (one-time charge with `cardNonce`). Record in `Payments`.
