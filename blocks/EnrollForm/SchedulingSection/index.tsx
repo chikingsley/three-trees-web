@@ -1,81 +1,117 @@
 "use client"
 
-import type React from "react"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
+import React from "react"
+import { useFormContext, Controller } from "react-hook-form"
+import StepHeader from "@/components/StepHeader"
+import type { EnrollmentFormData, ClassSlot } from "@/lib/form-types"
+import {
+  CLASS_SCHEDULE_DATA,
+  LEVEL_1_PROGRAM_IDS,
+  L1_SCHEDULE_PROGRAM_ID,
+  PROGRAM_DATA
+} from "@/lib/form-types"
+import { cn } from "@/lib/utils"
 
-// Type definition for SchedulingInfo (previously in page.tsx)
-export interface SchedulingInfo {
-  selectedDay: string
-  selectedTime: string
-}
+const SchedulingSection: React.FC = () => {
+  const {
+    control,
+    watch,
+    formState: { errors },
+  } = useFormContext<EnrollmentFormData>()
 
-interface SchedulingSectionProps {
-  formData: SchedulingInfo
-  updateFormData: (data: Partial<SchedulingInfo>) => void
-}
+  const selectedProgramId = watch("personalInfo.selectedProgram")
 
-const SchedulingSection: React.FC<SchedulingSectionProps> = ({
-  formData,
-  updateFormData,
-}) => {
+  const selectedProgramDetails = PROGRAM_DATA.find(p => p.id === selectedProgramId)
+
+  const availableSlots = React.useMemo(() => {
+    if (!selectedProgramId) return []
+
+    let targetProgramIdForScheduling = selectedProgramId
+    if (LEVEL_1_PROGRAM_IDS.includes(selectedProgramId)) {
+      targetProgramIdForScheduling = L1_SCHEDULE_PROGRAM_ID
+    }
+
+    return CLASS_SCHEDULE_DATA.filter(slot => {
+      if (slot.programId !== targetProgramIdForScheduling) return false
+      if (slot.genderSpecific) {
+        if (selectedProgramId === "dv_male" && slot.genderSpecific !== "male") return false
+        if (selectedProgramId === "dv_female" && slot.genderSpecific !== "female") return false
+      }
+      return true
+    })
+  }, [selectedProgramId])
+
+  const slotsByDay = React.useMemo(() => {
+    return availableSlots.reduce<Record<string, ClassSlot[]>>((acc, slot) => {
+      (acc[slot.day] = acc[slot.day] || []).push(slot)
+      return acc
+    }, {})
+  }, [availableSlots])
+
+  const daysOrder: ClassSlot["day"][] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="pt-8 md:pt-8 px-0"
-    >
-      <div className="mb-2 text-center">
-        <h2 className="text-2xl font-bold text-primary">When would you like to attend?</h2>
-        <p className="text-muted-foreground text-sm">Choose a day and time that works best for your schedule</p>
-      </div>
-
-      <div className="p-2 rounded-lg space-y-4">
-        <div>
-          <h3 className="text-base font-medium mb-2">Choose a day of the week:</h3>
-          <div className="grid grid-cols-3 md:grid-cols-7 gap-2">
-            {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => (
-              <Button
-                key={day}
-                variant={formData.selectedDay === day ? "default" : "outline"}
-                className="h-auto py-2 text-sm"
-                onClick={() => updateFormData({ selectedDay: day })}
-              >
-                {day.substring(0, 3)}
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <h3 className="text-base font-medium mb-2">Available time slots:</h3>
-          <div className="grid grid-cols-3 gap-3">
-            {[
-              "9:00 AM - 10:30 AM",
-              "11:00 AM - 12:30 PM",
-              "1:00 PM - 2:30 PM",
-              "3:00 PM - 4:30 PM",
-              "5:00 PM - 6:30 PM",
-              "7:00 PM - 8:30 PM",
-            ].map((slot) => (
-              <div
-                key={slot}
-                className={`
-                  border rounded-lg p-2 cursor-pointer transition-colors text-center
-                  ${formData.selectedTime === slot ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50"}
-                `}
-                onClick={() => updateFormData({ selectedTime: slot })}
-              >
-                <div className="font-medium text-sm">{slot}</div>
-                <div className="text-xs text-muted-foreground mt-1">8 spots left</div> {/* This might need to be dynamic in a real app */}
+    <>
+      <StepHeader 
+        title={`Schedule Your ${selectedProgramDetails?.name || "Class"}`}
+        subtitle="Choose an available time slot that works for you."
+      />
+      
+      {selectedProgramId ? (
+        <div className="space-y-4 rounded-lg">
+          {daysOrder.map(day => (
+            slotsByDay[day] && slotsByDay[day].length > 0 && (
+              <div key={day} className="mb-3">
+                <h3 className="text-sm font-semibold mb-2 text-muted-foreground border-b pb-1">{day}</h3>
+                <Controller
+                  name="scheduling.selectedClassSlotId"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="grid grid-cols-3 gap-2">
+                      {slotsByDay[day].map(slot => (
+                        <button
+                          key={slot.id}
+                          type="button"
+                          onClick={() => {
+                            if (field.value === slot.id) {
+                              field.onChange("");
+                            } else {
+                              field.onChange(slot.id);
+                            }
+                          }}
+                          className={cn(
+                            "p-2 border rounded-md text-center cursor-pointer transition-all duration-150 ease-in-out",
+                            "w-full h-14 flex flex-col items-center justify-center text-xs",
+                            field.value === slot.id 
+                              ? "bg-primary text-primary-foreground border-primary shadow-lg scale-105"
+                              : "bg-background hover:bg-muted/50 border-border"
+                          )}
+                        >
+                          <span className="font-medium">{slot.time.replace(" - ", "\n")}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                />
               </div>
-            ))}
-          </div>
+            )
+          ))}
+          {availableSlots.length === 0 && (
+            <p className="text-sm text-muted-foreground text-center py-4">
+              No available time slots for the selected program. Please check back later or contact us.
+            </p>
+          )}
+          {errors.scheduling?.selectedClassSlotId?.message && (
+            <p className="text-xs text-red-500 pt-2 text-center">{errors.scheduling.selectedClassSlotId.message as string}</p>
+          )}
         </div>
-      </div>
-    </motion.div>
+      ) : (
+        <p className="text-sm text-muted-foreground text-center py-4">
+          Please select a program in the previous step to see available class times.
+        </p>
+      )}
+    </>
   )
 }
 
-export default SchedulingSection; 
+export default SchedulingSection 
