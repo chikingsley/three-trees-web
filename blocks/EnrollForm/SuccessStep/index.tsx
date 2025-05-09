@@ -2,10 +2,10 @@
 
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { EnrollmentFormData } from "@/lib/form-types";
 import { CLASS_SCHEDULE_DATA } from "@/lib/form-types";
+import { MailCheck, CalendarCheck, ClipboardCheck } from "lucide-react";
 
 // SuccessStepFormData interface removed
 // SuccessStepProps interface removed
@@ -25,43 +25,53 @@ const SuccessStep: React.FC = () => {
     }
   }
 
+  // Data for the next steps section
+  const nextStepsData = [
+    {
+      icon: MailCheck,
+      text: "Check your email for program details and materials."
+    },
+    {
+      icon: CalendarCheck,
+      text: `Attend your first session ${dayTimeDisplay}.`
+    },
+    {
+      icon: ClipboardCheck, 
+      text: "Complete any pre-session assignments if provided."
+    }
+  ];
+
   return (
-    <div className="text-center">
-      <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-        <CheckCircle2 size={40} className="text-green-600" />
-      </div>
-      <h2 className="text-3xl font-bold mb-3 text-primary">Enrollment Complete!</h2>
-      <p className="text-xl text-muted-foreground mb-6">
+    <div className="text-center pt-6">
+      <h2 className="text-xl font-bold mb-2 text-primary">Enrollment Complete!</h2>
+      <p className="text-xs text-muted-foreground mb-4">
         Thank you for completing your enrollment
         {firstName ? `, ${firstName}` : ""}. We&apos;ve sent a confirmation
         email with all the details.
       </p>
-      <div className="max-w-md mx-auto border border-border rounded-lg p-5 text-left mb-6 shadow-sm">
-        <h3 className="font-medium text-lg mb-4">Your Next Steps:</h3>
-        <ul className="space-y-3">
-          <li className="flex items-center">
-            <div className="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center mr-3 shrink-0">
-              <span className="text-green-600 text-sm font-bold">1</span>
-            </div>
-            <span>Check your email for program details and materials</span>
-          </li>
-          <li className="flex items-center">
-            <div className="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center mr-3 shrink-0">
-              <span className="text-green-600 text-sm font-bold">2</span>
-            </div>
-            <span>
-              Attend your first session {dayTimeDisplay}
-            </span>
-          </li>
-          <li className="flex items-center">
-            <div className="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center mr-3 shrink-0">
-              <span className="text-green-600 text-sm font-bold">3</span>
-            </div>
-            <span>Complete any pre-session assignments if provided</span>
-          </li>
-        </ul>
+      
+      {/* Next Steps - Styled like WelcomeSection items */}
+      <div className="text-left text-sm space-y-3 px-2 py-4 mb-6">
+        <h3 className="font-semibold text-base text-primary mb-2">Your Next Steps:</h3>
+        {/* Removed ul, now using divs similar to WelcomeSection */}
+        <div className="space-y-3">
+          {nextStepsData.map((step, idx) => {
+            const IconComponent = step.icon;
+            return (
+              <div key={idx} className="flex items-start">
+                <div className="bg-primary/10 p-1.5 rounded-full mr-3 shrink-0 flex items-center justify-center">
+                  <IconComponent size={16} className="text-primary" /> {/* Smaller icon for this context */}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {step.text}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <Button className="bg-primary text-primary-foreground px-6 py-2 text-base h-auto">Go to Your Dashboard</Button>
+
+      <Button className="bg-primary text-primary-foreground px-6 py-2 text-sm h-auto">Go to Your Dashboard</Button>
     </div>
   );
 };
