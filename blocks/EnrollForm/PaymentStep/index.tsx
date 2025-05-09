@@ -7,14 +7,21 @@ import {
   CalendarCheck as PayAsYouGoIcon,
   Calendar,
   CircleDollarSign,
-  CheckCircle2,
   ArrowRight,
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label as CheckboxLabel } from "@/components/ui/label";
 import type { EnrollmentFormData } from "@/lib/form-types";
-import { PROGRAM_DATA, PaymentOption } from "@/lib/form-types";
+import { PROGRAM_DATA, PaymentOption as PaymentOptionType } from "@/lib/form-types";
 import StepHeader from "@/components/StepHeader";
+import PaymentOptionCard from "./PaymentOptionCard";
+
+// Define icon mapping
+const paymentOptionIcons = {
+  pay_as_you_go: PayAsYouGoIcon,
+  autopay_weekly: Calendar,
+  full_program: CircleDollarSign,
+};
 
 const PaymentStep: React.FC = () => {
   const {
@@ -25,20 +32,20 @@ const PaymentStep: React.FC = () => {
   } = useFormContext<EnrollmentFormData>();
 
   const selectedProgramId = watch("personalInfo.selectedProgram");
-  const paymentOption = watch("payment.paymentOption") as PaymentOption;
+  const paymentOption = watch("payment.paymentOption") as PaymentOptionType;
   const selectedProgram = PROGRAM_DATA.find(p => p.id === selectedProgramId);
 
   const enrollmentFee = selectedProgram ? selectedProgram.enrollmentFee : 0;
   const baseProgramCost = selectedProgram ? selectedProgram.weeks * selectedProgram.costPerSession : 0;
 
-  const getDiscountedProgramCost = (option: PaymentOption) => {
+  const getDiscountedProgramCost = (option: PaymentOptionType) => {
     if (!selectedProgram) return 0;
     if (option === "autopay_weekly") return baseProgramCost * 0.95;
     if (option === "full_program") return baseProgramCost * 0.90;
     return baseProgramCost;
   };
 
-  const calculateDueToday = (option: PaymentOption) => {
+  const calculateDueToday = (option: PaymentOptionType) => {
     if (!selectedProgram) return 0;
     if (option === "full_program") {
       return enrollmentFee + getDiscountedProgramCost(option);
@@ -48,12 +55,35 @@ const PaymentStep: React.FC = () => {
 
   const dueToday = calculateDueToday(paymentOption);
 
-  const handlePaymentOptionChange = (newOption: PaymentOption) => {
+  const handlePaymentOptionChange = (newOption: PaymentOptionType) => {
     setValue("payment.paymentOption", newOption, { shouldValidate: true });
     if (newOption !== "autopay_weekly") {
       setValue("payment.agreeToRecurring", false, { shouldValidate: true });
     }
   };
+
+  // Define payment options data
+  const paymentOptionsConfig: Array<{
+    id: PaymentOptionType;
+    title: string;
+    discountText: string;
+  }> = [
+    {
+      id: "pay_as_you_go",
+      title: "Pay As You Go",
+      discountText: "No discount",
+    },
+    {
+      id: "autopay_weekly",
+      title: "Autopay Weekly",
+      discountText: "Save 5%",
+    },
+    {
+      id: "full_program",
+      title: "Prepay Full Program",
+      discountText: "Save 10%",
+    },
+  ];
 
   return (
     <motion.div className="pt-6 px-0">
@@ -101,84 +131,19 @@ const PaymentStep: React.FC = () => {
           control={control}
           defaultValue="full_program"
           render={({ field }) => (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-              {/* Pay As You Go Button */}
-              <button
-                type="button"
-                className={`relative p-3 rounded-lg border transition-colors text-sm flex flex-col justify-between h-full ${field.value === "pay_as_you_go"
-                    ? "bg-white border-primary ring-2 ring-primary"
-                    : "bg-muted/10 border-border hover:bg-gray-50"
-                  }`}
-                onClick={() => handlePaymentOptionChange("pay_as_you_go")}
-              >
-                <div className="text-center mb-1">
-                  <PayAsYouGoIcon className="w-6 h-6 mx-auto mb-1.5 text-primary" />
-                  <div className="font-medium text-sm">Pay As You Go</div>
-                  <div className="text-xs text-muted-foreground mt-0.5">No discount</div>
-                </div>
-                <div className={`text-sm font-semibold mt-1 ${field.value === "pay_as_you_go" ? "text-primary" : "text-foreground"}`}>
-                  Due today: ${calculateDueToday("pay_as_you_go").toFixed(2)}
-                </div>
-                {field.value === "pay_as_you_go" && (
-                  <div className="absolute top-2 right-2">
-                    <div className="h-4 w-4 rounded-full bg-green-100 flex items-center justify-center">
-                      <CheckCircle2 className="w-3 h-3 text-green-600" />
-                    </div>
-                  </div>
-                )}
-              </button>
-
-              {/* Autopay Weekly Button */}
-              <button
-                type="button"
-                className={`relative p-3 rounded-lg border transition-colors text-sm flex flex-col justify-between h-full ${field.value === "autopay_weekly"
-                    ? "bg-white border-primary ring-2 ring-primary"
-                    : "bg-muted/10 border-border hover:bg-gray-50"
-                  }`}
-                onClick={() => handlePaymentOptionChange("autopay_weekly")}
-              >
-                <div className="text-center mb-1">
-                  <Calendar className="w-6 h-6 mx-auto mb-1.5 text-primary" />
-                  <div className="font-medium text-sm">Autopay Weekly</div>
-                  <div className="text-xs text-green-600 mt-0.5">Save 5% on sessions</div>
-                </div>
-                <div className={`text-sm font-semibold mt-1 ${field.value === "autopay_weekly" ? "text-primary" : "text-foreground"}`}>
-                  Due today: ${calculateDueToday("autopay_weekly").toFixed(2)}
-                </div>
-                {field.value === "autopay_weekly" && (
-                  <div className="absolute top-2 right-2">
-                    <div className="h-4 w-4 rounded-full bg-green-100 flex items-center justify-center">
-                      <CheckCircle2 className="w-3 h-3 text-green-600" />
-                    </div>
-                  </div>
-                )}
-              </button>
-
-              {/* Prepay Full Program Button */}
-              <button
-                type="button"
-                className={`relative p-3 rounded-lg border transition-colors text-sm flex flex-col justify-between h-full ${field.value === "full_program"
-                    ? "bg-white border-primary ring-2 ring-primary"
-                    : "bg-muted/10 border-border hover:bg-gray-50"
-                  }`}
-                onClick={() => handlePaymentOptionChange("full_program")}
-              >
-                <div className="text-center mb-1">
-                  <CircleDollarSign className="w-6 h-6 mx-auto mb-1.5 text-primary" />
-                  <div className="font-medium text-sm">Prepay Full Program</div>
-                  <div className="text-xs text-green-600 mt-0.5">Save 10% on sessions</div>
-                </div>
-                <div className={`text-sm font-semibold mt-1 ${field.value === "full_program" ? "text-primary" : "text-foreground"}`}>
-                  Due today: ${calculateDueToday("full_program").toFixed(2)}
-                </div>
-                {field.value === "full_program" && (
-                  <div className="absolute top-2 right-2">
-                    <div className="h-4 w-4 rounded-full bg-green-100 flex items-center justify-center">
-                      <CheckCircle2 className="w-3 h-3 text-green-600" />
-                    </div>
-                  </div>
-                )}
-              </button>
+            <div className="grid grid-cols-3 gap-2">
+              {paymentOptionsConfig.map((optionConfig) => (
+                <PaymentOptionCard
+                  key={optionConfig.id}
+                  optionId={optionConfig.id}
+                  title={optionConfig.title}
+                  IconComponent={paymentOptionIcons[optionConfig.id]}
+                  dueTodayAmount={calculateDueToday(optionConfig.id)}
+                  isSelected={field.value === optionConfig.id}
+                  onClick={() => handlePaymentOptionChange(optionConfig.id)}
+                  discountText={optionConfig.discountText}
+                />
+              ))}
             </div>
           )}
         />
