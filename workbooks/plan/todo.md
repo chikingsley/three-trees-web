@@ -137,8 +137,6 @@ This document outlines the phased development plan for the Three Trees platform,
   * [ ] View class rosters: For each `ClassSlot`, list enrolled clients and show spots filled / total spots.
   * [ ] Manually update client status.
 
----
-
 ## Phase 2: Full Site Buildout & Enhanced Admin Tools
 
 **Goal:** Develop the full informational website with Payload-managed content, create a robust reusable component library, implement SEO, and add admin document generation and attendance tracking.

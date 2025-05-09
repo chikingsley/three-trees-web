@@ -26,10 +26,11 @@ import ConsentFormStep from "@/blocks/EnrollForm/ConsentFormStep";
 import SuccessStep from "@/blocks/EnrollForm/SuccessStep";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { 
-  enrollmentFormSchema, 
-  EnrollmentFormData, 
-} from "@/lib/form-types"; 
+import {
+  enrollmentFormSchema,
+  EnrollmentFormData,
+  PaymentOption
+} from "@/lib/form-types";
 import StepAnimationWrapper from "@/components/StepAnimationWrapper";
 
 const LOCAL_STORAGE_KEY = 'threeTreesEnrollmentFormData';
@@ -43,10 +44,10 @@ const getInitialFormValues = (): EnrollmentFormData => {
       if (savedData) {
         const parsedData = JSON.parse(savedData);
         // Robust check for localStorage data structure
-        if (typeof parsedData === 'object' && parsedData !== null && 
-            'personalInfo' in parsedData && 
-            'payment' in parsedData 
-            // Add check for scheduling, provide default if missing from old localStorage
+        if (typeof parsedData === 'object' && parsedData !== null &&
+          'personalInfo' in parsedData &&
+          'payment' in parsedData
+          // Add check for scheduling, provide default if missing from old localStorage
         ) {
           const validatedPaymentData = {
             paymentOption: parsedData.payment.paymentOption || "full-program",
@@ -70,16 +71,16 @@ const getInitialFormValues = (): EnrollmentFormData => {
   }
   // Fallback default values
   return {
-    personalInfo: { 
-      firstName: "", lastName: "", city: "", county: "", 
+    personalInfo: {
+      firstName: "", lastName: "", city: "", county: "",
       referralSource: "", countyOther: "", referralSourceOther: "",
       whyReferred: "",
       selectedProgram: "",
     },
     scheduling: { selectedClassSlotId: "" },
     documents: { agreedToTerms: false, signature: "" },
-    payment: { 
-      paymentOption: "full-program",
+    payment: {
+      paymentOption: "full_program" as PaymentOption,
       agreeToRecurring: false
     },
   };
@@ -116,30 +117,30 @@ export default function EnrollmentForm() {
     { id: "personal-info", title: "Personal Information", initialIcon: UserIcon, completedIcon: CheckCircle2 },
     { id: "scheduling", title: "Schedule Your Sessions", initialIcon: Calendar, completedIcon: CalendarCheck },
     { id: "documents", title: "Review Your Consent Form", initialIcon: FileText, completedIcon: FileCheck },
-    { id: "payment", title: "Complete Payment", initialIcon: CircleDollarSign, completedIcon: ShieldCheck }, 
+    { id: "payment", title: "Complete Payment", initialIcon: CircleDollarSign, completedIcon: ShieldCheck },
   ];
 
   // Reorder stepComponents accordingly
   const stepComponents = [
     <WelcomeSection key="welcome" steps={enrollmentSteps} />,
-    <PersonalInfoStep key="personal" />, 
+    <PersonalInfoStep key="personal" />,
     <SchedulingSection key="scheduling" />,
     <ConsentFormStep key="documents" />,
-    <PaymentStep key="payment" />, 
-    <SuccessStep key="success" />, 
+    <PaymentStep key="payment" />,
+    <SuccessStep key="success" />,
   ];
 
   const watchedPersonalInfo = methods.watch("personalInfo");
   const watchedScheduling = methods.watch("scheduling");
   const watchedDocuments = methods.watch("documents");
-  const watchedPaymentInfo = methods.watch("payment"); 
+  const watchedPaymentInfo = methods.watch("payment");
 
   const isStepComplete = (stepIndex: number): boolean => {
     switch (stepIndex) {
       case 0: return true; // Welcome
       case 1: { // PersonalInfoStep 
         const pi = watchedPersonalInfo;
-        if (!pi) return false; 
+        if (!pi) return false;
         const baseComplete = !!(pi.firstName && pi.lastName && pi.city && pi.whyReferred && pi.selectedProgram);
         if (!baseComplete) return false;
         const countySelected = !!pi.county;
@@ -148,7 +149,7 @@ export default function EnrollmentForm() {
         const referralSelected = !!pi.referralSource;
         if (!referralSelected) return false;
         if (pi.referralSource === 'Other' && !pi.referralSourceOther) return false;
-        return true; 
+        return true;
       }
       case 2: { // SchedulingSection
         const sched = watchedScheduling;
@@ -162,10 +163,15 @@ export default function EnrollmentForm() {
         const docs = watchedDocuments;
         return !!(docs && docs.agreedToTerms);
       }
-      case 4: { // PaymentStep (logic remains the same)
+      case 4: { // PaymentStep - Updated logic
         const payment = watchedPaymentInfo;
-        if (!payment || !payment.paymentOption) return false;
-        if (payment.paymentOption === 'per-session' && !payment.agreeToRecurring) return false;
+        if (!payment || !payment.paymentOption) return false; // Must select an option
+
+        // If autopay_weekly is selected, consent is required
+        if (payment.paymentOption === 'autopay_weekly' && !payment.agreeToRecurring) return false;
+
+        // For pay_as_you_go and full_program, consent is not strictly required by this check
+        // (though Zod schema ensures agreeToRecurring is false if not autopay_weekly for data integrity)
         return true;
       }
       default: return false;
@@ -229,8 +235,8 @@ export default function EnrollmentForm() {
     } else {
       // No hash, ensure history state is set for the initial step (Welcome)
       const defaultStepId = getStepIdForIndex(0);
-        if (defaultStepId) {
-         window.history.replaceState({ step: 0, id: defaultStepId }, "", `#${defaultStepId}`);
+      if (defaultStepId) {
+        window.history.replaceState({ step: 0, id: defaultStepId }, "", `#${defaultStepId}`);
       }
     }
 
@@ -278,7 +284,6 @@ export default function EnrollmentForm() {
     }
   };
 
-  // Scroll to top when changing steps
   useEffect(() => {
     if (contentRef.current) {
       contentRef.current.scrollTo(0, 0);
@@ -289,15 +294,13 @@ export default function EnrollmentForm() {
   const isLastStep = currentStep === stepComponents.length - 1
   const isSuccessStep = currentStep === stepComponents.length - 1
 
-  // Update stepperIndex calculation based on new number of steps
-  let stepperIndex = -1; 
-  if (currentStep >= 1 && currentStep <= 4) { // Map steps 1 through 4 to indices 0 through 3
-      stepperIndex = currentStep - 1;
-  } else if (currentStep > 4) { // If on success step, keep last stepper item active
-      stepperIndex = enrollmentSteps.length - 1;
+  let stepperIndex = -1;
+  if (currentStep >= 1 && currentStep <= 4) {
+    stepperIndex = currentStep - 1;
+  } else if (currentStep > 4) {
+    stepperIndex = enrollmentSteps.length - 1;
   }
-  // Welcome step (currentStep 0) shows no stepper
-  
+
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col min-h-screen bg-muted">
@@ -305,8 +308,8 @@ export default function EnrollmentForm() {
           {/* Full-width stepper without card wrapper */}
           {currentStep > 0 && currentStep < stepComponents.length - 1 && (
             <div className="mb-4 container mx-auto">
-              {/* Pass the calculated stepperIndex */} 
-              <AnimatedStepper steps={enrollmentSteps} currentStep={stepperIndex} /> 
+              {/* Pass the calculated stepperIndex */}
+              <AnimatedStepper steps={enrollmentSteps} currentStep={stepperIndex} />
             </div>
           )}
 
@@ -323,7 +326,7 @@ export default function EnrollmentForm() {
 
           {/* Navigation buttons - also apply consistent max-width if desired */}
           {!isSuccessStep && (
-            <div className="container mx-auto max-w-md mt-auto p-4">
+            <div className="container mx-auto max-w-lg mt-auto p-4">
               <div className={isFirstStep ? "flex justify-center" : "flex items-center justify-between"}>
                 {!isFirstStep ? (
                   <Button onClick={goToPreviousStep} variant="outline" className="mr-2">
@@ -336,9 +339,8 @@ export default function EnrollmentForm() {
                 <Button
                   onClick={goToNextStep}
                   size={isFirstStep ? "lg" : "default"}
-                  className={`${isFirstStep ? "px-8 py-2 h-auto text-base" : "w-auto"} ${
-                    !canProceed && !isFirstStep ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                  className={`${isFirstStep ? "px-8 py-2 h-auto text-base" : "w-auto"} ${!canProceed && !isFirstStep ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                   disabled={!canProceed && !isFirstStep} // Disable if step not complete (and not first step)
                 >
                   {isFirstStep ? "Start Enrollment" : "Continue"}

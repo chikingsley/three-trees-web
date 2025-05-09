@@ -16,14 +16,14 @@ interface WelcomeSectionProps {
 
 const WelcomeSection: React.FC<WelcomeSectionProps> = ({ steps }) => {
   return (
-    <div className="pt-6 px-6 flex flex-col flex-1 items-center justify-center">
+    <div className="pt-6 md:mt-24 px-6 flex flex-col flex-1 items-center justify-center">
       {/* Header Section */}
       <div className="text-center mx-auto">
-        <h1 className="text-xl font-bold mb-4 text-primary">Welcome to Three Trees</h1>
-        <p className="text-lg text-muted-foreground">
+        <h1 className="text-xl md:text-3xl font-bold mb-4 text-primary">Welcome to Three Trees</h1>
+        <p className="text-lg md:text-xl text-muted-foreground">
           Complete your enrollment in
         </p>
-        <p className="text-lg text-muted-foreground">
+        <p className="text-lg md:text-xl text-muted-foreground">
           <span className="font-medium text-primary">less than 2 minutes</span>
         </p>
       </div>
@@ -34,15 +34,15 @@ const WelcomeSection: React.FC<WelcomeSectionProps> = ({ steps }) => {
       </div>
 
       {/* Steps Section */}
-      <div className="space-y-4 text-left mx-auto w-[280px]">
+      <div className="space-y-4 text-left mx-auto w-[280px] md:w-[400px]">
         {steps.map((step, idx) => {
           const Icon = step.initialIcon;
           return (
             <div key={idx} className="flex items-center justify-between">
-              <div>
-                <h3 className="font-medium text-sm">{step.title}</h3>
+              <div> 
+                <h3 className="font-medium text-sm md:text-base">{step.title}</h3>
               </div>
-              <div className="bg-primary/10 p-1 rounded-full shrink-0 flex items-center justify-center">
+              <div className="bg-primary/10 p-1 md:p-2 rounded-full shrink-0 flex items-center justify-center">
                 <Icon size={18} className="text-primary" />
               </div>
             </div>

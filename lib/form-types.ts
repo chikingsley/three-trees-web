@@ -56,13 +56,11 @@ export const referralSources = [
 
 // Type definitions for Payment Step
 // (Moved from PaymentStep/index.tsx)
-export type PaymentOption = "per-session" | "full-program"; // Add export
+export type PaymentOption = "pay_as_you_go" | "autopay_weekly" | "full_program";
 
-export interface PaymentData { // Add export
-  paymentOption: PaymentOption; // Use defined type
-  cardNumber?: string;
-  expiry?: string;
-  cvc?: string;
+export interface PaymentData {
+  paymentOption: PaymentOption;
+  agreeToRecurring?: boolean;
 }
 
 // Individual Step Schemas
@@ -116,18 +114,25 @@ export const documentsSchema = z.object({
 
 // Update paymentSchema to use PaymentOption type if desired, or keep as string
 export const paymentSchema = z.object({
-  paymentOption: z.enum(["per-session", "full-program"], { required_error: "Please select a payment option" }),
-  // Card fields will be handled by Square SDK, remove from RHF schema for now
-  // cardNumber: z.string().optional(), 
-  // expiry: z.string().optional(), 
-  // cvc: z.string().optional(), 
-  agreeToRecurring: z.boolean().optional(), // Will be conditionally required
+  paymentOption: z.enum(["pay_as_you_go", "autopay_weekly", "full_program"], { 
+    required_error: "Please select a payment option" 
+  }),
+  agreeToRecurring: z.boolean().optional(),
 }).superRefine((data, ctx) => {
-  if (data.paymentOption === 'per-session' && !data.agreeToRecurring) {
+  if (data.paymentOption === 'autopay_weekly' && !data.agreeToRecurring) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "You must agree to recurring charges for the per-session option.",
+      message: "You must agree to recurring weekly charges for the autopay option.",
       path: ['agreeToRecurring'],
+    });
+  }
+  // If agreeToRecurring is true, paymentOption MUST be autopay_weekly.
+  // This prevents submitting consent for non-recurring or pay_as_you_go options.
+  if (data.agreeToRecurring === true && data.paymentOption !== 'autopay_weekly') {
+    ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Recurring agreement is only valid if autopay weekly is selected.",
+        path: ['agreeToRecurring'], // Or path: ['paymentOption']
     });
   }
 });
