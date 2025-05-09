@@ -11,7 +11,7 @@ const StepHeader: React.FC<StepHeaderProps> = ({ title, subtitle, className }) =
     <div className={`mb-4 text-center ${className ?? ""}`}>
       <h2 className="text-xl md:text-2xl font-bold mb-1 text-primary">{title}</h2>
       {subtitle && (
-        <p className="text-muted-foreground text-xs md:text-sm">{subtitle}</p>
+        <p className="text-muted-foreground text-sm md:text-sm">{subtitle}</p>
       )}
     </div>
   );

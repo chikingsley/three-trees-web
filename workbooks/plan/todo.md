@@ -63,19 +63,19 @@ This document outlines the phased development plan for the Three Trees platform,
   * [x] Payload CMS project initialized.
   * [x] Initial admin user for Payload set up.
   * [ ] Payload-Supabase Integration: Configure Payload collections to map to/manage Supabase tables for `Clients`, `Programs`, `ClassSlots`, `Payments`, `Enrollments`. This might require custom Payload hooks, adapters, or careful schema mirroring.
-  * [ ] Define Payload Collections (mapping to Supabase Tables) for MVP:
-    * [ ] `Clients`:
+  * [x] Define Payload Collections (mapping to Supabase Tables) for MVP:
+    * [x] `Clients`:
       * Fields: Data from `EnrollmentFormData` (name, contact, address, referral info, `selectedProgram` ID, `selectedClassSlotId`, `paymentOption`, `agreeToRecurring`).
       * Referral agent name.
       * Internal fields: Enrollment Date, Payment Status, Square Customer ID, Square Subscription ID.
-    * [ ] `Programs` (or use static `lib/form-types.ts` data for MVP if admin updates aren't critical for go-live):
+    * [x] `Programs` (or use static `lib/form-types.ts` data for MVP if admin updates aren't critical for go-live):
       * Attributes: ID, Name (gender-specific for DV as in `lib/form-types.ts`), Duration, Description, Weeks, Cost/Session, Enrollment Fee.
-    * [ ] `ClassSlots` (or use static `lib/form-types.ts` for MVP):
+    * [x] `ClassSlots` (or use static `lib/form-types.ts` for MVP):
       * Attributes: ID, Program ID, Day, Time, Spots Total.
       * **Note:** Users select a general time block. Admin manages internal splitting if needed.
-    * [ ] `Payments`:
+    * [x] `Payments`:
       * Fields: Amount, Date, Payment Method ("Square"), Square Transaction ID, Client (link), Type (Enrollment Fee, Subscription).
-    * [ ] `Enrollments`:
+    * [x] `Enrollments`:
       * Fields: Client (link), ClassSlot (link), Start Date.
   * [ ] Data Migration: No bulk migration for MVP.
   * [ ] API for Enrollment Form Submission (`/api/enroll` - NextJS API Route):
@@ -91,19 +91,19 @@ This document outlines the phased development plan for the Three Trees platform,
   * [x] Payload CMS project initialized.
   * [x] Initial admin user for Payload set up.
   * [ ] Payload-Supabase Integration: Configure Payload collections to map to/manage Supabase tables for `Clients`, `Programs`, `ClassSlots`, `Payments`, `Enrollments`. This might require custom Payload hooks, adapters, or careful schema mirroring.
-  * [ ] Define Payload Collections (mapping to Supabase Tables) for MVP:
-    * [ ] `Clients`:
+  * [x] Define Payload Collections (mapping to Supabase Tables) for MVP:
+    * [x] `Clients`:
       * Fields: Data from `EnrollmentFormData` (name, contact, address, referral info, `selectedProgram` ID, `selectedClassSlotId`, `paymentOption`, `agreeToRecurring`).
       * Referral agent name.
       * Internal fields: Enrollment Date, Payment Status, Square Customer ID, Square Subscription ID.
-    * [ ] `Programs` (or use static `lib/form-types.ts` data for MVP if admin updates aren't critical for go-live):
+    * [x] `Programs` (or use static `lib/form-types.ts` data for MVP if admin updates aren't critical for go-live):
       * Attributes: ID, Name (gender-specific for DV as in `lib/form-types.ts`), Duration, Description, Weeks, Cost/Session, Enrollment Fee.
-    * [ ] `ClassSlots` (or use static `lib/form-types.ts` for MVP):
+    * [x] `ClassSlots` (or use static `lib/form-types.ts` for MVP):
       * Attributes: ID, Program ID, Day, Time, Spots Total.
       * **Note:** Users select a general time block. Admin manages internal splitting if needed.
-    * [ ] `Payments`:
+    * [x] `Payments`:
       * Fields: Amount, Date, Payment Method ("Square"), Square Transaction ID, Client (link), Type (Enrollment Fee, Subscription).
-    * [ ] `Enrollments`:
+    * [x] `Enrollments`:
       * Fields: Client (link), ClassSlot (link), Start Date.
   * [ ] Data Migration: No bulk migration for MVP.
   * [ ] API for Enrollment Form Submission (`/api/enroll` - NextJS API Route):

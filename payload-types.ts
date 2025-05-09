@@ -72,9 +72,13 @@ export interface Config {
     testimonials: Testimonial;
     programTypes: ProgramType;
     clients: Client;
+    programs: Program;
     services: Service;
     locations: Location;
     blogPosts: BlogPost;
+    'class-slots': ClassSlot;
+    enrollments: Enrollment;
+    payments: Payment;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -86,9 +90,13 @@ export interface Config {
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     programTypes: ProgramTypesSelect<false> | ProgramTypesSelect<true>;
     clients: ClientsSelect<false> | ClientsSelect<true>;
+    programs: ProgramsSelect<false> | ProgramsSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     locations: LocationsSelect<false> | LocationsSelect<true>;
     blogPosts: BlogPostsSelect<false> | BlogPostsSelect<true>;
+    'class-slots': ClassSlotsSelect<false> | ClassSlotsSelect<true>;
+    enrollments: EnrollmentsSelect<false> | EnrollmentsSelect<true>;
+    payments: PaymentsSelect<false> | PaymentsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -264,6 +272,96 @@ export interface Client {
   id: number;
   firstName: string;
   lastName: string;
+  email?: string | null;
+  phone?: string | null;
+  city?: string | null;
+  sex?: ('Male' | 'Female') | null;
+  county?:
+    | (
+        | 'Abbeville'
+        | 'Aiken'
+        | 'York'
+        | 'Charleston'
+        | 'Chester'
+        | 'Dorchester'
+        | 'Edgefield'
+        | 'Fairfield'
+        | 'Greenville'
+        | 'Horry'
+        | 'Lancaster'
+        | 'Lexington'
+        | 'Orangeburg'
+        | 'Richland'
+        | 'Spartanburg'
+        | 'Union'
+        | 'Other'
+      )
+    | null;
+  countyOther?: string | null;
+  referralSource?:
+    | (
+        | 'Probation Pardon & Parole (PPP)'
+        | 'Pretrial Intervention (PTI)'
+        | 'Department of Social Services (DSS)'
+        | 'Other'
+      )
+    | null;
+  referralSourceOther?: string | null;
+  whyReferred?: string | null;
+  selectedProgram?: string | null;
+  selectedClassSlotId?: string | null;
+  agreedToTerms?: boolean | null;
+  paymentOption?: ('pay_as_you_go' | 'autopay_weekly' | 'full_program') | null;
+  agreeToRecurring?: boolean | null;
+  enrollmentDate?: string | null;
+  paymentStatus?:
+    | (
+        | 'pending_enrollment_fee'
+        | 'pending_subscription'
+        | 'active_autopay'
+        | 'active_paid_full'
+        | 'payment_issue'
+        | 'completed'
+        | 'on_hold'
+        | 'cancelled'
+      )
+    | null;
+  squareCustomerId?: string | null;
+  squareSubscriptionId?: string | null;
+  /**
+   * Notes for internal admin use only.
+   */
+  internalNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Define the programs offered, their structure, and pricing.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programs".
+ */
+export interface Program {
+  id: number;
+  /**
+   * A unique code for this program (e.g., dv_male, am, sort). This is used for linking.
+   */
+  programId: string;
+  name: string;
+  description?: string | null;
+  durationText?: string | null;
+  weeks?: number | null;
+  sessionsPerWeek?: number | null;
+  costPerSession: number;
+  enrollmentFee: number;
+  /**
+   * Categorize the program for filtering or display purposes.
+   */
+  programCategory?: ('court_ordered' | 'college_university' | 'corporate_hospital' | 'general_wellness') | null;
+  /**
+   * Active programs can be selected during enrollment.
+   */
+  isActive?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -530,6 +628,76 @@ export interface BlogPost {
   createdAt: string;
 }
 /**
+ * Define specific instances of classes, including day, time, and capacity.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "class-slots".
+ */
+export interface ClassSlot {
+  id: number;
+  program: number | Program;
+  day: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+  /**
+   * Enter time in a consistent format (e.g., 5:00 PM, 10:00 AM).
+   */
+  time: string;
+  /**
+   * Select if this class slot is gender-specific.
+   */
+  genderSpecific?: ('male' | 'female') | null;
+  spotsTotal: number;
+  slotIdentifier?: string | null;
+  /**
+   * Active slots are available for enrollment selection.
+   */
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Tracks client enrollments in specific class slots.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enrollments".
+ */
+export interface Enrollment {
+  id: number;
+  client: number | Client;
+  /**
+   * Links to the specific type of class slot the client enrolled in.
+   */
+  classSlot: number | ClassSlot;
+  enrollmentDate: string;
+  status?: ('active' | 'completed' | 'cancelled' | 'on_hold') | null;
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Records of financial transactions.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payments".
+ */
+export interface Payment {
+  id: number;
+  client: number | Client;
+  /**
+   * Amount in USD (e.g., 50.00 for $50.00)
+   */
+  amount: number;
+  paymentDate: string;
+  type: 'enrollment_fee' | 'session_fee' | 'full_program_prepayment' | 'other';
+  /**
+   * e.g., Square Online, Manual Offline
+   */
+  paymentMethod?: string | null;
+  squareTransactionId?: string | null;
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
@@ -557,6 +725,10 @@ export interface PayloadLockedDocument {
         value: number | Client;
       } | null)
     | ({
+        relationTo: 'programs';
+        value: number | Program;
+      } | null)
+    | ({
         relationTo: 'services';
         value: number | Service;
       } | null)
@@ -567,6 +739,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'blogPosts';
         value: number | BlogPost;
+      } | null)
+    | ({
+        relationTo: 'class-slots';
+        value: number | ClassSlot;
+      } | null)
+    | ({
+        relationTo: 'enrollments';
+        value: number | Enrollment;
+      } | null)
+    | ({
+        relationTo: 'payments';
+        value: number | Payment;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -705,6 +889,43 @@ export interface ProgramTypesSelect<T extends boolean = true> {
 export interface ClientsSelect<T extends boolean = true> {
   firstName?: T;
   lastName?: T;
+  email?: T;
+  phone?: T;
+  city?: T;
+  sex?: T;
+  county?: T;
+  countyOther?: T;
+  referralSource?: T;
+  referralSourceOther?: T;
+  whyReferred?: T;
+  selectedProgram?: T;
+  selectedClassSlotId?: T;
+  agreedToTerms?: T;
+  paymentOption?: T;
+  agreeToRecurring?: T;
+  enrollmentDate?: T;
+  paymentStatus?: T;
+  squareCustomerId?: T;
+  squareSubscriptionId?: T;
+  internalNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programs_select".
+ */
+export interface ProgramsSelect<T extends boolean = true> {
+  programId?: T;
+  name?: T;
+  description?: T;
+  durationText?: T;
+  weeks?: T;
+  sessionsPerWeek?: T;
+  costPerSession?: T;
+  enrollmentFee?: T;
+  programCategory?: T;
+  isActive?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -896,6 +1117,49 @@ export interface BlogPostsSelect<T extends boolean = true> {
               id?: T;
             };
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "class-slots_select".
+ */
+export interface ClassSlotsSelect<T extends boolean = true> {
+  program?: T;
+  day?: T;
+  time?: T;
+  genderSpecific?: T;
+  spotsTotal?: T;
+  slotIdentifier?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enrollments_select".
+ */
+export interface EnrollmentsSelect<T extends boolean = true> {
+  client?: T;
+  classSlot?: T;
+  enrollmentDate?: T;
+  status?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payments_select".
+ */
+export interface PaymentsSelect<T extends boolean = true> {
+  client?: T;
+  amount?: T;
+  paymentDate?: T;
+  type?: T;
+  paymentMethod?: T;
+  squareTransactionId?: T;
+  notes?: T;
   updatedAt?: T;
   createdAt?: T;
 }

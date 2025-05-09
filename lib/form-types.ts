@@ -68,6 +68,7 @@ export const personalInfoSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   city: z.string().min(1, "City is required"),
+  sex: z.enum(["Male", "Female"], { required_error: "Sex is required" }),
   county: z.string({ required_error: "County is required" }).min(1, "County is required"),
   countyOther: z.string().optional(),
   referralSource: z.string({ required_error: "Referral source is required" }).min(1, "Referral source is required"),

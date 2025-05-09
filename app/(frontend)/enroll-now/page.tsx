@@ -72,7 +72,7 @@ const getInitialFormValues = (): EnrollmentFormData => {
   // Fallback default values
   return {
     personalInfo: {
-      firstName: "", lastName: "", city: "", county: "",
+      firstName: "", lastName: "", city: "", county: "", sex: "Male",
       referralSource: "", countyOther: "", referralSourceOther: "",
       whyReferred: "",
       selectedProgram: "",
