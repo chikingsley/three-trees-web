@@ -59,25 +59,15 @@ This document outlines the phased development plan for the Three Trees platform,
     * **Decision:** For "go-live next week," simplest acceptable is checkbox affirming "I have read and agree..." with form data submission logged as proof of consent
   * [ ] **Storage:** Determine how signed consent representation (e.g., PDF snapshot, timestamped affirmation text) will be stored (e.g., S3 via Supabase Storage or Payload Storage) and linked to the Client record in Payload
 * [ ] 9. Backend - Initial Setup (Payload CMS with Supabase/PostgreSQL Backend)
-  * **Architectural Decision:** Supabase (PostgreSQL) will be the primary database. Payload CMS will serve as the admin panel and Headless CMS, configured to interact with Supabase tables.
   * [x] Payload CMS project initialized.
   * [x] Initial admin user for Payload set up.
-  * [ ] Payload-Supabase Integration: Configure Payload collections to map to/manage Supabase tables for `Clients`, `Programs`, `ClassSlots`, `Payments`, `Enrollments`. This might require custom Payload hooks, adapters, or careful schema mirroring.
   * [x] Define Payload Collections (mapping to Supabase Tables) for MVP:
-    * [x] `Clients`:
-      * Fields: Data from `EnrollmentFormData` (name, contact, address, referral info, `selectedProgram` ID, `selectedClassSlotId`, `paymentOption`, `agreeToRecurring`).
-      * Referral agent name.
-      * Internal fields: Enrollment Date, Payment Status, Square Customer ID, Square Subscription ID.
-    * [x] `Programs` (or use static `lib/form-types.ts` data for MVP if admin updates aren't critical for go-live):
-      * Attributes: ID, Name (gender-specific for DV as in `lib/form-types.ts`), Duration, Description, Weeks, Cost/Session, Enrollment Fee.
-    * [x] `ClassSlots` (or use static `lib/form-types.ts` for MVP):
-      * Attributes: ID, Program ID, Day, Time, Spots Total.
-      * **Note:** Users select a general time block. Admin manages internal splitting if needed.
-    * [x] `Payments`:
-      * Fields: Amount, Date, Payment Method ("Square"), Square Transaction ID, Client (link), Type (Enrollment Fee, Subscription).
-    * [x] `Enrollments`:
-      * Fields: Client (link), ClassSlot (link), Start Date.
-  * [ ] Data Migration: No bulk migration for MVP.
+    * [x] `Clients`
+    * [x] `Programs`
+    * [x] `ClassSlots`
+    * [x] `Payments`
+    * [x] `Enrollments`
+  * [x] **Decision** Data Migration: No bulk migration for MVP.
   * [ ] API for Enrollment Form Submission (`/api/enroll` - NextJS API Route):
     * [*Validate incoming `EnrollmentFormData` (backend Zod validation)*]
     * [*Create/Update `Client` record (via Payload, targeting Supabase)*]
@@ -87,36 +77,7 @@ This document outlines the phased development plan for the Three Trees platform,
     * [ ] Send confirmation email (client & admin).
     * [ ] Implement error handling.
     * [ ] (Future Enhancement Idea) Consider refactor to save form data incrementally per step for abandonment recovery and analytics.
-* [ ] 2. Backend - Initial Setup (Payload CMS with Supabase/PostgreSQL Backend)
-  * **Architectural Decision:** Supabase (PostgreSQL) will be the primary database. Payload CMS will serve as the admin panel and Headless CMS, configured to interact with Supabase tables.
-  * [x] Payload CMS project initialized.
-  * [x] Initial admin user for Payload set up.
-  * [ ] Payload-Supabase Integration: Configure Payload collections to map to/manage Supabase tables for `Clients`, `Programs`, `ClassSlots`, `Payments`, `Enrollments`. This might require custom Payload hooks, adapters, or careful schema mirroring.
-  * [x] Define Payload Collections (mapping to Supabase Tables) for MVP:
-    * [x] `Clients`:
-      * Fields: Data from `EnrollmentFormData` (name, contact, address, referral info, `selectedProgram` ID, `selectedClassSlotId`, `paymentOption`, `agreeToRecurring`).
-      * Referral agent name.
-      * Internal fields: Enrollment Date, Payment Status, Square Customer ID, Square Subscription ID.
-    * [x] `Programs` (or use static `lib/form-types.ts` data for MVP if admin updates aren't critical for go-live):
-      * Attributes: ID, Name (gender-specific for DV as in `lib/form-types.ts`), Duration, Description, Weeks, Cost/Session, Enrollment Fee.
-    * [x] `ClassSlots` (or use static `lib/form-types.ts` for MVP):
-      * Attributes: ID, Program ID, Day, Time, Spots Total.
-      * **Note:** Users select a general time block. Admin manages internal splitting if needed.
-    * [x] `Payments`:
-      * Fields: Amount, Date, Payment Method ("Square"), Square Transaction ID, Client (link), Type (Enrollment Fee, Subscription).
-    * [x] `Enrollments`:
-      * Fields: Client (link), ClassSlot (link), Start Date.
-  * [ ] Data Migration: No bulk migration for MVP.
-  * [ ] API for Enrollment Form Submission (`/api/enroll` - NextJS API Route):
-    * [*Validate incoming `EnrollmentFormData` (backend Zod validation)*]
-    * [*Create/Update `Client` record (via Payload, targeting Supabase)*]
-    * [ ] Handle payment processing via Square (see below).
-    * [ ] Store digital consent link/data.
-    * [ ] Create `Enrollment` record.
-    * [ ] Send confirmation email (client & admin).
-    * [ ] Implement error handling.
-    * [ ] (Future Enhancement Idea) Consider refactor to save form data incrementally per step for abandonment recovery and analytics.
-* [ ] 3. Payments - Square Integration (MVP)
+* [ ] 10. Payments - Square Integration (MVP)
   * **Frontend (`PaymentStep.tsx`):**
     * [ ] Integrate Square Web Payments SDK into `#card-container`.
     * [ ] On "Pay" button click: Validate RHF step, then `card.tokenize()`.
@@ -131,10 +92,10 @@ This document outlines the phased development plan for the Three Trees platform,
       * [ ] 4. Subscribe Square Customer to pre-defined weekly plan (from Square Dashboard).
       * [ ] 5. Store Square Customer ID & Subscription ID with `Client`.
     * [ ] Securely manage Square Access Token.
-* [ ] 4. Phase 1 Completion - Client Portal (Manage Payments - Basic)
+* [ ] 11. Phase 1 Completion - Client Portal (Manage Payments - Basic)
   * [ ] Authentication: Basic client login (Payload Auth, custom frontend, no Payload Admin UI access).
   * [ ] Functionality: View subscription status, update card on file (Square SDK), view payment history (from Payload/Supabase).
-* [ ] 5. Phase 1 Completion - Admin - Basic Client & Class Management View (Payload CMS)
+* [ ] 12. Phase 1 Completion - Admin - Basic Client & Class Management View (Payload CMS)
   * [ ] View client list & details.
   * [ ] View class rosters: For each `ClassSlot`, list enrolled clients and show spots filled / total spots.
   * [ ] Manually update client status.
