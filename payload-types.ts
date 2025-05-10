@@ -272,10 +272,9 @@ export interface Client {
   id: number;
   firstName: string;
   lastName: string;
+  sex?: ('Male' | 'Female') | null;
   email?: string | null;
   phone?: string | null;
-  city?: string | null;
-  sex?: ('Male' | 'Female') | null;
   county?:
     | (
         | 'Abbeville'
@@ -298,6 +297,10 @@ export interface Client {
       )
     | null;
   countyOther?: string | null;
+  city?: string | null;
+  state?: string | null;
+  zipcode?: string | null;
+  consentToContact?: boolean | null;
   referralSource?:
     | (
         | 'Probation Pardon & Parole (PPP)'
@@ -313,6 +316,16 @@ export interface Client {
   agreedToTerms?: boolean | null;
   paymentOption?: ('pay_as_you_go' | 'autopay_weekly' | 'full_program') | null;
   agreeToRecurring?: boolean | null;
+  enrollmentProcessStatus?:
+    | (
+        | 'contact_info_collected'
+        | 'program_info_collected'
+        | 'schedule_selected'
+        | 'consent_agreed'
+        | 'final_data_collected_pending_payment'
+        | 'enrollment_complete'
+      )
+    | null;
   enrollmentDate?: string | null;
   paymentStatus?:
     | (
@@ -887,14 +900,18 @@ export interface ProgramTypesSelect<T extends boolean = true> {
  * via the `definition` "clients_select".
  */
 export interface ClientsSelect<T extends boolean = true> {
+  id?: T;
   firstName?: T;
   lastName?: T;
+  sex?: T;
   email?: T;
   phone?: T;
-  city?: T;
-  sex?: T;
   county?: T;
   countyOther?: T;
+  city?: T;
+  state?: T;
+  zipcode?: T;
+  consentToContact?: T;
   referralSource?: T;
   referralSourceOther?: T;
   whyReferred?: T;
@@ -903,6 +920,7 @@ export interface ClientsSelect<T extends boolean = true> {
   agreedToTerms?: T;
   paymentOption?: T;
   agreeToRecurring?: T;
+  enrollmentProcessStatus?: T;
   enrollmentDate?: T;
   paymentStatus?: T;
   squareCustomerId?: T;

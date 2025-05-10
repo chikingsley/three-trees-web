@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   ArrowLeft,
   ArrowRight,
+  Loader2 as SpinnerIcon,
 } from "lucide-react"
 import { AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
@@ -44,9 +45,9 @@ const getInitialFormValues = (): EnrollmentFormData => {
       const savedData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
       if (savedData) {
         const parsedData = JSON.parse(savedData);
-        if (typeof parsedData === 'object' && parsedData !== null && 
-            'personalInfo' in parsedData && 
-            'payment' in parsedData 
+        if (typeof parsedData === 'object' && parsedData !== null &&
+          'personalInfo' in parsedData &&
+          'payment' in parsedData
         ) {
           const validatedPaymentData = {
             paymentOption: parsedData.payment.paymentOption || "full_program",
@@ -58,10 +59,10 @@ const getInitialFormValues = (): EnrollmentFormData => {
           // Ensure all fields, including new ones, are properly defaulted or loaded
           const defaultPersonalInfo = {
             firstName: "", lastName: "", email: "", phone: "",
-            city: "", state: "", zipCode: "",
-            sex: "Male", 
+            city: "", state: "", zipcode: "",
+            sex: "Male",
             county: "", countyOther: "",
-            consentToContact: false, 
+            consentToContact: false,
             referralSource: "", referralSourceOther: "",
             whyReferred: "",
             selectedProgram: "",
@@ -84,10 +85,10 @@ const getInitialFormValues = (): EnrollmentFormData => {
   return {
     personalInfo: {
       firstName: "", lastName: "", email: "", phone: "",
-      city: "", state: "", zipCode: "",
-      sex: "Male", 
+      city: "", state: "", zipcode: "",
+      sex: "Male",
       county: "", countyOther: "",
-      consentToContact: false, 
+      consentToContact: false,
       referralSource: "", referralSourceOther: "",
       whyReferred: "",
       selectedProgram: "",
@@ -102,6 +103,11 @@ const getInitialFormValues = (): EnrollmentFormData => {
 };
 
 export default function EnrollmentForm() {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [draftClientId, setDraftClientId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+
   const methods = useForm<EnrollmentFormData>({
     resolver: zodResolver(enrollmentFormSchema),
     defaultValues: getInitialFormValues(),
@@ -124,31 +130,28 @@ export default function EnrollmentForm() {
     return () => subscription.unsubscribe();
   }, [methods]);
 
-  const [currentStep, setCurrentStep] = useState(0);
-  const contentRef = useRef<HTMLDivElement>(null);
-
   const enrollmentSteps = [
     { id: "contact-info", title: "Contact Information", initialIcon: UserIcon, completedIcon: CheckCircle2 },
     { id: "program-info", title: "Program Information", initialIcon: UserIcon, completedIcon: CheckCircle2 },
     { id: "scheduling", title: "Schedule Your Sessions", initialIcon: Calendar, completedIcon: CalendarCheck },
     { id: "documents", title: "Review Your Consent Form", initialIcon: FileText, completedIcon: FileCheck },
-    { id: "payment", title: "Complete Payment", initialIcon: CircleDollarSign, completedIcon: ShieldCheck }, 
+    { id: "payment", title: "Complete Payment", initialIcon: CircleDollarSign, completedIcon: ShieldCheck },
   ];
 
   const stepComponents = [
-    <WelcomeSection key="welcome" steps={enrollmentSteps} />, 
-    <ContactInfoStep key="contact" />,                       
-    <ProgramInfoStep key="program" />,                       
-    <SchedulingSection key="scheduling" />,                  
-    <ConsentFormStep key="documents" />,                     
-    <PaymentStep key="payment" />,                           
-    <SuccessStep key="success" />,                           
+    <WelcomeSection key="welcome" steps={enrollmentSteps} />,
+    <ContactInfoStep key="contact" />,
+    <ProgramInfoStep key="program" />,
+    <SchedulingSection key="scheduling" />,
+    <ConsentFormStep key="documents" />,
+    <PaymentStep key="payment" />,
+    <SuccessStep key="success" />,
   ];
 
   const watchedPersonalInfo = methods.watch("personalInfo");
   const watchedScheduling = methods.watch("scheduling");
   const watchedDocuments = methods.watch("documents");
-  const watchedPaymentInfo = methods.watch("payment"); 
+  const watchedPaymentInfo = methods.watch("payment");
 
   // Updated isStepComplete logic for new steps
   const isStepComplete = (stepIndex: number): boolean => {
@@ -156,9 +159,9 @@ export default function EnrollmentForm() {
       case 0: return true; // Welcome
       case 1: { // ContactInfoStep
         const pi = watchedPersonalInfo;
-        if (!pi) return false; 
-        // Add checks for new fields: email, phone, state, zipCode, consentToContact
-        return !!(pi.firstName && pi.lastName && pi.email && pi.phone && pi.city && pi.state && pi.zipCode && pi.sex && pi.county && (pi.county !== 'Other' || pi.countyOther) && pi.consentToContact);
+        if (!pi) return false;
+        // Add checks for new fields: email, phone, state, zipcode, consentToContact
+        return !!(pi.firstName && pi.lastName && pi.email && pi.phone && pi.city && pi.state && pi.zipcode && pi.sex && pi.county && (pi.county !== 'Other' || pi.countyOther) && pi.consentToContact);
       }
       case 2: { // ProgramInfoStep
         const pi = watchedPersonalInfo;
@@ -250,82 +253,99 @@ export default function EnrollmentForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, []); // Run only on mount and unmount
 
-  // goToNextStep needs to handle API calls for step 1 and 2 (ContactInfo, ProgramInfo)
   const goToNextStep = async () => {
-    let canProceedValidation = true;
-    let isLastDataStepBeforeBackend = false;
+    // Frontend validation using RHF trigger based on current step
+    let fieldsToValidate: any[] = []; // Array of field names for RHF's trigger
+    let currentPhase = '';
+    let dataForApi: any = {};
 
+    // Determine fields to validate and API phase based on current step index
+    // stepComponents array: 0:Welcome, 1:Contact, 2:Program, 3:Scheduling, 4:Consent, 5:Payment, 6:Success
     switch (currentStep) {
       case 1: // ContactInfoStep
-        canProceedValidation = await methods.trigger(["personalInfo.firstName", "personalInfo.lastName", "personalInfo.email", "personalInfo.phone", "personalInfo.city", "personalInfo.state", "personalInfo.zipCode", "personalInfo.sex", "personalInfo.county", "personalInfo.countyOther", "personalInfo.consentToContact"]);
-        if (canProceedValidation) {
-          // TODO: API Call 1 - Submit Contact Info
-          console.log("Submitting Contact Info...");
-          // const contactData = methods.getValues("personalInfo"); // Get relevant parts
-          // await submitPartialData(contactData, 'contact'); 
-        }
+        fieldsToValidate = [
+          "personalInfo.firstName", "personalInfo.lastName", "personalInfo.email",
+          "personalInfo.phone", "personalInfo.city", "personalInfo.state",
+          "personalInfo.zipcode", "personalInfo.sex", "personalInfo.county",
+          "personalInfo.consentToContact"
+          // Note: countyOther is conditionally required, RHF schema should handle this
+        ];
+        currentPhase = 'contactInfo';
+        const piContact = methods.getValues("personalInfo");
+        dataForApi = {
+          personalInfo: {
+            firstName: piContact.firstName, lastName: piContact.lastName, email: piContact.email, phone: piContact.phone,
+            city: piContact.city, state: piContact.state, zipcode: piContact.zipcode, sex: piContact.sex,
+            county: piContact.county, countyOther: piContact.countyOther, consentToContact: piContact.consentToContact
+          }
+        };
         break;
-      case 2: // ProgramInfoStep
-        canProceedValidation = await methods.trigger(["personalInfo.referralSource", "personalInfo.referralSourceOther", "personalInfo.selectedProgram", "personalInfo.whyReferred"]);
-        if (canProceedValidation) {
-          // TODO: API Call 2 - Submit Program Info (update existing client)
-          console.log("Submitting Program Info...");
-          // const programData = methods.getValues("personalInfo"); // Get relevant parts
-          // await submitPartialData(programData, 'program'); 
-        }
+      // Add cases for other steps later (ProgramInfo, Scheduling, Consent)
+      default:
+        // For steps without API calls or if logic is handled elsewhere (e.g. Welcome, Payment's final submit)
         break;
-      case 3: // Scheduling
-        canProceedValidation = await methods.trigger("scheduling");
-        // Potentially API Call 3 - Update with scheduling
-        break;
-      case 4: // Documents
-        canProceedValidation = await methods.trigger("documents");
-        // Potentially API Call 4 - Update with documents
-        break;
-      case 5: // Payment - This is where the main submission for payment processing happens
-        canProceedValidation = await methods.trigger("payment");
-        isLastDataStepBeforeBackend = true; // This step now triggers the main backend call
-        break;
-      default: break;
     }
 
-    if (canProceedValidation) {
-      if (isLastDataStepBeforeBackend) {
-        // This is where the final submission to /api/enroll should happen
-        // which includes payment processing.
-        console.log("Attempting final submission to /api/enroll...");
-        try {
-          const allFormData = methods.getValues();
-          const response = await fetch('/api/enroll', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(allFormData),
-          });
-          if (!response.ok) {
-            const errorData = await response.json();
-            console.error("Enrollment submission failed:", errorData);
-            // TODO: Show error to user (e.g., using a toast notification)
-            alert(`Submission failed: ${errorData.error || 'Unknown error'} - ${JSON.stringify(errorData.details || '')}`);
-            return; // Don't proceed to next step if submission fails
-          }
-          // If successful, proceed to the next step (SuccessStep)
-          console.log("Enrollment submission successful");
-        } catch (error) {
-          console.error("Error submitting enrollment:", error);
-          // TODO: Show error to user
-          alert("An unexpected error occurred during submission.");
-          return; // Don't proceed
+    if (fieldsToValidate.length > 0) {
+      const isValid = await methods.trigger(fieldsToValidate as any); // Cast to any to satisfy RHF trigger type if complex
+      if (!isValid) {
+        console.log("Frontend validation failed for step:", currentStep);
+        // Optionally, find the first error and scroll to it.
+        // const firstError = Object.keys(methods.formState.errors)[0];
+        // if (firstError) { document.getElementsByName(firstError)[0]?.focus(); }
+        return; // Stop if validation fails
+      }
+    }
+
+    // If there's a phase defined for this step, make an API call
+    if (currentPhase) {
+      setIsLoading(true);
+      try {
+        const body = {
+          ...dataForApi,
+          submissionPhase: currentPhase,
+          clientId: draftClientId, // Will be null for the first call, populated for subsequent ones
+        };
+
+        const response = await fetch('/api/enroll', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+
+        const responseBody = await response.json();
+
+        if (!response.ok) {
+          console.error(`API Error for phase ${currentPhase}:`, responseBody);
+          alert(`Error saving data (${currentPhase}): ${responseBody.error || response.statusText}`);
+          setIsLoading(false);
+          return;
         }
+
+        console.log(`Phase ${currentPhase} successful:`, responseBody);
+        if (responseBody.clientId) {
+          setDraftClientId(responseBody.clientId);
+        }
+      } catch (error) {
+        console.error(`Network or unexpected error during ${currentPhase} API call:`, error);
+        alert("An unexpected network error occurred. Please try again.");
+        setIsLoading(false);
+        return;
       }
-      // Navigate to the next UI step
-      const nextStep = Math.min(currentStep + 1, stepComponents.length - 1);
-      const stepId = getStepIdForIndex(nextStep);
-      setCurrentStep(nextStep);
+      setIsLoading(false);
+    }
+
+    // Proceed to next step UI update (original logic)
+    if (currentStep < stepComponents.length - 1) {
+      const nextStepIndex = currentStep + 1;
+      setCurrentStep(nextStepIndex);
+      const stepId = getStepIdForIndex(nextStepIndex);
       if (stepId) {
-        window.history.pushState({ step: nextStep, id: stepId }, "", `#${stepId}`);
+        window.history.pushState({ step: nextStepIndex, id: stepId }, ``, `#${stepId}`);
       }
-    } else {
-      console.log("Validation errors:", methods.formState.errors);
+      if (contentRef.current) {
+        contentRef.current.scrollTop = 0;
+      }
     }
   };
 
@@ -395,10 +415,19 @@ export default function EnrollmentForm() {
                   size={isFirstStep ? "lg" : "default"}
                   className={`${isFirstStep ? "px-8 py-2 h-auto text-base" : "w-auto"} ${!canProceed && !isFirstStep ? "opacity-50 cursor-not-allowed" : ""
                     }`}
-                  disabled={!canProceed && !isFirstStep} // Disable if step not complete (and not first step)
+                  disabled={(!canProceed && !isFirstStep) || isLoading}
                 >
-                  {isFirstStep ? "Start Enrollment" : "Continue"}
-                  {!isLastStep && <ArrowRight size={16} className="ml-2" />}
+                  {isLoading ? (
+                    <>
+                      <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
+                      {isFirstStep ? "Processing..." : "Saving..."}
+                    </>
+                  ) : (
+                    <>
+                      {isFirstStep ? "Start Enrollment" : "Continue"}
+                      {!isLastStep && <ArrowRight size={16} className="ml-2" />}
+                    </>
+                  )}
                 </Button>
               </div>
             </div>

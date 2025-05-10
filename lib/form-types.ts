@@ -71,7 +71,7 @@ export const personalInfoSchema = z.object({
   phone: z.string().min(1, "Phone is required"),
   city: z.string().min(1, "City is required"),
   state: z.string().min(1, "State is required"),
-  zipCode: z.string().regex(/^\d{5}$/, "Zip code must be 5 digits"),
+  zipcode: z.string().regex(/^\d{5}$/, "Zip code must be 5 digits"),
   sex: z.enum(["Male", "Female"], { required_error: "Sex is required" }),
   county: z.string({ required_error: "County is required" }).min(1, "County is required"),
   countyOther: z.string().optional(),

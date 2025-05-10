@@ -132,7 +132,7 @@ const ContactInfoStep: React.FC = () => {
             />
             <FormField
                 control={control}
-                name="personalInfo.zipCode"
+                name="personalInfo.zipcode"
                 render={({ field }) => (
                 <FormItem>
                     <FormLabel className="text-sm">Zip Code <span className="">*</span></FormLabel>
