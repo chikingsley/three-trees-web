@@ -79,13 +79,14 @@ This document outlines the phased development plan for the Three Trees platform,
       * Fields: Client (link), ClassSlot (link), Start Date.
   * [ ] Data Migration: No bulk migration for MVP.
   * [ ] API for Enrollment Form Submission (`/api/enroll` - NextJS API Route):
-    * [ ] Validate incoming `EnrollmentFormData` (backend Zod validation).
-    * [ ] Create/Update `Client` record (via Payload, targeting Supabase).
+    * [*Validate incoming `EnrollmentFormData` (backend Zod validation)*]
+    * [*Create/Update `Client` record (via Payload, targeting Supabase)*]
     * [ ] Handle payment processing via Square (see below).
     * [ ] Store digital consent link/data.
     * [ ] Create `Enrollment` record.
     * [ ] Send confirmation email (client & admin).
     * [ ] Implement error handling.
+    * [ ] (Future Enhancement Idea) Consider refactor to save form data incrementally per step for abandonment recovery and analytics.
 * [ ] 2. Backend - Initial Setup (Payload CMS with Supabase/PostgreSQL Backend)
   * **Architectural Decision:** Supabase (PostgreSQL) will be the primary database. Payload CMS will serve as the admin panel and Headless CMS, configured to interact with Supabase tables.
   * [x] Payload CMS project initialized.
@@ -107,13 +108,14 @@ This document outlines the phased development plan for the Three Trees platform,
       * Fields: Client (link), ClassSlot (link), Start Date.
   * [ ] Data Migration: No bulk migration for MVP.
   * [ ] API for Enrollment Form Submission (`/api/enroll` - NextJS API Route):
-    * [ ] Validate incoming `EnrollmentFormData` (backend Zod validation).
-    * [ ] Create/Update `Client` record (via Payload, targeting Supabase).
+    * [*Validate incoming `EnrollmentFormData` (backend Zod validation)*]
+    * [*Create/Update `Client` record (via Payload, targeting Supabase)*]
     * [ ] Handle payment processing via Square (see below).
     * [ ] Store digital consent link/data.
     * [ ] Create `Enrollment` record.
     * [ ] Send confirmation email (client & admin).
     * [ ] Implement error handling.
+    * [ ] (Future Enhancement Idea) Consider refactor to save form data incrementally per step for abandonment recovery and analytics.
 * [ ] 3. Payments - Square Integration (MVP)
   * **Frontend (`PaymentStep.tsx`):**
     * [ ] Integrate Square Web Payments SDK into `#card-container`.

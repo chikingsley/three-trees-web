@@ -67,6 +67,8 @@ export interface PaymentData {
 export const personalInfoSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email address").optional().or(z.literal('')),
+  phone: z.string().optional().or(z.literal('')),
   city: z.string().min(1, "City is required"),
   sex: z.enum(["Male", "Female"], { required_error: "Sex is required" }),
   county: z.string({ required_error: "County is required" }).min(1, "County is required"),

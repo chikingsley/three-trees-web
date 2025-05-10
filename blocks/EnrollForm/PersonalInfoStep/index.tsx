@@ -63,6 +63,35 @@ const PersonalInfoStep: React.FC = () => {
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={control}
+            name="personalInfo.email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-sm">Email <span className="">*</span></FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="Enter your email..." {...field} className="bg-white"/>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="personalInfo.phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-sm">Phone</FormLabel>
+                <FormControl>
+                  <Input type="tel" placeholder="Enter your phone..." {...field} className="bg-white"/>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={control}
             name="personalInfo.city"
             render={({ field }) => (
               <FormItem>
