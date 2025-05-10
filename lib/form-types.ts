@@ -67,12 +67,17 @@ export interface PaymentData {
 export const personalInfoSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Invalid email address").optional().or(z.literal('')),
-  phone: z.string().optional().or(z.literal('')),
+  email: z.string().email("Invalid email address").min(1, "Email is required"),
+  phone: z.string().min(1, "Phone is required"),
   city: z.string().min(1, "City is required"),
+  state: z.string().min(1, "State is required"),
+  zipCode: z.string().regex(/^\d{5}$/, "Zip code must be 5 digits"),
   sex: z.enum(["Male", "Female"], { required_error: "Sex is required" }),
   county: z.string({ required_error: "County is required" }).min(1, "County is required"),
   countyOther: z.string().optional(),
+  consentToContact: z.boolean().refine(val => val === true, { 
+    message: "You must consent to be contacted to proceed." 
+  }),
   referralSource: z.string({ required_error: "Referral source is required" }).min(1, "Referral source is required"),
   referralSourceOther: z.string().optional(),
   whyReferred: z.string().min(1, "Reason for referral is required"),
@@ -87,10 +92,7 @@ export const personalInfoSchema = z.object({
     });
   }
   // If county is not 'Other', countyOther should ideally be empty/null (optional: add refinement to clear it)
-  if (data.county !== 'Other' && data.countyOther) {
-    // Optional: You might want to clear countyOther if county is changed from Other
-    // data.countyOther = undefined; // This mutation is tricky in refine, better handled in component logic if needed
-  }
+  // No specific action needed here for superRefine, component can handle clearing if necessary
 
   // If referralSource is 'Other', referralSourceOther must be provided
   if (data.referralSource === 'Other' && !data.referralSourceOther) {
@@ -100,10 +102,7 @@ export const personalInfoSchema = z.object({
       path: ['referralSourceOther'],
     });
   }
-  if (data.referralSource !== 'Other' && data.referralSourceOther) {
-    // Optional: Clear referralSourceOther if referralSource is changed from Other
-    // data.referralSourceOther = undefined;
-  }
+  // No specific action for referralSource !== 'Other' in superRefine
 });
 
 export const schedulingSchema = z.object({
