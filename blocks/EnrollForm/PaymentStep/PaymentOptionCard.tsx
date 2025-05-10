@@ -61,10 +61,10 @@ const PaymentOptionCard: React.FC<PaymentOptionCardProps> = ({
       </div>
 
       {/* Bottom Section: Discount and Due Today */}
-      <div className="mt-auto text-center pt-1">
+      <div className="mt-auto pt-1 w-full">
         {discountText && (
           <div
-            className={`text-xs mb-1 text-center ${
+            className={`w-full text-center text-xs mb-1 ${
               discountText.includes("Save")
                 ? "text-green-600"
                 : "text-muted-foreground"
@@ -74,13 +74,13 @@ const PaymentOptionCard: React.FC<PaymentOptionCardProps> = ({
           </div>
         )}
         <div
-          className={`text-xs ${isSelected ? "text-primary font-medium" : "text-foreground"
+          className={`w-full text-center text-xs ${isSelected ? "text-primary font-medium" : "text-foreground"
             }`}
         >
           Due today:
         </div>
         <div
-          className={`text-sm font-semibold ${isSelected ? "text-primary" : "text-foreground"
+          className={`w-full text-center text-sm font-semibold ${isSelected ? "text-primary" : "text-foreground"
             }`}
         >
           ${dueTodayAmount.toFixed(2)}
