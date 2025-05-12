@@ -65,7 +65,7 @@ const ContactInfoStep: React.FC = () => {
         </div>
 
         {/* Email / Phone / Sex Row */}
-        <div className="grid grid-cols-[auto_auto_auto] gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-[auto_auto_auto] gap-4">
           <FormField
             control={control}
             name="personalInfo.email"
@@ -116,7 +116,7 @@ const ContactInfoStep: React.FC = () => {
         </div>
 
         {/* City / State / Zip Row */}
-        <div className="grid grid-cols-[1fr_auto_auto] gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-[1fr_auto_auto] gap-4">
           <FormField
             control={control}
             name="personalInfo.city"
@@ -171,19 +171,24 @@ const ContactInfoStep: React.FC = () => {
           control={control}
           name="personalInfo.consentToContact"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 shadow bg-white mt-6">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel className="text-sm font-normal">
-                  By checking this box, you agree to be contacted by Three Trees via email or phone regarding your enrollment and our services. <span className="">*</span>
-                </FormLabel>
+            <FormItem className="mt-6">
+              <div className="rounded-md border p-4 shadow bg-white flex flex-row items-start space-x-3">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    id="consent-checkbox"
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel htmlFor="consent-checkbox" className="text-sm font-normal cursor-pointer">
+                    By checking this box, you agree to be contacted by Three Trees via email or phone regarding your enrollment and our services.**
+                  </FormLabel>
+                </div>
               </div>
-              <FormMessage />
+              <div className="pt-1">
+                <FormMessage />
+              </div>
             </FormItem>
           )}
         />
