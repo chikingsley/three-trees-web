@@ -271,3 +271,38 @@ This document outlines the phased development plan for the Three Trees platform,
     * Does `selectedClassSlotId` point to one of these specific, capacity-limited "schedulable" instances? (Assumed yes for now).
     * Or does the client pick a more general block and then admins assign to an instance?
     * How is attendance taken if it's a general pool initially?
+
+York PPP
+York DSS
+Union PPP
+Spartanburg PPP
+Richland PPP
+Orangeburg PPP
+Lexington PPP
+Lancaster PPP
+Greenville PPP
+Fairfield PPP
+Chester PPP
+Chester PTI
+Cherokee PPP
+Charleston PPP
+Anderson PPP
+Aiken PPP
+Abbeville PPP
+
+if (!data.county && data.countyOther) {
+  const name = data.countyOther.trim()
+
+  const exists = await req.payload.find({
+    collection: 'counties',
+    where: { name: { equals: name } },
+    limit: 1,
+  })
+
+  if (exists.totalDocs === 0) {
+    await req.payload.create({
+      collection: 'counties',
+      data: { name, isActive: false } // stays hidden until approved
+    })
+  }
+}

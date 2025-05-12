@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useFormContext } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -13,7 +13,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import type { EnrollmentFormData } from "@/lib/form-types";
-import { countyNames } from "@/lib/form-types"; // Assuming stateNames will be added or handled
 import StepHeader from "@/components/StepHeader"
 
 // TODO: Consider adding a list of states for a dropdown, e.g., stateNames from form-types or a local const
@@ -27,7 +26,6 @@ const stateAbbreviations = [
 
 const ContactInfoStep: React.FC = () => {
   const { control } = useFormContext<EnrollmentFormData>();
-  const watchedCounty = useWatch({ control, name: "personalInfo.county" });
 
   return (
     <>
@@ -143,51 +141,6 @@ const ContactInfoStep: React.FC = () => {
                 </FormItem>
                 )}
             />
-        </div>
-
-        <div className="flex items-end gap-4">
-          <div className="flex-1">
-            <FormField
-              control={control}
-              name="personalInfo.county"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm">County <span className="">*</span></FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="bg-white">
-                        <SelectValue placeholder="Select county..." />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {countyNames.map((county) => (
-                        <SelectItem key={county} value={county}>{county}</SelectItem>
-                      ))}
-                      <SelectItem value="Other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          {watchedCounty === 'Other' && (
-            <div className="flex-1">
-              <FormField
-                control={control}
-                name="personalInfo.countyOther"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm">Please specify county <span className="">*</span></FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter county name..." {...field} className="bg-white"/>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          )}
         </div>
 
         <FormField

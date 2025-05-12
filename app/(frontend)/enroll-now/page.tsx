@@ -26,7 +26,7 @@ import PaymentStep from "@/blocks/EnrollForm/PaymentStep";
 import SchedulingSection from "@/blocks/EnrollForm/SchedulingSection";
 import ConsentFormStep from "@/blocks/EnrollForm/ConsentFormStep";
 import SuccessStep from "@/blocks/EnrollForm/SuccessStep";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, Path } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   enrollmentFormSchema,
@@ -104,7 +104,7 @@ const getInitialFormValues = (): EnrollmentFormData => {
 
 export default function EnrollmentForm() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [draftClientId, setDraftClientId] = useState<string | null>(null);
+  const [enrollmentToken, setEnrollmentToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -160,13 +160,14 @@ export default function EnrollmentForm() {
       case 1: { // ContactInfoStep
         const pi = watchedPersonalInfo;
         if (!pi) return false;
-        // Add checks for new fields: email, phone, state, zipcode, consentToContact
-        return !!(pi.firstName && pi.lastName && pi.email && pi.phone && pi.city && pi.state && pi.zipcode && pi.sex && pi.county && (pi.county !== 'Other' || pi.countyOther) && pi.consentToContact);
+        // Removed county and countyOther checks from here
+        return !!(pi.firstName && pi.lastName && pi.email && pi.phone && pi.city && pi.state && pi.zipcode && pi.sex && pi.consentToContact);
       }
       case 2: { // ProgramInfoStep
         const pi = watchedPersonalInfo;
         if (!pi) return false;
-        return !!(pi.referralSource && (pi.referralSource !== 'Other' || pi.referralSourceOther) && pi.selectedProgram && pi.whyReferred);
+        // Added county and countyOther checks here
+        return !!(pi.referralSource && (pi.referralSource !== 'Other' || pi.referralSourceOther) && pi.selectedProgram && pi.whyReferred && pi.county && (pi.county !== 'Other' || pi.countyOther));
       }
       case 3: { // SchedulingSection (was step 2)
         const sched = watchedScheduling;
@@ -254,98 +255,167 @@ export default function EnrollmentForm() {
   }, []); // Run only on mount and unmount
 
   const goToNextStep = async () => {
-    // Frontend validation using RHF trigger based on current step
-    let fieldsToValidate: any[] = []; // Array of field names for RHF's trigger
-    let currentPhase = '';
-    let dataForApi: any = {};
-
-    // Determine fields to validate and API phase based on current step index
-    // stepComponents array: 0:Welcome, 1:Contact, 2:Program, 3:Scheduling, 4:Consent, 5:Payment, 6:Success
-    switch (currentStep) {
-      case 1: // ContactInfoStep
-        fieldsToValidate = [
-          "personalInfo.firstName", "personalInfo.lastName", "personalInfo.email",
-          "personalInfo.phone", "personalInfo.city", "personalInfo.state",
-          "personalInfo.zipcode", "personalInfo.sex", "personalInfo.county",
-          "personalInfo.consentToContact"
-          // Note: countyOther is conditionally required, RHF schema should handle this
-        ];
-        currentPhase = 'contactInfo';
-        const piContact = methods.getValues("personalInfo");
-        dataForApi = {
-          personalInfo: {
-            firstName: piContact.firstName, lastName: piContact.lastName, email: piContact.email, phone: piContact.phone,
-            city: piContact.city, state: piContact.state, zipcode: piContact.zipcode, sex: piContact.sex,
-            county: piContact.county, countyOther: piContact.countyOther, consentToContact: piContact.consentToContact
-          }
-        };
-        break;
-      // Add cases for other steps later (ProgramInfo, Scheduling, Consent)
-      default:
-        // For steps without API calls or if logic is handled elsewhere (e.g. Welcome, Payment's final submit)
-        break;
+    // Handle Welcome step: No API call, just advance UI
+    if (currentStep === 0) {
+      setCurrentStep((prev) => prev + 1);
+      // Update URL hash for welcome step if you have that logic
+      const nextStepId = getStepIdForIndex(1); // Assuming 1 is contact-info
+      if (nextStepId) {
+        window.history.pushState({ step: 1, id: nextStepId }, "", `#${nextStepId}`);
+      }
+      return; // Exit early
     }
 
-    if (fieldsToValidate.length > 0) {
-      const isValid = await methods.trigger(fieldsToValidate as any); // Cast to any to satisfy RHF trigger type if complex
-      if (!isValid) {
-        console.log("Frontend validation failed for step:", currentStep);
-        // Optionally, find the first error and scroll to it.
-        // const firstError = Object.keys(methods.formState.errors)[0];
-        // if (firstError) { document.getElementsByName(firstError)[0]?.focus(); }
-        return; // Stop if validation fails
-      }
-    }
+    setIsLoading(true);
 
-    // If there's a phase defined for this step, make an API call
-    if (currentPhase) {
-      setIsLoading(true);
-      try {
-        const body = {
-          ...dataForApi,
-          submissionPhase: currentPhase,
-          clientId: draftClientId, // Will be null for the first call, populated for subsequent ones
-        };
+    const stepIndexForApi = currentStep - 1; 
+    const currentPhaseId = enrollmentSteps[stepIndexForApi]?.id;
+    let submissionPhase = currentPhaseId; 
+    // Determine which fields to validate based on the current step
+    let fieldsToValidate: Path<EnrollmentFormData>[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let dataForApi: any = {}; // Using any for flexibility, tailor as needed
 
-        const response = await fetch('/api/enroll', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        });
-
-        const responseBody = await response.json();
-
-        if (!response.ok) {
-          console.error(`API Error for phase ${currentPhase}:`, responseBody);
-          alert(`Error saving data (${currentPhase}): ${responseBody.error || response.statusText}`);
-          setIsLoading(false);
-          return;
+    // Determine fields and data based on phase
+    if (submissionPhase === 'contact-info') {
+      fieldsToValidate = [
+        'personalInfo.firstName', 'personalInfo.lastName', 'personalInfo.email', 'personalInfo.phone', 
+        'personalInfo.city', 'personalInfo.state', 'personalInfo.zipcode', 'personalInfo.sex', 
+        // county and countyOther removed from validation here
+        'personalInfo.consentToContact'
+      ];
+      // Construct data payload specifically for contact info, excluding county
+      dataForApi = {
+        submissionPhase: 'contactInfo',
+        personalInfo: {
+          firstName: watchedPersonalInfo.firstName,
+          lastName: watchedPersonalInfo.lastName,
+          email: watchedPersonalInfo.email,
+          phone: watchedPersonalInfo.phone,
+          city: watchedPersonalInfo.city,
+          state: watchedPersonalInfo.state,
+          zipcode: watchedPersonalInfo.zipcode,
+          sex: watchedPersonalInfo.sex,
+          // county and countyOther removed from payload here
+          consentToContact: watchedPersonalInfo.consentToContact,
         }
-
-        console.log(`Phase ${currentPhase} successful:`, responseBody);
-        if (responseBody.clientId) {
-          setDraftClientId(responseBody.clientId);
+      };
+    } else if (submissionPhase === 'program-info') {
+      submissionPhase = 'programInfo'; // Normalize phase name for API
+      fieldsToValidate = [
+        'personalInfo.referralSource', 'personalInfo.referralSourceOther', 
+        'personalInfo.selectedProgram', 'personalInfo.whyReferred',
+        // Add county validation here
+        'personalInfo.county', 'personalInfo.countyOther'
+      ];
+      // Construct data payload for program info, including county
+      dataForApi = {
+        submissionPhase: 'programInfo',
+        personalInfo: {
+          referralSource: watchedPersonalInfo.referralSource,
+          referralSourceOther: watchedPersonalInfo.referralSourceOther,
+          selectedProgram: watchedPersonalInfo.selectedProgram,
+          whyReferred: watchedPersonalInfo.whyReferred,
+          // Add county fields to payload here
+          county: watchedPersonalInfo.county,
+          countyOther: watchedPersonalInfo.countyOther,
         }
-      } catch (error) {
-        console.error(`Network or unexpected error during ${currentPhase} API call:`, error);
-        alert("An unexpected network error occurred. Please try again.");
-        setIsLoading(false);
-        return;
-      }
+      };
+    } else if (submissionPhase === 'scheduling') {
+      submissionPhase = 'scheduling';
+      fieldsToValidate = ['scheduling.selectedClassSlotId'];
+      dataForApi = { submissionPhase: 'scheduling', scheduling: watchedScheduling };
+    } else if (submissionPhase === 'documents') {
+      submissionPhase = 'consent'; // API expects 'consent' phase
+      fieldsToValidate = ['documents.agreedToTerms'];
+      dataForApi = { submissionPhase: 'consent', documents: watchedDocuments };
+    } else if (submissionPhase === 'payment') {
+      // Payment step might not need a backend save here, 
+      // as final data is collected before. 
+      // If it *does* trigger a final save or payment status update:
+      // submissionPhase = 'final'; 
+      // fieldsToValidate = [...all relevant fields for final validation]
+      // dataForApi = { submissionPhase: 'final', ...all form data };
+      
+      // For now, assume payment moves to success without intermediate save
+      console.log("Proceeding from payment step (no intermediate save)");
+      setCurrentStep((prev) => prev + 1);
       setIsLoading(false);
+      return; // Exit early if no API call needed here
+    }
+    
+    // Client-side validation for the current step fields
+    const isStepFieldsValid = await methods.trigger(fieldsToValidate);
+    if (!isStepFieldsValid) {
+      console.log(`Validation failed for phase: ${submissionPhase}`, methods.formState.errors);
+      // Use sonner for toast notifications
+      // toast.error(`Please complete all required fields for the ${submissionPhase.replace('-',' ')} step.`);
+      setIsLoading(false);
+      return;
     }
 
-    // Proceed to next step UI update (original logic)
-    if (currentStep < stepComponents.length - 1) {
-      const nextStepIndex = currentStep + 1;
-      setCurrentStep(nextStepIndex);
-      const stepId = getStepIdForIndex(nextStepIndex);
-      if (stepId) {
-        window.history.pushState({ step: nextStepIndex, id: stepId }, ``, `#${stepId}`);
+    // API Call Logic
+    try {
+      const fetchOptions: RequestInit = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataForApi),
+      };
+
+      // --- Add Logging Here ---
+      console.log(`Preparing API call for phase: ${submissionPhase}. Token present: ${!!enrollmentToken}`);
+      // ------------------------
+
+      // --- Simplified Token Check and Header Logic ---
+      if (submissionPhase !== 'contact-info') {
+        // Phases after contactInfo require a token
+        if (!enrollmentToken) {
+          // Token is required but missing
+          console.error('Error: enrollmentToken missing for phase:', submissionPhase); 
+          // toast.error('Enrollment session error. Please refresh and try again.');
+          setIsLoading(false);
+          return; 
+        }
+        // Token exists, add the header
+        fetchOptions.headers = {
+          ...fetchOptions.headers, 
+          'Authorization': `Bearer ${enrollmentToken}`
+        };
       }
-      if (contentRef.current) {
-        contentRef.current.scrollTop = 0;
+      // --- End Simplified Logic ---
+      
+      const response = await fetch('/api/enroll', fetchOptions);
+      const result = await response.json();
+
+      if (response.ok) {
+        // toast.success(result.message || 'Step saved successfully!');
+        // If it was the contactInfo step, save the received token
+        if (submissionPhase === 'contactInfo' && result.enrollmentToken) {
+          setEnrollmentToken(result.enrollmentToken);
+          console.log("Enrollment token received and stored.")
+        }
+        // Proceed to the next step in the UI
+        setCurrentStep((prev) => prev + 1);
+      } else {
+        console.error('API Error:', result);
+        // toast.error(result.error || 'Failed to save step data.');
+        if (response.status === 401) {
+            // Handle specific unauthorized/token errors
+            // toast.error('Your session may have expired. Please start the enrollment again.');
+            // Optionally clear token and reset form
+            setEnrollmentToken(null);
+            // You might want to redirect to the start or clear local storage
+            window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+            setCurrentStep(0); // Go back to welcome
+        }
       }
+    } catch (error) {
+      console.error('Network or other error saving step data:', error);
+      // toast.error('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 

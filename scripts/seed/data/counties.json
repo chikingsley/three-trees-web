@@ -1,0 +1,186 @@
+[
+  {
+    "name": "Abbeville",
+    "isActive": true
+  },
+  {
+    "name": "Aiken",
+    "isActive": true
+  },
+  {
+    "name": "Allendale",
+    "isActive": true
+  },
+  {
+    "name": "Anderson",
+    "isActive": true
+  },
+  {
+    "name": "Bamberg",
+    "isActive": true
+  },
+  {
+    "name": "Barnwell",
+    "isActive": true
+  },
+  {
+    "name": "Beaufort",
+    "isActive": true
+  },
+  {
+    "name": "Berkeley",
+    "isActive": true
+  },
+  {
+    "name": "Calhoun",
+    "isActive": true
+  },
+  {
+    "name": "Charleston",
+    "isActive": true
+  },
+  {
+    "name": "Cherokee",
+    "isActive": true
+  },
+  {
+    "name": "Chester",
+    "isActive": true
+  },
+  {
+    "name": "Chesterfield",
+    "isActive": true
+  },
+  {
+    "name": "Clarendon",
+    "isActive": true
+  },
+  {
+    "name": "Colleton",
+    "isActive": true
+  },
+  {
+    "name": "Darlington",
+    "isActive": true
+  },
+  {
+    "name": "Dillon",
+    "isActive": true
+  },
+  {
+    "name": "Dorchester",
+    "isActive": true
+  },
+  {
+    "name": "Edgefield",
+    "isActive": true
+  },
+  {
+    "name": "Fairfield",
+    "isActive": true
+  },
+  {
+    "name": "Florence",
+    "isActive": true
+  },
+  {
+    "name": "Georgetown",
+    "isActive": true
+  },
+  {
+    "name": "Greenville",
+    "isActive": true
+  },
+  {
+    "name": "Greenwood",
+    "isActive": true
+  },
+  {
+    "name": "Hampton",
+    "isActive": true
+  },
+  {
+    "name": "Horry",
+    "isActive": true
+  },
+  {
+    "name": "Jasper",
+    "isActive": true
+  },
+  {
+    "name": "Kershaw",
+    "isActive": true
+  },
+  {
+    "name": "Lancaster",
+    "isActive": true
+  },
+  {
+    "name": "Laurens",
+    "isActive": true
+  },
+  {
+    "name": "Lee",
+    "isActive": true
+  },
+  {
+    "name": "Lexington",
+    "isActive": true
+  },
+  {
+    "name": "Marion",
+    "isActive": true
+  },
+  {
+    "name": "Marlboro",
+    "isActive": true
+  },
+  {
+    "name": "McCormick",
+    "isActive": true
+  },
+  {
+    "name": "Newberry",
+    "isActive": true
+  },
+  {
+    "name": "Oconee",
+    "isActive": true
+  },
+  {
+    "name": "Orangeburg",
+    "isActive": true
+  },
+  {
+    "name": "Pickens",
+    "isActive": true
+  },
+  {
+    "name": "Richland",
+    "isActive": true
+  },
+  {
+    "name": "Saluda",
+    "isActive": true
+  },
+  {
+    "name": "Spartanburg",
+    "isActive": true
+  },
+  {
+    "name": "Sumter",
+    "isActive": true
+  },
+  {
+    "name": "Union",
+    "isActive": true
+  },
+  {
+    "name": "Williamsburg",
+    "isActive": true
+  },
+  {
+    "name": "York",
+    "isActive": true
+  }
+] 

@@ -1,31 +1,51 @@
 import type { CollectionConfig } from 'payload'
-import {
-  countyNames,
-  referralSources,
-} from '../lib/form-types' 
-// import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 export const Clients: CollectionConfig = {
   slug: 'clients',
   admin: {
-    useAsTitle: 'lastName', // Changed to lastName, can be combined later
-    defaultColumns: ['firstName', 'lastName', 'email', 'enrollmentProcessStatus', 'paymentStatus', 'enrollmentDate', 'updatedAt'],
+    useAsTitle: 'lastName',
+    defaultColumns: ['firstName', 'lastName', 'email', 'publicId', 'enrollmentProcessStatus', 'paymentStatus', 'updatedAt'],
     group: 'Customers',
   },
   access: {
-    read: () => true,
-    create: () => true,
-    update: () => true,
-    delete: () => true,
+    read: ({ req }) => {
+      if (req.user && req.user.roles?.includes('admin')) {
+        return true;
+      }
+      // Future: Allow clients to read their own record
+      return false; 
+    },
+    create: () => true, // Public enrollment form needs this
+    update: ({ req }) => {
+      if (req.user && req.user.roles?.includes('admin')) {
+        return true;
+      }
+      // Future: Allow clients to update parts of their own record
+      return false;
+    },
+    delete: ({ req }) => {
+      if (req.user && req.user.roles?.includes('admin')) {
+        return true;
+      }
+      return false;
+    },
   },
   fields: [
     // Personal Info
-    // {
-    //   name: 'id',
-    //   required: true,
-    //   type: 'number',
-    //   // defaultValue: () => uuidv4(),
-    // },
+    {
+      name: 'publicId',
+      label: 'Public ID',
+      type: 'text',
+      unique: true,
+      index: true, 
+      admin: { readOnly: true, position: 'sidebar' },
+      defaultValue: () => uuidv4(),
+      access: { 
+          read: () => true, // Public ID can be generally readable if the document itself is readable
+          update: ({ req }) => !!req.user && req.user.roles?.includes('admin'), // Only admins can change it
+      },
+    },
     {
       type: 'row',
       fields: [
@@ -33,48 +53,23 @@ export const Clients: CollectionConfig = {
           name: 'firstName',
           type: 'text',
           required: true,
+          admin: { width: '50%' },
         },
         {
           name: 'lastName',
           type: 'text',
           required: true,
-        },
-        {
-          name: 'sex',
-          type: 'select',
-          options: ['Male', 'Female'],
-        }
-      ],
-    },
-    {
-      type: 'row',
-      fields: [
-        {
-          name: 'email',
-          type: 'email',
-        },
-        {
-          name: 'phone',
-          type: 'text',
+          admin: { width: '50%' },
         },
       ],
     },
     {
-      type: 'row',
-      fields: [
-        {
-          name: 'county',
-          type: 'select',
-          options: [...countyNames, 'Other'].map(val => ({ label: val, value: val })),
-        },
-        {
-          name: 'countyOther',
-          type: 'text',
-          admin: {
-            condition: (data) => data.county === 'Other',
-          },
-        },
-      ],
+      name: 'email',
+      type: 'email',
+    },
+    {
+      name: 'phone',
+      type: 'text',
     },
     {
       type: 'row',
@@ -82,14 +77,47 @@ export const Clients: CollectionConfig = {
         {
           name: 'city',
           type: 'text',
+          admin: { width: '40%' },
         },
         {
           name: 'state',
           type: 'text',
+          admin: { width: '30%' },
         },
         {
           name: 'zipcode',
           type: 'text',
+          admin: { width: '30%' },
+        },
+      ],
+    },
+    {
+      name: 'sex',
+      type: 'select',
+      options: ['Male', 'Female'],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'county',
+          type: 'relationship',
+          relationTo: 'counties',
+          hasMany: false,
+          required: false,
+          admin: {
+            description: 'Select the client\'s county of residence or use the "Other" field',
+            width: '50%'
+          }
+        },
+        {
+          name: 'countyOther',
+          type: 'text',
+          admin: {
+            description: 'If county not in the list, specify the name here',
+            width: '50%',
+            placeholder: 'Other county...'
+          }
         },
       ],
     },
@@ -100,15 +128,21 @@ export const Clients: CollectionConfig = {
     },
     {
       name: 'referralSource',
-      type: 'select',
-      options: [...referralSources, 'Other'].map(val => ({ label: val, value: val })),
+      type: 'relationship',
+      relationTo: 'referral-sources',
+      hasMany: false,
+      required: false,
+      admin: {
+        description: 'Select the agency that referred this client or use the "Other" field'
+      }
     },
     {
       name: 'referralSourceOther',
       type: 'text',
       admin: {
-        condition: (data) => data.referralSource === 'Other',
-      },
+        description: 'If referral source not in the list, specify here',
+        placeholder: 'Other referral source...'
+      }
     },
     {
       name: 'whyReferred',
@@ -117,11 +151,21 @@ export const Clients: CollectionConfig = {
     // Program & Scheduling
     {
       name: 'selectedProgram',
-      type: 'text',
+      type: 'relationship',
+      relationTo: 'programs',
+      hasMany: false,
+      admin: {
+        description: 'The program the client is enrolled in'
+      }
     },
     {
-      name: 'selectedClassSlotId',
-      type: 'text',
+      name: 'selectedClassSlot',
+      type: 'relationship',
+      relationTo: 'class-slots',
+      hasMany: false,
+      admin: {
+        description: 'The specific day/time slot the client is assigned to'
+      }
     },
     // Documents
     {
@@ -210,6 +254,10 @@ export const Clients: CollectionConfig = {
         readOnly: true, // Usually set programmatically
         position: 'sidebar',
       },
+      access: { // Field-level access for sensitive ID
+        read: ({ req }) => !!req.user && req.user.roles?.includes('admin'),
+        update: ({ req }) => !!req.user && req.user.roles?.includes('admin'),
+      }
     },
     {
       name: 'squareSubscriptionId',
@@ -219,6 +267,10 @@ export const Clients: CollectionConfig = {
         readOnly: true, // Usually set programmatically
         position: 'sidebar',
       },
+      access: { // Field-level access for sensitive ID
+        read: ({ req }) => !!req.user && req.user.roles?.includes('admin'),
+        update: ({ req }) => !!req.user && req.user.roles?.includes('admin'),
+      }
     },
     // Notes field for admin
     {

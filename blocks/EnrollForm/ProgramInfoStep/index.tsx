@@ -13,12 +13,13 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import type { EnrollmentFormData } from "@/lib/form-types";
-import { referralSources, PROGRAM_DATA } from "@/lib/form-types";
+import { referralSources, PROGRAM_DATA, countyNames } from "@/lib/form-types";
 import StepHeader from "@/components/StepHeader"
 
 const ProgramInfoStep: React.FC = () => {
   const { control } = useFormContext<EnrollmentFormData>();
   const watchedReferralSource = useWatch({ control, name: "personalInfo.referralSource" });
+  const watchedCounty = useWatch({ control, name: "personalInfo.county" });
 
   return (
     <>
@@ -66,6 +67,51 @@ const ProgramInfoStep: React.FC = () => {
             )}
           />
         )}
+
+        <div className="flex items-end gap-4">
+          <div className="flex-1">
+            <FormField
+              control={control}
+              name="personalInfo.county"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">County <span className="">*</span></FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="bg-white">
+                        <SelectValue placeholder="Select county..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {countyNames.map((county) => (
+                        <SelectItem key={county} value={county}>{county}</SelectItem>
+                      ))}
+                      <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {watchedCounty === 'Other' && (
+            <div className="flex-1">
+              <FormField
+                control={control}
+                name="personalInfo.countyOther"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm">Please specify county <span className="">*</span></FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter county name..." {...field} className="bg-white"/>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          )}
+        </div>
 
         <FormField
           control={control}

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate:types": "NODE_OPTIONS='--import tsx' npx payload generate:types"
+    "generate:types": "NODE_OPTIONS='--import tsx' npx payload generate:types",
+    "seed": "dotenv -e .env -- tsx scripts/seed/seed.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -35,6 +36,7 @@
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "graphql": "^16.10.0",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.501.0",
     "motion": "^12.7.4",
     "next": "15.3.0",
@@ -52,12 +54,16 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@tailwindcss/postcss": "^4.1.4",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20.17.30",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
+    "dotenv-cli": "^8.0.0",
     "eslint": "^9.25.0",
     "eslint-config-next": "15.3.0",
     "tailwindcss": "^4.1.4",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   },
   "trustedDependencies": [

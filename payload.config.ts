@@ -7,18 +7,21 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
-import { Users } from './collections/Users.ts'
-import { Media } from './collections/Media.ts'
-import { Services } from './collections/Services.ts'
-import { Locations } from './collections/Locations.ts'
 import { BlogPosts } from './collections/BlogPosts.ts'
-import { Testimonials } from './collections/Testimonials.ts'
-import { ProgramTypes } from './collections/ProgramTypes.ts'
-import { Clients } from './collections/Clients.ts'
-import { Programs } from './collections/Programs.ts'
 import { ClassSlots } from './collections/ClassSlots.ts'
+import { Clients } from './collections/Clients.ts'
+import { Counties } from './collections/Counties.ts'
 import { Enrollments } from './collections/Enrollments.ts'
+import { Locations } from './collections/Locations.ts'
+import { Media } from './collections/Media.ts'
 import { Payments } from './collections/Payments.ts'
+import { ProgramTypes } from './collections/ProgramTypes.ts'
+import { Programs } from './collections/Programs.ts'
+import { ReferralSources } from './collections/ReferralSources.ts'
+import { ReferralSourceTypes } from './collections/ReferralSourceTypes.ts'
+import { Services } from './collections/Services.ts'
+import { Testimonials } from './collections/Testimonials.ts'
+import { Users } from './collections/Users.ts'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -30,7 +33,23 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Testimonials, ProgramTypes, Clients, Programs, Services, Locations, BlogPosts, ClassSlots, Enrollments, Payments],
+  collections: [
+    BlogPosts,
+    ClassSlots,
+    Clients,
+    Counties,
+    Enrollments,
+    Locations,
+    Media,
+    Payments,
+    ProgramTypes,
+    Programs,
+    ReferralSources,
+    ReferralSourceTypes,
+    Services,
+    Testimonials,
+    Users,
+  ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -40,6 +59,7 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
+    idType: 'uuid',
   }),
   sharp,
   cors: ['https://www.yourdomain.com', 'http://localhost:3000'],

@@ -67,42 +67,48 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
-    media: Media;
-    testimonials: Testimonial;
-    programTypes: ProgramType;
-    clients: Client;
-    programs: Program;
-    services: Service;
-    locations: Location;
     blogPosts: BlogPost;
     'class-slots': ClassSlot;
+    clients: Client;
+    counties: County;
     enrollments: Enrollment;
+    locations: Location;
+    media: Media;
     payments: Payment;
+    programTypes: ProgramType;
+    programs: Program;
+    'referral-sources': ReferralSource;
+    'referral-source-types': ReferralSourceType;
+    services: Service;
+    testimonials: Testimonial;
+    users: User;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
-    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
-    programTypes: ProgramTypesSelect<false> | ProgramTypesSelect<true>;
-    clients: ClientsSelect<false> | ClientsSelect<true>;
-    programs: ProgramsSelect<false> | ProgramsSelect<true>;
-    services: ServicesSelect<false> | ServicesSelect<true>;
-    locations: LocationsSelect<false> | LocationsSelect<true>;
     blogPosts: BlogPostsSelect<false> | BlogPostsSelect<true>;
     'class-slots': ClassSlotsSelect<false> | ClassSlotsSelect<true>;
+    clients: ClientsSelect<false> | ClientsSelect<true>;
+    counties: CountiesSelect<false> | CountiesSelect<true>;
     enrollments: EnrollmentsSelect<false> | EnrollmentsSelect<true>;
+    locations: LocationsSelect<false> | LocationsSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
     payments: PaymentsSelect<false> | PaymentsSelect<true>;
+    programTypes: ProgramTypesSelect<false> | ProgramTypesSelect<true>;
+    programs: ProgramsSelect<false> | ProgramsSelect<true>;
+    'referral-sources': ReferralSourcesSelect<false> | ReferralSourcesSelect<true>;
+    'referral-source-types': ReferralSourceTypesSelect<false> | ReferralSourceTypesSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: number;
+    defaultIDType: string;
   };
   globals: {};
   globalsSelect: {};
@@ -135,10 +141,84 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blogPosts".
+ */
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  featuredImage: string | Media;
+  status: 'draft' | 'published';
+  publishedDate: string;
+  author: string | User;
+  categories?:
+    | {
+        category: string;
+        id?: string | null;
+      }[]
+    | null;
+  summary: string;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  relatedPrograms?: (string | ProgramType)[] | null;
+  relatedServices?: (string | Service)[] | null;
+  tags?:
+    | {
+        tag?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    keywords?:
+      | {
+          keyword?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: string;
+  alt: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   roles: ('admin' | 'public')[];
@@ -155,60 +235,10 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "testimonials".
- */
-export interface Testimonial {
-  id: number;
-  name: string;
-  title: string;
-  location?: string | null;
-  quote: string;
-  fullTestimonial?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  image?: (number | null) | Media;
-  featured?: boolean | null;
-  date?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "programTypes".
  */
 export interface ProgramType {
-  id: number;
+  id: string;
   title: string;
   slug: string;
   subtitle?: string | null;
@@ -227,10 +257,10 @@ export interface ProgramType {
     };
     [k: string]: unknown;
   };
-  heroImage: number | Media;
+  heroImage: string | Media;
   shortDescription: string;
   icon?: string | null;
-  featuredTestimonials?: (number | Testimonial)[] | null;
+  featuredTestimonials?: (string | Testimonial)[] | null;
   seo?: {
     metaTitle?: string | null;
     metaDescription?: string | null;
@@ -266,115 +296,32 @@ export interface ProgramType {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "clients".
+ * via the `definition` "testimonials".
  */
-export interface Client {
-  id: number;
-  firstName: string;
-  lastName: string;
-  sex?: ('Male' | 'Female') | null;
-  email?: string | null;
-  phone?: string | null;
-  county?:
-    | (
-        | 'Abbeville'
-        | 'Aiken'
-        | 'York'
-        | 'Charleston'
-        | 'Chester'
-        | 'Dorchester'
-        | 'Edgefield'
-        | 'Fairfield'
-        | 'Greenville'
-        | 'Horry'
-        | 'Lancaster'
-        | 'Lexington'
-        | 'Orangeburg'
-        | 'Richland'
-        | 'Spartanburg'
-        | 'Union'
-        | 'Other'
-      )
-    | null;
-  countyOther?: string | null;
-  city?: string | null;
-  state?: string | null;
-  zipcode?: string | null;
-  consentToContact?: boolean | null;
-  referralSource?:
-    | (
-        | 'Probation Pardon & Parole (PPP)'
-        | 'Pretrial Intervention (PTI)'
-        | 'Department of Social Services (DSS)'
-        | 'Other'
-      )
-    | null;
-  referralSourceOther?: string | null;
-  whyReferred?: string | null;
-  selectedProgram?: string | null;
-  selectedClassSlotId?: string | null;
-  agreedToTerms?: boolean | null;
-  paymentOption?: ('pay_as_you_go' | 'autopay_weekly' | 'full_program') | null;
-  agreeToRecurring?: boolean | null;
-  enrollmentProcessStatus?:
-    | (
-        | 'contact_info_collected'
-        | 'program_info_collected'
-        | 'schedule_selected'
-        | 'consent_agreed'
-        | 'final_data_collected_pending_payment'
-        | 'enrollment_complete'
-      )
-    | null;
-  enrollmentDate?: string | null;
-  paymentStatus?:
-    | (
-        | 'pending_enrollment_fee'
-        | 'pending_subscription'
-        | 'active_autopay'
-        | 'active_paid_full'
-        | 'payment_issue'
-        | 'completed'
-        | 'on_hold'
-        | 'cancelled'
-      )
-    | null;
-  squareCustomerId?: string | null;
-  squareSubscriptionId?: string | null;
-  /**
-   * Notes for internal admin use only.
-   */
-  internalNotes?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Define the programs offered, their structure, and pricing.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "programs".
- */
-export interface Program {
-  id: number;
-  /**
-   * A unique code for this program (e.g., dv_male, am, sort). This is used for linking.
-   */
-  programId: string;
+export interface Testimonial {
+  id: string;
   name: string;
-  description?: string | null;
-  durationText?: string | null;
-  weeks?: number | null;
-  sessionsPerWeek?: number | null;
-  costPerSession: number;
-  enrollmentFee: number;
-  /**
-   * Categorize the program for filtering or display purposes.
-   */
-  programCategory?: ('court_ordered' | 'college_university' | 'corporate_hospital' | 'general_wellness') | null;
-  /**
-   * Active programs can be selected during enrollment.
-   */
-  isActive?: boolean | null;
+  title: string;
+  location?: string | null;
+  quote: string;
+  fullTestimonial?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image?: (string | null) | Media;
+  featured?: boolean | null;
+  date?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -383,11 +330,11 @@ export interface Program {
  * via the `definition` "services".
  */
 export interface Service {
-  id: number;
+  id: string;
   title: string;
   slug: string;
-  programType: number | ProgramType;
-  heroImage: number | Media;
+  programType: string | ProgramType;
+  heroImage: string | Media;
   summary: string;
   description: {
     root: {
@@ -459,10 +406,10 @@ export interface Service {
         id?: string | null;
       }[]
     | null;
-  testimonials?: (number | Testimonial)[] | null;
-  relatedServices?: (number | Service)[] | null;
+  testimonials?: (string | Testimonial)[] | null;
+  relatedServices?: (string | Service)[] | null;
   availability?: {
-    locations?: (number | Location)[] | null;
+    locations?: (string | Location)[] | null;
     notes?: string | null;
   };
   callToAction: {
@@ -488,11 +435,11 @@ export interface Service {
  * via the `definition` "locations".
  */
 export interface Location {
-  id: number;
+  id: string;
   name: string;
   slug: string;
   type: 'state' | 'county' | 'city';
-  parent?: (number | null) | Location;
+  parent?: (string | null) | Location;
   description: {
     root: {
       type: string;
@@ -508,8 +455,8 @@ export interface Location {
     };
     [k: string]: unknown;
   };
-  heroImage?: (number | null) | Media;
-  services?: (number | Service)[] | null;
+  heroImage?: (string | null) | Media;
+  services?: (string | Service)[] | null;
   address?: {
     street?: string | null;
     city?: string | null;
@@ -544,7 +491,7 @@ export interface Location {
     };
     [k: string]: unknown;
   } | null;
-  testimonials?: (number | Testimonial)[] | null;
+  testimonials?: (string | Testimonial)[] | null;
   faqs?:
     | {
         question: string;
@@ -586,69 +533,14 @@ export interface Location {
   createdAt: string;
 }
 /**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "blogPosts".
- */
-export interface BlogPost {
-  id: number;
-  title: string;
-  slug: string;
-  featuredImage: number | Media;
-  status: 'draft' | 'published';
-  publishedDate: string;
-  author: number | User;
-  categories?:
-    | {
-        category: string;
-        id?: string | null;
-      }[]
-    | null;
-  summary: string;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  relatedPrograms?: (number | ProgramType)[] | null;
-  relatedServices?: (number | Service)[] | null;
-  tags?:
-    | {
-        tag?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  seo?: {
-    metaTitle?: string | null;
-    metaDescription?: string | null;
-    keywords?:
-      | {
-          keyword?: string | null;
-          id?: string | null;
-        }[]
-      | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
  * Define specific instances of classes, including day, time, and capacity.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "class-slots".
  */
 export interface ClassSlot {
-  id: number;
-  program: number | Program;
+  id: string;
+  program: string | Program;
   day: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
   /**
    * Enter time in a consistent format (e.g., 5:00 PM, 10:00 AM).
@@ -668,18 +560,147 @@ export interface ClassSlot {
   createdAt: string;
 }
 /**
+ * Define the programs offered, their structure, and pricing.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programs".
+ */
+export interface Program {
+  id: string;
+  /**
+   * A unique code for this program (e.g., dv_male, am, sort). This is used for linking.
+   */
+  programId: string;
+  name: string;
+  description?: string | null;
+  durationText?: string | null;
+  weeks?: number | null;
+  sessionsPerWeek?: number | null;
+  costPerSession: number;
+  enrollmentFee: number;
+  /**
+   * Categorize the program for filtering or display purposes.
+   */
+  programCategory?: ('court_ordered' | 'college_university' | 'corporate_hospital' | 'general_wellness') | null;
+  /**
+   * Active programs can be selected during enrollment.
+   */
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clients".
+ */
+export interface Client {
+  id: string;
+  publicId?: string | null;
+  firstName: string;
+  lastName: string;
+  email?: string | null;
+  phone?: string | null;
+  city?: string | null;
+  state?: string | null;
+  zipcode?: string | null;
+  sex?: ('Male' | 'Female') | null;
+  county?:
+    | (
+        | 'Abbeville'
+        | 'Aiken'
+        | 'York'
+        | 'Charleston'
+        | 'Chester'
+        | 'Dorchester'
+        | 'Edgefield'
+        | 'Fairfield'
+        | 'Greenville'
+        | 'Horry'
+        | 'Lancaster'
+        | 'Lexington'
+        | 'Orangeburg'
+        | 'Richland'
+        | 'Spartanburg'
+        | 'Union'
+        | 'Other'
+      )
+    | null;
+  countyOther?: string | null;
+  consentToContact?: boolean | null;
+  referralSource?:
+    | (
+        | 'Probation Pardon & Parole (PPP)'
+        | 'Pretrial Intervention (PTI)'
+        | 'Department of Social Services (DSS)'
+        | 'Other'
+      )
+    | null;
+  referralSourceOther?: string | null;
+  whyReferred?: string | null;
+  selectedProgram?: string | null;
+  selectedClassSlotId?: string | null;
+  agreedToTerms?: boolean | null;
+  paymentOption?: ('pay_as_you_go' | 'autopay_weekly' | 'full_program') | null;
+  agreeToRecurring?: boolean | null;
+  enrollmentProcessStatus?:
+    | (
+        | 'contact_info_collected'
+        | 'program_info_collected'
+        | 'schedule_selected'
+        | 'consent_agreed'
+        | 'final_data_collected_pending_payment'
+        | 'enrollment_complete'
+      )
+    | null;
+  enrollmentDate?: string | null;
+  paymentStatus?:
+    | (
+        | 'pending_enrollment_fee'
+        | 'pending_subscription'
+        | 'active_autopay'
+        | 'active_paid_full'
+        | 'payment_issue'
+        | 'completed'
+        | 'on_hold'
+        | 'cancelled'
+      )
+    | null;
+  squareCustomerId?: string | null;
+  squareSubscriptionId?: string | null;
+  /**
+   * Notes for internal admin use only.
+   */
+  internalNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "counties".
+ */
+export interface County {
+  id: string;
+  name: string;
+  /**
+   * Active counties can be selected during enrollment.
+   */
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Tracks client enrollments in specific class slots.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "enrollments".
  */
 export interface Enrollment {
-  id: number;
-  client: number | Client;
+  id: string;
+  client: string | Client;
   /**
    * Links to the specific type of class slot the client enrolled in.
    */
-  classSlot: number | ClassSlot;
+  classSlot: string | ClassSlot;
   enrollmentDate: string;
   status?: ('active' | 'completed' | 'cancelled' | 'on_hold') | null;
   notes?: string | null;
@@ -693,8 +714,8 @@ export interface Enrollment {
  * via the `definition` "payments".
  */
 export interface Payment {
-  id: number;
-  client: number | Client;
+  id: string;
+  client: string | Client;
   /**
    * Amount in USD (e.g., 50.00 for $50.00)
    */
@@ -711,64 +732,133 @@ export interface Payment {
   createdAt: string;
 }
 /**
+ * Specific referral sources combining county and type (e.g., York PPP)
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "referral-sources".
+ */
+export interface ReferralSource {
+  id: string;
+  /**
+   * The county this referral source is located in
+   */
+  county: string | County;
+  /**
+   * The type of referral source (e.g., PPP, DSS, PTI)
+   */
+  sourceType: string | ReferralSourceType;
+  title?: string | null;
+  contactInfo?: {
+    /**
+     * Primary contact person at this referral source
+     */
+    contactName?: string | null;
+    email?: string | null;
+    phone?: string | null;
+  };
+  /**
+   * Any special requirements or procedures for this specific referral source
+   */
+  notes?: string | null;
+  /**
+   * Active referral sources can be selected during enrollment
+   */
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "referral-source-types".
+ */
+export interface ReferralSourceType {
+  id: string;
+  /**
+   * Full name of the referral source type (e.g., "Probation Pardon & Parole")
+   */
+  name: string;
+  /**
+   * Common abbreviation (e.g., "PPP")
+   */
+  abbreviation: string;
+  /**
+   * Active referral source types can be selected during enrollment.
+   */
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: number;
+  id: string;
   document?:
     | ({
-        relationTo: 'users';
-        value: number | User;
-      } | null)
-    | ({
-        relationTo: 'media';
-        value: number | Media;
-      } | null)
-    | ({
-        relationTo: 'testimonials';
-        value: number | Testimonial;
-      } | null)
-    | ({
-        relationTo: 'programTypes';
-        value: number | ProgramType;
-      } | null)
-    | ({
-        relationTo: 'clients';
-        value: number | Client;
-      } | null)
-    | ({
-        relationTo: 'programs';
-        value: number | Program;
-      } | null)
-    | ({
-        relationTo: 'services';
-        value: number | Service;
-      } | null)
-    | ({
-        relationTo: 'locations';
-        value: number | Location;
-      } | null)
-    | ({
         relationTo: 'blogPosts';
-        value: number | BlogPost;
+        value: string | BlogPost;
       } | null)
     | ({
         relationTo: 'class-slots';
-        value: number | ClassSlot;
+        value: string | ClassSlot;
+      } | null)
+    | ({
+        relationTo: 'clients';
+        value: string | Client;
+      } | null)
+    | ({
+        relationTo: 'counties';
+        value: string | County;
       } | null)
     | ({
         relationTo: 'enrollments';
-        value: number | Enrollment;
+        value: string | Enrollment;
+      } | null)
+    | ({
+        relationTo: 'locations';
+        value: string | Location;
+      } | null)
+    | ({
+        relationTo: 'media';
+        value: string | Media;
       } | null)
     | ({
         relationTo: 'payments';
-        value: number | Payment;
+        value: string | Payment;
+      } | null)
+    | ({
+        relationTo: 'programTypes';
+        value: string | ProgramType;
+      } | null)
+    | ({
+        relationTo: 'programs';
+        value: string | Program;
+      } | null)
+    | ({
+        relationTo: 'referral-sources';
+        value: string | ReferralSource;
+      } | null)
+    | ({
+        relationTo: 'referral-source-types';
+        value: string | ReferralSourceType;
+      } | null)
+    | ({
+        relationTo: 'services';
+        value: string | Service;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: string | Testimonial;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: string | User;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: number | User;
+    value: string | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -778,10 +868,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: number;
+  id: string;
   user: {
     relationTo: 'users';
-    value: number | User;
+    value: string | User;
   };
   key?: string | null;
   value?:
@@ -801,7 +891,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: number;
+  id: string;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -809,21 +899,182 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
+ * via the `definition` "blogPosts_select".
  */
-export interface UsersSelect<T extends boolean = true> {
-  firstName?: T;
-  lastName?: T;
-  roles?: T;
+export interface BlogPostsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  featuredImage?: T;
+  status?: T;
+  publishedDate?: T;
+  author?: T;
+  categories?:
+    | T
+    | {
+        category?: T;
+        id?: T;
+      };
+  summary?: T;
+  content?: T;
+  relatedPrograms?: T;
+  relatedServices?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        keywords?:
+          | T
+          | {
+              keyword?: T;
+              id?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "class-slots_select".
+ */
+export interface ClassSlotsSelect<T extends boolean = true> {
+  program?: T;
+  day?: T;
+  time?: T;
+  genderSpecific?: T;
+  spotsTotal?: T;
+  slotIdentifier?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clients_select".
+ */
+export interface ClientsSelect<T extends boolean = true> {
+  publicId?: T;
+  firstName?: T;
+  lastName?: T;
   email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
+  phone?: T;
+  city?: T;
+  state?: T;
+  zipcode?: T;
+  sex?: T;
+  county?: T;
+  countyOther?: T;
+  consentToContact?: T;
+  referralSource?: T;
+  referralSourceOther?: T;
+  whyReferred?: T;
+  selectedProgram?: T;
+  selectedClassSlotId?: T;
+  agreedToTerms?: T;
+  paymentOption?: T;
+  agreeToRecurring?: T;
+  enrollmentProcessStatus?: T;
+  enrollmentDate?: T;
+  paymentStatus?: T;
+  squareCustomerId?: T;
+  squareSubscriptionId?: T;
+  internalNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "counties_select".
+ */
+export interface CountiesSelect<T extends boolean = true> {
+  name?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enrollments_select".
+ */
+export interface EnrollmentsSelect<T extends boolean = true> {
+  client?: T;
+  classSlot?: T;
+  enrollmentDate?: T;
+  status?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "locations_select".
+ */
+export interface LocationsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  type?: T;
+  parent?: T;
+  description?: T;
+  heroImage?: T;
+  services?: T;
+  address?:
+    | T
+    | {
+        street?: T;
+        city?: T;
+        state?: T;
+        zipCode?: T;
+      };
+  contactInformation?:
+    | T
+    | {
+        phone?: T;
+        email?: T;
+        hours?: T;
+      };
+  localPartners?:
+    | T
+    | {
+        name?: T;
+        role?: T;
+        contact?: T;
+        id?: T;
+      };
+  localRequirements?: T;
+  testimonials?: T;
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        keywords?:
+          | T
+          | {
+              keyword?: T;
+              id?: T;
+            };
+        localKeywords?:
+          | T
+          | {
+              keyword?: T;
+              id?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -845,17 +1096,16 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "testimonials_select".
+ * via the `definition` "payments_select".
  */
-export interface TestimonialsSelect<T extends boolean = true> {
-  name?: T;
-  title?: T;
-  location?: T;
-  quote?: T;
-  fullTestimonial?: T;
-  image?: T;
-  featured?: T;
-  date?: T;
+export interface PaymentsSelect<T extends boolean = true> {
+  client?: T;
+  amount?: T;
+  paymentDate?: T;
+  type?: T;
+  paymentMethod?: T;
+  squareTransactionId?: T;
+  notes?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -897,40 +1147,6 @@ export interface ProgramTypesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "clients_select".
- */
-export interface ClientsSelect<T extends boolean = true> {
-  id?: T;
-  firstName?: T;
-  lastName?: T;
-  sex?: T;
-  email?: T;
-  phone?: T;
-  county?: T;
-  countyOther?: T;
-  city?: T;
-  state?: T;
-  zipcode?: T;
-  consentToContact?: T;
-  referralSource?: T;
-  referralSourceOther?: T;
-  whyReferred?: T;
-  selectedProgram?: T;
-  selectedClassSlotId?: T;
-  agreedToTerms?: T;
-  paymentOption?: T;
-  agreeToRecurring?: T;
-  enrollmentProcessStatus?: T;
-  enrollmentDate?: T;
-  paymentStatus?: T;
-  squareCustomerId?: T;
-  squareSubscriptionId?: T;
-  internalNotes?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "programs_select".
  */
 export interface ProgramsSelect<T extends boolean = true> {
@@ -943,6 +1159,37 @@ export interface ProgramsSelect<T extends boolean = true> {
   costPerSession?: T;
   enrollmentFee?: T;
   programCategory?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "referral-sources_select".
+ */
+export interface ReferralSourcesSelect<T extends boolean = true> {
+  county?: T;
+  sourceType?: T;
+  title?: T;
+  contactInfo?:
+    | T
+    | {
+        contactName?: T;
+        email?: T;
+        phone?: T;
+      };
+  notes?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "referral-source-types_select".
+ */
+export interface ReferralSourceTypesSelect<T extends boolean = true> {
+  name?: T;
+  abbreviation?: T;
   isActive?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1033,153 +1280,37 @@ export interface ServicesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "locations_select".
+ * via the `definition` "testimonials_select".
  */
-export interface LocationsSelect<T extends boolean = true> {
+export interface TestimonialsSelect<T extends boolean = true> {
   name?: T;
-  slug?: T;
-  type?: T;
-  parent?: T;
-  description?: T;
-  heroImage?: T;
-  services?: T;
-  address?:
-    | T
-    | {
-        street?: T;
-        city?: T;
-        state?: T;
-        zipCode?: T;
-      };
-  contactInformation?:
-    | T
-    | {
-        phone?: T;
-        email?: T;
-        hours?: T;
-      };
-  localPartners?:
-    | T
-    | {
-        name?: T;
-        role?: T;
-        contact?: T;
-        id?: T;
-      };
-  localRequirements?: T;
-  testimonials?: T;
-  faqs?:
-    | T
-    | {
-        question?: T;
-        answer?: T;
-        id?: T;
-      };
-  seo?:
-    | T
-    | {
-        metaTitle?: T;
-        metaDescription?: T;
-        keywords?:
-          | T
-          | {
-              keyword?: T;
-              id?: T;
-            };
-        localKeywords?:
-          | T
-          | {
-              keyword?: T;
-              id?: T;
-            };
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "blogPosts_select".
- */
-export interface BlogPostsSelect<T extends boolean = true> {
   title?: T;
-  slug?: T;
-  featuredImage?: T;
-  status?: T;
-  publishedDate?: T;
-  author?: T;
-  categories?:
-    | T
-    | {
-        category?: T;
-        id?: T;
-      };
-  summary?: T;
-  content?: T;
-  relatedPrograms?: T;
-  relatedServices?: T;
-  tags?:
-    | T
-    | {
-        tag?: T;
-        id?: T;
-      };
-  seo?:
-    | T
-    | {
-        metaTitle?: T;
-        metaDescription?: T;
-        keywords?:
-          | T
-          | {
-              keyword?: T;
-              id?: T;
-            };
-      };
+  location?: T;
+  quote?: T;
+  fullTestimonial?: T;
+  image?: T;
+  featured?: T;
+  date?: T;
   updatedAt?: T;
   createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "class-slots_select".
+ * via the `definition` "users_select".
  */
-export interface ClassSlotsSelect<T extends boolean = true> {
-  program?: T;
-  day?: T;
-  time?: T;
-  genderSpecific?: T;
-  spotsTotal?: T;
-  slotIdentifier?: T;
-  isActive?: T;
+export interface UsersSelect<T extends boolean = true> {
+  firstName?: T;
+  lastName?: T;
+  roles?: T;
   updatedAt?: T;
   createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "enrollments_select".
- */
-export interface EnrollmentsSelect<T extends boolean = true> {
-  client?: T;
-  classSlot?: T;
-  enrollmentDate?: T;
-  status?: T;
-  notes?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payments_select".
- */
-export interface PaymentsSelect<T extends boolean = true> {
-  client?: T;
-  amount?: T;
-  paymentDate?: T;
-  type?: T;
-  paymentMethod?: T;
-  squareTransactionId?: T;
-  notes?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
