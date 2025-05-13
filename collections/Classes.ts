@@ -188,7 +188,10 @@ export const Classes: CollectionConfig = {
         }, 
         access: { create: () => false, update: () => false }, // Prevent setting via API
         hooks: {
-            afterRead: [calculateSpots], // Calculate after reading data
+            afterRead: [async (args) => {
+                const calculation = await calculateSpots(args); 
+                return calculation.spotsTotal;
+            }],
             beforeChange: [({ siblingData }) => { delete siblingData?.['spotsTotal'] }],
         }
     },
@@ -201,7 +204,10 @@ export const Classes: CollectionConfig = {
         }, 
         access: { create: () => false, update: () => false }, // Prevent setting via API
         hooks: {
-             afterRead: [calculateSpots], // Also calculated by calculateSpots hook
+             afterRead: [async (args) => {
+                const calculation = await calculateSpots(args);
+                return calculation.spotsAvailable;
+             }],
              beforeChange: [({ siblingData }) => { delete siblingData?.['spotsAvailable'] }],
         }
     },
