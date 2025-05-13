@@ -8,10 +8,9 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
 import { BlogPosts } from './collections/BlogPosts.ts'
-import { ClassSlots } from './collections/ClassSlots.ts'
+import { Classes } from './collections/Classes.ts'
 import { Clients } from './collections/Clients.ts'
 import { Counties } from './collections/Counties.ts'
-import { Enrollments } from './collections/Enrollments.ts'
 import { Locations } from './collections/Locations.ts'
 import { Media } from './collections/Media.ts'
 import { Payments } from './collections/Payments.ts'
@@ -35,10 +34,9 @@ export default buildConfig({
   },
   collections: [
     BlogPosts,
-    ClassSlots,
+    Classes,
     Clients,
     Counties,
-    Enrollments,
     Locations,
     Media,
     Payments,

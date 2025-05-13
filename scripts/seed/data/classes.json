@@ -1,0 +1,101 @@
+[
+  {
+    "programId": "dv_female", 
+    "day": "Monday",
+    "time": "17:00", 
+    "genderSpecific": "female",
+    "numberOfParallelClasses": 2,
+    "isActive": true
+  },
+  {
+    "programId": "sort",
+    "day": "Monday",
+    "time": "17:30",
+    "numberOfParallelClasses": 1,
+    "isActive": true
+  },
+  {
+    "programId": "sort",
+    "day": "Monday",
+    "time": "18:00",
+    "numberOfParallelClasses": 1,
+    "isActive": true
+  },
+  {
+    "programId": "dv_male",
+    "day": "Monday",
+    "time": "19:00",
+    "genderSpecific": "male",
+    "numberOfParallelClasses": 4,
+    "isActive": true
+  },
+  {
+    "programId": "dv_male",
+    "day": "Tuesday",
+    "time": "19:00",
+    "genderSpecific": "male",
+    "numberOfParallelClasses": 3,
+    "isActive": true
+  },
+  {
+    "programId": "sort",
+    "day": "Wednesday",
+    "time": "10:00",
+    "numberOfParallelClasses": 1,
+    "isActive": true
+  },
+  {
+    "programId": "sort",
+    "day": "Wednesday",
+    "time": "18:00",
+    "numberOfParallelClasses": 1,
+    "isActive": true
+  },
+  {
+    "programId": "dv_male",
+    "day": "Wednesday",
+    "time": "18:00",
+    "genderSpecific": "male",
+    "numberOfParallelClasses": 2,
+    "isActive": true
+  },
+  {
+    "programId": "dv_female",
+    "day": "Wednesday",
+    "time": "18:30",
+    "genderSpecific": "female",
+    "numberOfParallelClasses": 2,
+    "isActive": true
+  },
+  {
+    "programId": "sort",
+    "day": "Thursday",
+    "time": "18:00",
+    "numberOfParallelClasses": 1,
+    "isActive": true
+  },
+  {
+    "programId": "dv_male",
+    "day": "Thursday",
+    "time": "19:00",
+    "genderSpecific": "male",
+    "numberOfParallelClasses": 2,
+    "isActive": true
+  },
+  {
+    "programId": "dv_male",
+    "day": "Saturday",
+    "time": "08:00",
+    "genderSpecific": "male",
+    "numberOfParallelClasses": 2,
+    "isActive": true
+  },
+  {
+    "programId": "dv_male",
+    "day": "Saturday",
+    "time": "11:30",
+    "genderSpecific": "male",
+    "numberOfParallelClasses": 4,
+    "isActive": true
+  }
+] 

@@ -54,7 +54,7 @@ const getInitialFormValues = (): EnrollmentFormData => {
             agreeToRecurring: parsedData.payment.agreeToRecurring || false,
           };
           const validatedSchedulingData = {
-            selectedClassSlotId: parsedData.scheduling?.selectedClassSlotId || "",
+            selectedClassId: parsedData.scheduling?.selectedClassId || "",
           };
           // Ensure all fields, including new ones, are properly defaulted or loaded
           const defaultPersonalInfo = {
@@ -93,7 +93,7 @@ const getInitialFormValues = (): EnrollmentFormData => {
       whyReferred: "",
       selectedProgram: "",
     },
-    scheduling: { selectedClassSlotId: "" },
+    scheduling: { selectedClassId: "" },
     documents: { agreedToTerms: false, signature: "" },
     payment: {
       paymentOption: "full_program" as PaymentOption,
@@ -171,7 +171,7 @@ export default function EnrollmentForm() {
       }
       case 3: { // SchedulingSection (was step 2)
         const sched = watchedScheduling;
-        return !!(sched && sched.selectedClassSlotId);
+        return !!(sched && sched.selectedClassId);
       }
       case 4: { // ConsentFormStep (was step 3)
         const docs = watchedDocuments;
@@ -255,167 +255,118 @@ export default function EnrollmentForm() {
   }, []); // Run only on mount and unmount
 
   const goToNextStep = async () => {
-    // Handle Welcome step: No API call, just advance UI
-    if (currentStep === 0) {
-      setCurrentStep((prev) => prev + 1);
-      // Update URL hash for welcome step if you have that logic
-      const nextStepId = getStepIdForIndex(1); // Assuming 1 is contact-info
-      if (nextStepId) {
-        window.history.pushState({ step: 1, id: nextStepId }, "", `#${nextStepId}`);
+    if (!isStepComplete(currentStep)) {
+      // Trigger validation for the current step's fields if needed
+      // This depends on how granular you want the validation trigger to be.
+      // For example, for step 1 (ContactInfo), trigger validation for personalInfo fields.
+      let fieldsToValidate: Path<EnrollmentFormData>[] = [];
+      if (currentStep === 1) { // ContactInfo
+        fieldsToValidate = Object.keys(methods.getValues('personalInfo')).map(k => `personalInfo.${k}` as Path<EnrollmentFormData>);
+      } else if (currentStep === 2) { // ProgramInfo
+        fieldsToValidate = ['personalInfo.referralSource', 'personalInfo.referralSourceOther', 'personalInfo.selectedProgram', 'personalInfo.whyReferred', 'personalInfo.county', 'personalInfo.countyOther'];
+      } else if (currentStep === 3) { // Scheduling
+        fieldsToValidate = ['scheduling.selectedClassId']; // Changed here
+      } else if (currentStep === 4) { // Documents
+        fieldsToValidate = ['documents.agreedToTerms', 'documents.signature'];
+      } else if (currentStep === 5) { // Payment
+        fieldsToValidate = ['payment.paymentOption', 'payment.agreeToRecurring'];
       }
-      return; // Exit early
+      
+      const allValid = await methods.trigger(fieldsToValidate.length > 0 ? fieldsToValidate : undefined );
+      if (!allValid) return;
     }
 
     setIsLoading(true);
-
-    const stepIndexForApi = currentStep - 1; 
-    const currentPhaseId = enrollmentSteps[stepIndexForApi]?.id;
-    let submissionPhase = currentPhaseId; 
-    // Determine which fields to validate based on the current step
-    let fieldsToValidate: Path<EnrollmentFormData>[] = [];
+    let submissionPhase = "";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let dataForApi: any = {}; // Using any for flexibility, tailor as needed
+    let dataToSend: any = {}; 
 
-    // Determine fields and data based on phase
-    if (submissionPhase === 'contact-info') {
-      fieldsToValidate = [
-        'personalInfo.firstName', 'personalInfo.lastName', 'personalInfo.email', 'personalInfo.phone', 
-        'personalInfo.city', 'personalInfo.state', 'personalInfo.zipcode', 'personalInfo.sex', 
-        // county and countyOther removed from validation here
-        'personalInfo.consentToContact'
-      ];
-      // Construct data payload specifically for contact info, excluding county
-      dataForApi = {
-        submissionPhase: 'contactInfo',
-        personalInfo: {
-          firstName: watchedPersonalInfo.firstName,
-          lastName: watchedPersonalInfo.lastName,
-          email: watchedPersonalInfo.email,
-          phone: watchedPersonalInfo.phone,
-          city: watchedPersonalInfo.city,
-          state: watchedPersonalInfo.state,
-          zipcode: watchedPersonalInfo.zipcode,
-          sex: watchedPersonalInfo.sex,
-          // county and countyOther removed from payload here
-          consentToContact: watchedPersonalInfo.consentToContact,
+    // Determine submission phase and data based on currentStep
+    if (currentStep === 0) { // Welcome step, no API call, just advance
+        setIsLoading(false);
+        const nextStepIndex = currentStep + 1;
+        const nextStepId = getStepIdForIndex(nextStepIndex);
+        if (nextStepId) {
+            window.history.pushState({ step: nextStepIndex, id: nextStepId }, "", `#${nextStepId}`);
         }
-      };
-    } else if (submissionPhase === 'program-info') {
-      submissionPhase = 'programInfo'; // Normalize phase name for API
-      fieldsToValidate = [
-        'personalInfo.referralSource', 'personalInfo.referralSourceOther', 
-        'personalInfo.selectedProgram', 'personalInfo.whyReferred',
-        // Add county validation here
-        'personalInfo.county', 'personalInfo.countyOther'
-      ];
-      // Construct data payload for program info, including county
-      dataForApi = {
-        submissionPhase: 'programInfo',
-        personalInfo: {
-          referralSource: watchedPersonalInfo.referralSource,
-          referralSourceOther: watchedPersonalInfo.referralSourceOther,
-          selectedProgram: watchedPersonalInfo.selectedProgram,
-          whyReferred: watchedPersonalInfo.whyReferred,
-          // Add county fields to payload here
-          county: watchedPersonalInfo.county,
-          countyOther: watchedPersonalInfo.countyOther,
-        }
-      };
-    } else if (submissionPhase === 'scheduling') {
-      submissionPhase = 'scheduling';
-      fieldsToValidate = ['scheduling.selectedClassSlotId'];
-      dataForApi = { submissionPhase: 'scheduling', scheduling: watchedScheduling };
-    } else if (submissionPhase === 'documents') {
-      submissionPhase = 'consent'; // API expects 'consent' phase
-      fieldsToValidate = ['documents.agreedToTerms'];
-      dataForApi = { submissionPhase: 'consent', documents: watchedDocuments };
-    } else if (submissionPhase === 'payment') {
-      // Payment step might not need a backend save here, 
-      // as final data is collected before. 
-      // If it *does* trigger a final save or payment status update:
-      // submissionPhase = 'final'; 
-      // fieldsToValidate = [...all relevant fields for final validation]
-      // dataForApi = { submissionPhase: 'final', ...all form data };
-      
-      // For now, assume payment moves to success without intermediate save
-      console.log("Proceeding from payment step (no intermediate save)");
-      setCurrentStep((prev) => prev + 1);
-      setIsLoading(false);
-      return; // Exit early if no API call needed here
+        setCurrentStep(nextStepIndex);
+        contentRef.current?.scrollTo(0, 0); // Scroll to top
+        return;
     }
-    
-    // Client-side validation for the current step fields
-    const isStepFieldsValid = await methods.trigger(fieldsToValidate);
-    if (!isStepFieldsValid) {
-      console.log(`Validation failed for phase: ${submissionPhase}`, methods.formState.errors);
-      // Use sonner for toast notifications
-      // toast.error(`Please complete all required fields for the ${submissionPhase.replace('-',' ')} step.`);
+    if (currentStep === 1) { // ContactInfoStep
+      submissionPhase = "contactInfo";
+      dataToSend = { personalInfo: watchedPersonalInfo };
+    } else if (currentStep === 2) { // ProgramInfoStep
+      submissionPhase = "programInfo";
+      dataToSend = { personalInfo: watchedPersonalInfo }; 
+    } else if (currentStep === 3) { // SchedulingSection
+      submissionPhase = "scheduling";
+      dataToSend = { scheduling: { selectedClassId: watchedScheduling.selectedClassId } }; // Changed here
+    } else if (currentStep === 4) { // ConsentFormStep
+      submissionPhase = "consent";
+      dataToSend = { documents: watchedDocuments };
+    } else if (currentStep === 5) { // PaymentStep - this is the final step before success view
+      submissionPhase = "final";
+      // For the final step, send all form data according to EnrollmentFormData structure
+      dataToSend = { ...methods.getValues() }; // Send all form data
+    }
+
+    if (!submissionPhase) {
       setIsLoading(false);
+      console.error("Invalid step or submissionPhase not set.");
+      // Optionally, show an error to the user
       return;
     }
 
-    // API Call Logic
     try {
-      const fetchOptions: RequestInit = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataForApi),
-      };
-
-      // --- Add Logging Here ---
-      console.log(`Preparing API call for phase: ${submissionPhase}. Token present: ${!!enrollmentToken}`);
-      // ------------------------
-
-      // --- Simplified Token Check and Header Logic ---
-      if (submissionPhase !== 'contact-info') {
-        // Phases after contactInfo require a token
-        if (!enrollmentToken) {
-          // Token is required but missing
-          console.error('Error: enrollmentToken missing for phase:', submissionPhase); 
-          // toast.error('Enrollment session error. Please refresh and try again.');
-          setIsLoading(false);
-          return; 
-        }
-        // Token exists, add the header
-        fetchOptions.headers = {
-          ...fetchOptions.headers, 
-          'Authorization': `Bearer ${enrollmentToken}`
-        };
+      const headers: HeadersInit = { 'Content-Type': 'application/json' };
+      if (enrollmentToken && submissionPhase !== 'contactInfo') {
+        headers['Authorization'] = `Bearer ${enrollmentToken}`;
       }
-      // --- End Simplified Logic ---
-      
-      const response = await fetch('/api/enroll', fetchOptions);
+
+      const response = await fetch("/api/enroll", {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({ submissionPhase, ...dataToSend }),
+      });
+
       const result = await response.json();
-
-      if (response.ok) {
-        // toast.success(result.message || 'Step saved successfully!');
-        // If it was the contactInfo step, save the received token
-        if (submissionPhase === 'contactInfo' && result.enrollmentToken) {
-          setEnrollmentToken(result.enrollmentToken);
-          console.log("Enrollment token received and stored.")
-        }
-        // Proceed to the next step in the UI
-        setCurrentStep((prev) => prev + 1);
-      } else {
-        console.error('API Error:', result);
-        // toast.error(result.error || 'Failed to save step data.');
-        if (response.status === 401) {
-            // Handle specific unauthorized/token errors
-            // toast.error('Your session may have expired. Please start the enrollment again.');
-            // Optionally clear token and reset form
-            setEnrollmentToken(null);
-            // You might want to redirect to the start or clear local storage
-            window.localStorage.removeItem(LOCAL_STORAGE_KEY);
-            setCurrentStep(0); // Go back to welcome
-        }
-      }
-    } catch (error) {
-      console.error('Network or other error saving step data:', error);
-      // toast.error('An unexpected error occurred. Please try again.');
-    } finally {
       setIsLoading(false);
+
+      if (!response.ok) {
+        console.error("API Error:", result);
+        // Handle specific errors, e.g., token expiration
+        if (response.status === 401 && result.error?.includes("token")) {
+            // Token issue, perhaps clear token and redirect to contact info or show message
+            setEnrollmentToken(null);
+            // Optionally, force user back to contact info step or show a specific message
+            // setCurrentStep(getIndexForStepId('contact-info') || 1);
+            alert("Your session has expired or is invalid. Please start over from the contact information step if issues persist.");
+        } else {
+            alert(`Error: ${result.error || 'An unknown error occurred.'}`);
+        }
+        return; // Stop processing on error
+      }
+
+      // Store token from contactInfo response
+      if (submissionPhase === "contactInfo" && result.enrollmentToken) {
+        setEnrollmentToken(result.enrollmentToken);
+      }
+      
+      // If this was the last actual data submission step (Payment / step 5)
+      // and it was successful, advance to the SuccessStep (index 6)
+      const nextStepIndex = currentStep === 5 ? currentStep + 1 : currentStep + 1;
+      const nextStepId = getStepIdForIndex(nextStepIndex);
+      if (nextStepId) {
+        window.history.pushState({ step: nextStepIndex, id: nextStepId }, "", `#${nextStepId}`);
+      }
+      setCurrentStep(nextStepIndex);
+      contentRef.current?.scrollTo(0, 0); // Scroll to top
+
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Network or other error:", error);
+      alert("An unexpected error occurred. Please try again.");
     }
   };
 

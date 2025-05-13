@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Probation Pardon & Parole",
+    "abbreviation": "PPP",
+    "isActive": true
+  },
+  {
+    "name": "Department of Social Services",
+    "abbreviation": "DSS",
+    "isActive": true
+  },
+  {
+    "name": "Pre-Trial Intervention",
+    "abbreviation": "PTI",
+    "isActive": true
+  },
+  {
+    "name": "Self-Referral",
+    "abbreviation": "Self",
+    "isActive": true
+  },
+  {
+    "name": "Other",
+    "abbreviation": "Other",
+    "isActive": true
+  }
+] 

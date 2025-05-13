@@ -64,19 +64,19 @@ This document outlines the phased development plan for the Three Trees platform,
   * [x] Define Payload Collections (mapping to Supabase Tables) for MVP:
     * [x] `Clients`
     * [x] `Programs`
-    * [x] `ClassSlots`
-    * [x] `Payments`
-    * [x] `Enrollments`
+    * [x] `ClassSlots` (now Classes)
+    * [ ] `Payments`
+    * [x] `Enrollments` (now obsolete; client-class link refactored)
   * [x] **Decision** Data Migration: No bulk migration for MVP.
   * [ ] API for Enrollment Form Submission (`/api/enroll` - NextJS API Route):
-    * [*Validate incoming `EnrollmentFormData` (backend Zod validation)*]
-    * [*Create/Update `Client` record (via Payload, targeting Supabase)*]
+    * [x] Validate incoming `EnrollmentFormData` (phased validation implemented; final step includes full Zod schema validation)
+    * [x] Create/Update `Client` record (via Payload, targeting Supabase)
     * [ ] Handle payment processing via Square (see below).
     * [ ] Store digital consent link/data.
-    * [ ] Create `Enrollment` record.
+    * [x] Create `Enrollment` record. (Obsolete - client/class link refactored to direct relationships in Clients and Classes collections)
     * [ ] Send confirmation email (client & admin).
-    * [ ] Implement error handling.
-    * [ ] (Future Enhancement Idea) Consider refactor to save form data incrementally per step for abandonment recovery and analytics.
+    * [x] Implement error handling (basic API error handling on frontend; JWT error handling on backend).
+    * [x] (Future Enhancement Idea) Consider refactor to save form data incrementally per step for abandonment recovery and analytics. (Implemented with phased submission API and JWT-based enrollment session)
 * [ ] 10. Payments - Square Integration (MVP)
   * **Frontend (`PaymentStep.tsx`):**
     * [ ] Integrate Square Web Payments SDK into `#card-container`.

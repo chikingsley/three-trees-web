@@ -6,7 +6,11 @@ interface StepHeaderProps {
   className?: string;
 }
 
-const StepHeader: React.FC<StepHeaderProps> = ({ title, subtitle, className }) => {
+const StepHeader: React.FC<StepHeaderProps> = ({ 
+  title, 
+  // subtitle, 
+  className 
+}) => {
   return (
     <div className={`mb-4 text-center ${className ?? ""}`}>
       <h2 className="text-xl md:text-2xl font-bold mb-1 text-primary px-2">{title}</h2>

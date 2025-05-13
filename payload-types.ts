@@ -68,10 +68,9 @@ export interface Config {
   blocks: {};
   collections: {
     blogPosts: BlogPost;
-    'class-slots': ClassSlot;
+    classes: Class;
     clients: Client;
     counties: County;
-    enrollments: Enrollment;
     locations: Location;
     media: Media;
     payments: Payment;
@@ -89,10 +88,9 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     blogPosts: BlogPostsSelect<false> | BlogPostsSelect<true>;
-    'class-slots': ClassSlotsSelect<false> | ClassSlotsSelect<true>;
+    classes: ClassesSelect<false> | ClassesSelect<true>;
     clients: ClientsSelect<false> | ClientsSelect<true>;
     counties: CountiesSelect<false> | CountiesSelect<true>;
-    enrollments: EnrollmentsSelect<false> | EnrollmentsSelect<true>;
     locations: LocationsSelect<false> | LocationsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     payments: PaymentsSelect<false> | PaymentsSelect<true>;
@@ -533,27 +531,90 @@ export interface Location {
   createdAt: string;
 }
 /**
- * Define specific instances of classes, including day, time, and capacity.
+ * Define scheduled blocks of classes for specific programs, days, and times.
  *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "class-slots".
+ * via the `definition` "classes".
  */
-export interface ClassSlot {
+export interface Class {
   id: string;
   program: string | Program;
+  /**
+   * How many instances of this class run simultaneously at this time.
+   */
+  numberOfParallelClasses: number;
   day: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
   /**
-   * Enter time in a consistent format (e.g., 5:00 PM, 10:00 AM).
+   * Start time of the class block.
    */
-  time: string;
+  time:
+    | '00:00'
+    | '00:30'
+    | '01:00'
+    | '01:30'
+    | '02:00'
+    | '02:30'
+    | '03:00'
+    | '03:30'
+    | '04:00'
+    | '04:30'
+    | '05:00'
+    | '05:30'
+    | '06:00'
+    | '06:30'
+    | '07:00'
+    | '07:30'
+    | '08:00'
+    | '08:30'
+    | '09:00'
+    | '09:30'
+    | '10:00'
+    | '10:30'
+    | '11:00'
+    | '11:30'
+    | '12:00'
+    | '12:30'
+    | '13:00'
+    | '13:30'
+    | '14:00'
+    | '14:30'
+    | '15:00'
+    | '15:30'
+    | '16:00'
+    | '16:30'
+    | '17:00'
+    | '17:30'
+    | '18:00'
+    | '18:30'
+    | '19:00'
+    | '19:30'
+    | '20:00'
+    | '20:30'
+    | '21:00'
+    | '21:30'
+    | '22:00'
+    | '22:30'
+    | '23:00'
+    | '23:30';
   /**
-   * Select if this class slot is gender-specific.
+   * Select if this class block is gender-specific.
    */
   genderSpecific?: ('male' | 'female') | null;
-  spotsTotal: number;
-  slotIdentifier?: string | null;
   /**
-   * Active slots are available for enrollment selection.
+   * Clients currently enrolled in this class block.
+   */
+  clients?: (string | Client)[] | null;
+  /**
+   * Calculated: Number of Parallel Classes * Spots Per Class defined on the Program.
+   */
+  spotsTotal?: number | null;
+  /**
+   * Calculated: Spots Total - Number of Enrolled Clients.
+   */
+  spotsAvailable?: number | null;
+  classBlockIdentifier?: string | null;
+  /**
+   * Active class blocks are available for enrollment selection.
    */
   isActive?: boolean | null;
   updatedAt: string;
@@ -578,6 +639,10 @@ export interface Program {
   sessionsPerWeek?: number | null;
   costPerSession: number;
   enrollmentFee: number;
+  /**
+   * The maximum number of clients allowed in a single class instance of this program.
+   */
+  spotsPerClass: number;
   /**
    * Categorize the program for filtering or display purposes.
    */
@@ -604,41 +669,32 @@ export interface Client {
   state?: string | null;
   zipcode?: string | null;
   sex?: ('Male' | 'Female') | null;
-  county?:
-    | (
-        | 'Abbeville'
-        | 'Aiken'
-        | 'York'
-        | 'Charleston'
-        | 'Chester'
-        | 'Dorchester'
-        | 'Edgefield'
-        | 'Fairfield'
-        | 'Greenville'
-        | 'Horry'
-        | 'Lancaster'
-        | 'Lexington'
-        | 'Orangeburg'
-        | 'Richland'
-        | 'Spartanburg'
-        | 'Union'
-        | 'Other'
-      )
-    | null;
+  /**
+   * Select the client's county of residence or use the "Other" field
+   */
+  county?: (string | null) | County;
+  /**
+   * If county not in the list, specify the name here
+   */
   countyOther?: string | null;
   consentToContact?: boolean | null;
-  referralSource?:
-    | (
-        | 'Probation Pardon & Parole (PPP)'
-        | 'Pretrial Intervention (PTI)'
-        | 'Department of Social Services (DSS)'
-        | 'Other'
-      )
-    | null;
+  /**
+   * Select the agency that referred this client or use the "Other" field
+   */
+  referralSource?: (string | null) | ReferralSource;
+  /**
+   * If referral source not in the list, specify here
+   */
   referralSourceOther?: string | null;
   whyReferred?: string | null;
-  selectedProgram?: string | null;
-  selectedClassSlotId?: string | null;
+  /**
+   * The program the client is enrolled in
+   */
+  selectedProgram?: (string | null) | Program;
+  /**
+   * The specific day/time slot the client is assigned to
+   */
+  selectedClassSlot?: (string | null) | Class;
   agreedToTerms?: boolean | null;
   paymentOption?: ('pay_as_you_go' | 'autopay_weekly' | 'full_program') | null;
   agreeToRecurring?: boolean | null;
@@ -671,6 +727,10 @@ export interface Client {
    * Notes for internal admin use only.
    */
   internalNotes?: string | null;
+  /**
+   * The specific class block this client is currently assigned to.
+   */
+  class?: (string | null) | Class;
   updatedAt: string;
   createdAt: string;
 }
@@ -685,49 +745,6 @@ export interface County {
    * Active counties can be selected during enrollment.
    */
   isActive?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Tracks client enrollments in specific class slots.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "enrollments".
- */
-export interface Enrollment {
-  id: string;
-  client: string | Client;
-  /**
-   * Links to the specific type of class slot the client enrolled in.
-   */
-  classSlot: string | ClassSlot;
-  enrollmentDate: string;
-  status?: ('active' | 'completed' | 'cancelled' | 'on_hold') | null;
-  notes?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Records of financial transactions.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payments".
- */
-export interface Payment {
-  id: string;
-  client: string | Client;
-  /**
-   * Amount in USD (e.g., 50.00 for $50.00)
-   */
-  amount: number;
-  paymentDate: string;
-  type: 'enrollment_fee' | 'session_fee' | 'full_program_prepayment' | 'other';
-  /**
-   * e.g., Square Online, Manual Offline
-   */
-  paymentMethod?: string | null;
-  squareTransactionId?: string | null;
-  notes?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -789,6 +806,30 @@ export interface ReferralSourceType {
   createdAt: string;
 }
 /**
+ * Records of financial transactions.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payments".
+ */
+export interface Payment {
+  id: string;
+  client: string | Client;
+  /**
+   * Amount in USD (e.g., 50.00 for $50.00)
+   */
+  amount: number;
+  paymentDate: string;
+  type: 'enrollment_fee' | 'session_fee' | 'full_program_prepayment' | 'other';
+  /**
+   * e.g., Square Online, Manual Offline
+   */
+  paymentMethod?: string | null;
+  squareTransactionId?: string | null;
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
@@ -800,8 +841,8 @@ export interface PayloadLockedDocument {
         value: string | BlogPost;
       } | null)
     | ({
-        relationTo: 'class-slots';
-        value: string | ClassSlot;
+        relationTo: 'classes';
+        value: string | Class;
       } | null)
     | ({
         relationTo: 'clients';
@@ -810,10 +851,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'counties';
         value: string | County;
-      } | null)
-    | ({
-        relationTo: 'enrollments';
-        value: string | Enrollment;
       } | null)
     | ({
         relationTo: 'locations';
@@ -941,15 +978,18 @@ export interface BlogPostsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "class-slots_select".
+ * via the `definition` "classes_select".
  */
-export interface ClassSlotsSelect<T extends boolean = true> {
+export interface ClassesSelect<T extends boolean = true> {
   program?: T;
+  numberOfParallelClasses?: T;
   day?: T;
   time?: T;
   genderSpecific?: T;
+  clients?: T;
   spotsTotal?: T;
-  slotIdentifier?: T;
+  spotsAvailable?: T;
+  classBlockIdentifier?: T;
   isActive?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -975,7 +1015,7 @@ export interface ClientsSelect<T extends boolean = true> {
   referralSourceOther?: T;
   whyReferred?: T;
   selectedProgram?: T;
-  selectedClassSlotId?: T;
+  selectedClassSlot?: T;
   agreedToTerms?: T;
   paymentOption?: T;
   agreeToRecurring?: T;
@@ -985,6 +1025,7 @@ export interface ClientsSelect<T extends boolean = true> {
   squareCustomerId?: T;
   squareSubscriptionId?: T;
   internalNotes?: T;
+  class?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -995,19 +1036,6 @@ export interface ClientsSelect<T extends boolean = true> {
 export interface CountiesSelect<T extends boolean = true> {
   name?: T;
   isActive?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "enrollments_select".
- */
-export interface EnrollmentsSelect<T extends boolean = true> {
-  client?: T;
-  classSlot?: T;
-  enrollmentDate?: T;
-  status?: T;
-  notes?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1158,6 +1186,7 @@ export interface ProgramsSelect<T extends boolean = true> {
   sessionsPerWeek?: T;
   costPerSession?: T;
   enrollmentFee?: T;
+  spotsPerClass?: T;
   programCategory?: T;
   isActive?: T;
   updatedAt?: T;

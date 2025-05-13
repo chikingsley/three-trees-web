@@ -106,7 +106,7 @@ export const personalInfoSchema = z.object({
 });
 
 export const schedulingSchema = z.object({
-  selectedClassSlotId: z.string({required_error: "Please select a class time"}).min(1, "Please select a class time"),
+  selectedClassId: z.string({required_error: "Please select a class time"}).min(1, "Please select a class time"),
 });
 
 export const documentsSchema = z.object({

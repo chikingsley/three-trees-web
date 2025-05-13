@@ -72,7 +72,7 @@ export const Programs: CollectionConfig = {
           type: 'number',
           min: 0,
           required: true,
-          admin: { width: '50%' },
+          admin: { width: '33%' },
         },
         {
           name: 'enrollmentFee',
@@ -80,7 +80,19 @@ export const Programs: CollectionConfig = {
           type: 'number',
           min: 0,
           required: true,
-          admin: { width: '50%' },
+          admin: { width: '33%' },
+        },
+        {
+          name: 'spotsPerClass',
+          label: 'Spots Per Class Instance',
+          type: 'number',
+          min: 1,
+          required: true,
+          defaultValue: 1,
+          admin: { 
+            width: '33%',
+            description: 'The maximum number of clients allowed in a single class instance of this program.'
+          },
         },
       ]
     },

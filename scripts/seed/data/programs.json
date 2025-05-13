@@ -1,0 +1,80 @@
+[
+  {
+    "programId": "dv_male",
+    "name": "Domestic Violence (Male Group)",
+    "durationText": "26 weeks",
+    "description": "For male individuals addressing domestic violence issues",
+    "weeks": 26,
+    "sessionsPerWeek": 1,
+    "costPerSession": 35,
+    "enrollmentFee": 50,
+    "spotsPerClass": 10,
+    "programCategory": "court_ordered",
+    "isActive": true
+  },
+  {
+    "programId": "dv_female",
+    "name": "Domestic Violence (Female Group)",
+    "durationText": "26 weeks",
+    "description": "For female individuals addressing domestic violence issues",
+    "weeks": 26,
+    "sessionsPerWeek": 1,
+    "costPerSession": 35,
+    "enrollmentFee": 50,
+    "spotsPerClass": 10,
+    "programCategory": "court_ordered",
+    "isActive": true
+  },
+  {
+    "programId": "sort",
+    "name": "Sex Offender Responsible Thinking",
+    "durationText": "18 months",
+    "description": "Specialized program for sex offender rehabilitation",
+    "weeks": 78,
+    "sessionsPerWeek": 1,
+    "costPerSession": 40,
+    "enrollmentFee": 90,
+    "spotsPerClass": 8,
+    "programCategory": "court_ordered",
+    "isActive": true
+  },
+  {
+    "programId": "am",
+    "name": "Anger Management",
+    "durationText": "12 weeks",
+    "description": "Learn to manage anger and emotional responses (Level 1)",
+    "weeks": 12,
+    "sessionsPerWeek": 1,
+    "costPerSession": 35,
+    "enrollmentFee": 50,
+    "spotsPerClass": 12,
+    "programCategory": "court_ordered",
+    "isActive": true
+  },
+  {
+    "programId": "sact",
+    "name": "Substance Abuse + Critical Thinking",
+    "durationText": "12 weeks",
+    "description": "Address substance abuse issues with critical thinking skills (Level 1)",
+    "weeks": 12,
+    "sessionsPerWeek": 1,
+    "costPerSession": 35,
+    "enrollmentFee": 50,
+    "spotsPerClass": 12,
+    "programCategory": "court_ordered",
+    "isActive": true
+  },
+  {
+    "programId": "pp",
+    "name": "Positive Parenting",
+    "durationText": "12 weeks",
+    "description": "Develop effective parenting skills and techniques (Level 1)",
+    "weeks": 12,
+    "sessionsPerWeek": 1,
+    "costPerSession": 35,
+    "enrollmentFee": 50,
+    "spotsPerClass": 12,
+    "programCategory": "court_ordered",
+    "isActive": true
+  }
+] 

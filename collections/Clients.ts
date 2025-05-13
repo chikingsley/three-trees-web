@@ -161,7 +161,7 @@ export const Clients: CollectionConfig = {
     {
       name: 'selectedClassSlot',
       type: 'relationship',
-      relationTo: 'class-slots',
+      relationTo: 'classes',
       hasMany: false,
       admin: {
         description: 'The specific day/time slot the client is assigned to'
@@ -280,6 +280,22 @@ export const Clients: CollectionConfig = {
       admin: {
         description: 'Notes for internal admin use only.'
       }
-    }
+    },
+    // {
+    //   name: 'tags',
+    //   type: 'relationship',
+    //   relationTo: 'tags',
+    //   hasMany: true,
+    // }, // Temporarily removed due to missing Tags collection
+    {
+      name: 'class',
+      label: 'Assigned Class Block',
+      type: 'relationship',
+      relationTo: 'classes',
+      hasMany: false,
+      admin: {
+        description: 'The specific class block this client is currently assigned to.',
+      }
+    },
   ],
 }
