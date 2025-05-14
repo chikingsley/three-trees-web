@@ -35,15 +35,16 @@ const MyDocument: React.FC<MyDocumentProps> = ({ clientData, selectedClass }) =>
   const tableCellViewBase = tw('border border-gray-300 p-1.5 justify-center');
   const tableCellHeaderViewSpecifics = tw('bg-gray-100');
   const tableCellValueViewSpecifics = tw('flex-1');
-  const tableCellTextContentStyle = tw('text-xs');
+  const tableCellTextContentStyle = tw('text-sm');
 
-  const listItemNumberStyle = tw('mr-1 text-xs');
-  const listItemTextStyle = tw('flex-1 text-xs');
+  const listItemNumberStyle = tw('mr-1 text-sm');
+  const listItemTextStyle = tw('flex-1 text-sm');
+  const h2 = tw('text-base font-bold mt-3 mb-1 text-center');
 
 
   return (
     <Document author="Three Trees Center for Change" title="Level One Signature Paperwork">
-      <Page size="LETTER" style={tw('p-10 text-sm text-gray-800 font-helvetica')}>
+      <Page size="LETTER" style={tw('px-20 py-10 text-sm text-gray-800 font-helvetica')}>
 
         {/* Logo */}
         <View style={tw('w-40 h-40 self-center mb-4')}>
@@ -69,11 +70,11 @@ const MyDocument: React.FC<MyDocumentProps> = ({ clientData, selectedClass }) =>
 
         <Text style={tw('text-xl text-center mb-1 font-bold')}>Level One Signature Paperwork</Text>
         <View style={tw('flex-row justify-center mb-2')}>
-          <Text style={tw('text-xs text-center')}>Class you are Taking (circle the appropriate class):</Text>
+          <Text style={tw('text-base text-center')}>Class you are Taking (circle the appropriate class):</Text>
         </View>
         <View style={tw('flex-row justify-center mb-4')}>
           {classes.map((cls, index) => (
-            <Text key={cls} style={tw(`mx-1 text-xs ${cls === selectedClass ? 'border border-black rounded-full px-0.5' : ''}`)}>
+            <Text key={cls} style={tw(`mx-1 text-base ${cls === selectedClass ? 'border border-black rounded-full px-0.5' : ''}`)}>
               {cls}{index < classes.length - 1 ? ' / ' : ''}
             </Text>
           ))}
@@ -161,7 +162,7 @@ const MyDocument: React.FC<MyDocumentProps> = ({ clientData, selectedClass }) =>
           </View>
            {/* Environment Question */}
           <View style={tw('flex-row')}>
-            <View style={[tableCellViewBase, tableCellHeaderViewSpecifics, tw('w-1/3')]}>
+            <View style={[tableCellViewBase, tableCellHeaderViewSpecifics, tw('w-2/3')]}>
               <Text style={tableCellTextContentStyle}>Is your current living environment helpful for your successful completion of this program, please explain:</Text>
             </View>
             <View style={[tableCellViewBase, tableCellValueViewSpecifics]}>
@@ -170,8 +171,8 @@ const MyDocument: React.FC<MyDocumentProps> = ({ clientData, selectedClass }) =>
           </View>
         </View>
 
-        <Text style={tw('text-base font-bold mt-3 text-center')}>General Standards for</Text>
-        <Text style={tw('text-base font-bold mb-1 text-center')}>Educational Classes</Text>
+        <Text style={tw('text-base font-bold mt-1 text-center')}>General Standards for</Text>
+        <Text style={tw('text-base font-bold mb-3 text-center')}>Educational Classes</Text>
 
         {[
           "All individual and group sessions must be attended, and participants are to arrive on time. If you are late you will not be allowed to receive credit for that session. While in attendance clients will actively participate, be in a room alone with no other people present, and be viewable on camera at all times during class.",
@@ -188,7 +189,7 @@ const MyDocument: React.FC<MyDocumentProps> = ({ clientData, selectedClass }) =>
           </View>
         ))}
 
-        <Text style={tw('text-base font-bold mt-3 mb-1 text-center')}>Group Confidentiality Agreement</Text>
+        <Text style={h2}>Group Confidentiality Agreement</Text>
         {[
           <>I, <Text style={tw('underline font-bold')}>{clientData.name}</Text>, (Client&apos;s name) promise to hold confidential all communications made by participants and all information obtained from or about any participant while receiving treatment in this program.</>,
           "I am making this promise in consideration of the mutual promises made by all participants in this group and in return for benefits available from group therapy/education.",
@@ -201,7 +202,7 @@ const MyDocument: React.FC<MyDocumentProps> = ({ clientData, selectedClass }) =>
           </View>
         ))}
 
-        <Text style={tw('text-base font-bold mt-3 mb-1 text-center')}>Fee and Payment Policies</Text>
+        <Text style={h2}>Fee and Payment Policies</Text>
         {[
           "Three Trees only accepts secured payments; therefore, fees may be paid by cash or money order, or online at www.threetreescenterforchange.com.",
           "The cost of enrollment at the time of intake is $40.00 for all applicants to the program.",
@@ -209,7 +210,7 @@ const MyDocument: React.FC<MyDocumentProps> = ({ clientData, selectedClass }) =>
           "You will have a minimum of 2 drug and alcohol screens that will cost $25 each. These will be paid at time of drug screen.",
           "Group fees are to be paid at the time service is provided. If unable to pay the entire group fee, the participant will not receive credit for that session. If a participant wishes to attend and participate in a group session without receiving credit, he/she is welcome to do so.",
           "Program clients are held responsible for any outstanding balances even after they are no longer participating in the program.",
-          <>Any change in financial responsibilities should be noted here: <Text style={tw('border-b border-black min-w-[100px] px-0.5')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Text></>
+          <>Any change in financial responsibilities should be noted here: <Text style={tw('border-b border-black min-w-[100px] px-0.5')}>____________________</Text></>
         ].map((item, index) => (
           <View key={`fee-${index}`} style={tw('mb-1 flex-row')}>
             <Text style={listItemNumberStyle}>{index + 1}.</Text>
@@ -217,12 +218,12 @@ const MyDocument: React.FC<MyDocumentProps> = ({ clientData, selectedClass }) =>
           </View>
         ))}
 
-        <Text style={tw('text-base font-bold mt-3 text-center')}>Statement of Client Rights</Text>
+        <Text style={h2}>Statement of Client Rights</Text>
         <Text style={tw('text-sm font-bold mb-1 text-center')}>As a client of Three Trees Center For Change, LLC, you will be afforded:</Text>
         {[
           "Respect and dignity for and protection of your privacy",
           "Your informed consent to participate in services",
-          <><Text style={tw('font-bold')}>CONFIDENTIALITY</Text> of your client records, unless contraindicated in treatment and recovery process or as ordered by an appropriate healthcare provider</>,
+          "CONFIDENTIALITY of your client records, unless contraindicated in treatment and recovery process or as ordered by an appropriate healthcare provider",
           "Privacy of sessions, unless contraindicated in treatment and recovery process or as ordered by an appropriate healthcare provider",
           "A thorough explanation of program treatment, rules, and expectations",
           "The opportunity to provide feedback and recommendations throughout treatment regarding program rules, expectations, and quality of care",
@@ -234,14 +235,15 @@ const MyDocument: React.FC<MyDocumentProps> = ({ clientData, selectedClass }) =>
           </View>
         ))}
 
-        <Text style={tw('mt-3 text-xs')}>I have reviewed and understand the general rules, fee and payment policies, confidentiality agreement and my rights:</Text>
-        <Text style={tw('mt-2 text-xs')}>Client Signature<Text style={tw('border-b border-black min-w-[150px] mx-0.5')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Text> Date: <Text style={tw('border-b border-black min-w-[100px] mx-0.5')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Text></Text>
+        <Text style={tw('mt-3 text-sm')}>I have reviewed and understand the general rules, fee and payment policies, confidentiality agreement and my rights:</Text>
+        <Text style={tw('mt-2 text-sm')}>Client Signature: <Text style={tw('border-b border-black min-w-[150px] mx-0.5')}>____________________________</Text> Date: <Text style={tw('border-b border-black min-w-[100px] mx-0.5')}>____________________</Text></Text>
 
-        <Text style={tw('text-base font-bold mt-3 mb-1 text-center')}>Authorization for Release of Information</Text>
-        <Text style={tw('text-xs')}>I, <Text style={tw('underline font-bold')}>{clientData.name}</Text> (client&apos;s name) authorize Three Trees Center for Change, LLC to exchange the below specified information with anyone who is involved in the court mandated monitoring of my treatment. To include, but not limited to, the Department of Social Services, Probation and Parole, Victim Advocates, Pre-Trial Intervention, County Solicitor&apos;s Office, or Court employees, and my own legal counsel.</Text>
-        <Text style={tw('mt-2 text-xs')}>I further authorize Three Trees Center for Change, LLC to exchange information with the following additional individuals/groups:</Text>
+        <Text style={h2}>Authorization for Release of Information</Text>
+        <Text style={tw('text-sm')}>I, <Text style={tw('underline font-bold')}>{clientData.name}</Text> (client&apos;s name) authorize Three Trees Center for Change, LLC to exchange the below specified information with anyone who is involved in the court mandated monitoring of my treatment. To include, but not limited to, the Department of Social Services, Probation and Parole, Victim Advocates, Pre-Trial Intervention, County Solicitor&apos;s Office, or Court employees, and my own legal counsel.</Text>
+        
+        <Text style={tw('mt-2 text-sm')}>I further authorize Three Trees Center for Change, LLC to exchange information with the following additional individuals/groups:</Text>
         {[1, 2, 3, 4].map(i => (
-          <Text key={`auth-${i}`} style={tw('text-xs mt-0.5')}>{i}. <Text style={tw('border-b border-black min-w-[300px] px-0.5')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Text></Text>
+          <Text key={`auth-${i}`} style={tw('text-sm mt-0.5')}>{i}. <Text style={tw('border-b border-black min-w-[300px] px-0.5')}>____________________________________________________________</Text></Text>
         ))}
 
         <Text style={tw('text-sm font-bold mb-0.5 mt-3')}>The following information will be shared:</Text>
@@ -258,11 +260,11 @@ const MyDocument: React.FC<MyDocumentProps> = ({ clientData, selectedClass }) =>
           </View>
         ))}
 
-        <Text style={tw('mt-2 text-xs')}>My birth date is: <Text style={tw('border-b border-black min-w-[200px] mx-0.5')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Text></Text>
-        <Text style={tw('mt-2 text-xs')}>This authorization will expire 180 days from my completion or termination of this program, except for allowing Three Trees Center for Change to follow up at 1, 3, and 5 year intervals to see if I have recidivated. I also understand that this authorization may be revoked by me, in writing, at any time, except to the extent that action has already been taken.</Text>
-        <Text style={tw('mt-2 text-xs')}>I have reviewed and provide permission for my information to be released to the above-mentioned parties.</Text>
-        <Text style={tw('mt-2 text-xs')}>Client Signature<Text style={tw('border-b border-black min-w-[150px] mx-0.5')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Text> Date: <Text style={tw('border-b border-black min-w-[100px] mx-0.5')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Text></Text>
-        <Text style={tw('mt-2 text-xs')}>Staff Signature<Text style={tw('border-b border-black min-w-[150px] mx-0.5')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Text> Date: <Text style={tw('border-b border-black min-w-[100px] mx-0.5')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Text></Text>
+        <Text style={tw('mt-2 text-sm')}>My birth date is: <Text style={tw('border-b border-black min-w-[200px] mx-0.5')}>____________________________________________________</Text></Text>
+        <Text style={tw('mt-2 text-sm')}>This authorization will expire 180 days from my completion or termination of this program, except for allowing Three Trees Center for Change to follow up at 1, 3, and 5 year intervals to see if I have recidivated. I also understand that this authorization may be revoked by me, in writing, at any time, except to the extent that action has already been taken.</Text>
+        <Text style={tw('mt-2 text-sm')}>I have reviewed and provide permission for my information to be released to the above-mentioned parties.</Text>
+        <Text style={tw('mt-2 text-sm')}>Client Signature: <Text style={tw('border-b border-black min-w-[150px] mx-0.5')}>____________________________</Text> Date: <Text style={tw('border-b border-black min-w-[100px] mx-0.5')}>____________________</Text></Text>
+        <Text style={tw('mt-2 text-sm')}>Staff Signature: <Text style={tw('border-b border-black min-w-[150px] mx-0.5')}>_____________________________</Text> Date: <Text style={tw('border-b border-black min-w-[100px] mx-0.5')}>____________________</Text></Text>
 
         <Text style={tw('absolute bottom-5 left-10 right-10 text-center text-gray-500 text-[8px]')}>Three Trees Center for Change, LLC</Text>
       </Page>
