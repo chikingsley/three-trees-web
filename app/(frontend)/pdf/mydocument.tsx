@@ -32,8 +32,11 @@ const MyDocument: React.FC<MyDocumentProps> = ({ clientData, selectedClass }) =>
   const classes = ["Parenting", "Substance Use and Responsible Living", "Working with Anger"];
 
   // Example of a reusable style combining Tailwind classes
-  const tableCellHeaderStyle = tw('border border-gray-300 bg-gray-100 p-1.5 text-xs');
-  const tableCellValueStyle = tw('border border-gray-300 p-1.5 text-xs flex-1'); // Added flex-1
+  const tableCellViewBase = tw('border border-gray-300 p-1.5 justify-center');
+  const tableCellHeaderViewSpecifics = tw('bg-gray-100');
+  const tableCellValueViewSpecifics = tw('flex-1');
+  const tableCellTextContentStyle = tw('text-xs');
+
   const listItemNumberStyle = tw('mr-1 text-xs');
   const listItemTextStyle = tw('flex-1 text-xs');
 
@@ -41,13 +44,13 @@ const MyDocument: React.FC<MyDocumentProps> = ({ clientData, selectedClass }) =>
   return (
     <Document author="Three Trees Center for Change" title="Level One Signature Paperwork">
       <Page size="LETTER" style={tw('p-10 text-sm text-gray-800 font-helvetica')}>
-        
+
         {/* Logo */}
-        <View style={tw('w-40 h-40 self-center mb-4')}> 
+        <View style={tw('w-40 h-40 self-center mb-4')}>
           <Svg viewBox="0 0 552.96 552.96" style={tw('w-full h-full')}>
             <Path
               d="M333.57 111.92c-3.61-1.14-7.26-2.17-10.95-3.1-3.54-.89-7.12-1.7-10.74-2.39a203.918 203.918 0 0 0-31.78-3.67h-.16a206.49 206.49 0 0 0-12.91-.07c-9.36.25-18.56 1.12-27.56 2.58-2.51.41-5.02.86-7.5 1.36-93.46 18.79-163.85 101.34-163.85 200.33 0 50.22 18.12 96.21 48.17 131.79 3.19 3.78 6.52 7.44 9.97 10.97a21.38 21.38 0 0 0 12.03 6.17c5.4.82 10.87 1.44 16.4 1.84 1.13.08 1.7-1.34.84-2.08-3.62-3.12-7.11-6.38-10.47-9.76-34.29-34.43-55.47-81.91-55.47-134.34 0-81.98 51.8-151.85 124.45-178.69 3.86-1.43 7.78-2.73 11.76-3.91 7.37-2.19 14.93-3.94 22.64-5.22 6.79-1.14 13.71-1.91 20.72-2.3 3.59-.21 7.22-.31 10.86-.31s7.27.1 10.86.31c14.31.8 28.19 3.18 41.48 6.97.63.18 1.26.36 1.88.55 5.26 1.56 10.42 3.34 15.48 5.33 70.7 27.82 120.73 96.7 120.73 177.27 0 49.56-18.92 94.68-49.95 128.56-2.37 2.6-4.82 5.13-7.34 7.59-.8.78-.19 2.13.93 2.02l4.08-.4a2.59 2.59 0 0 0 1.64-.8c2.86-2.97 5.62-6.02 8.29-9.16 30.37-35.66 48.7-81.9 48.7-132.41 0-91.57-60.23-169.07-143.23-195.04Z"
-              fill="#273472" // Default fill, can be changed via tw class if color is in theme
+              fill="#273472"
             />
             <Path
               d="M458.98 329.6H324.34v74.97h-9.03v16h-69.63v-16h-8.78V329.6H101.06L280.02 19.64 458.98 329.6z"
@@ -80,55 +83,96 @@ const MyDocument: React.FC<MyDocumentProps> = ({ clientData, selectedClass }) =>
         <View style={tw('border border-gray-300 mb-2.5')}>
           {/* Client Name */}
           <View style={tw('flex-row')}>
-            <Text style={[tableCellHeaderStyle, tw('w-1/3')]}>Client Name (Alias&apos;s):</Text>
-            <Text style={tableCellValueStyle}>{clientData.name}</Text>
+            <View style={[tableCellViewBase, tableCellHeaderViewSpecifics, tw('w-min-content')]}>
+              <Text style={tableCellTextContentStyle}>Client Name (Alias&apos;s):</Text>
+            </View>
+            <View style={[tableCellViewBase, tableCellValueViewSpecifics]}>
+              <Text style={tableCellTextContentStyle}>{clientData.name}</Text>
+            </View>
           </View>
           {/* Address Line 1 */}
           <View style={tw('flex-row')}>
-            <Text style={[tableCellHeaderStyle, tw('w-1/3')]}>Current Address:</Text>
-            <Text style={tableCellValueStyle}>{clientData.address}</Text>
-          </View>
-          {/* City, State, Zip */}
-          <View style={tw('flex-row')}>
-            <Text style={[tableCellHeaderStyle, tw('w-[15%]')]} >City:</Text>
-            <Text style={[tableCellValueStyle, tw('min-w-0')]}>{clientData.city}</Text>
-            <Text style={[tableCellHeaderStyle, tw('w-[15%]')]} >State:</Text>
-            <Text style={[tableCellValueStyle, tw('min-w-0')]}>{clientData.state}</Text>
-            <Text style={[tableCellHeaderStyle, tw('w-[12%]')]} >Zip:</Text>
-            <Text style={[tableCellValueStyle, tw('min-w-0')]}>{clientData.zip}</Text>
+            <View style={[tableCellViewBase, tableCellHeaderViewSpecifics, tw('w-min-content')]}>
+              <Text style={tableCellTextContentStyle}>Current Address:</Text>
+            </View>
+            <View style={[tableCellViewBase, tableCellValueViewSpecifics]}>
+              <Text style={tableCellTextContentStyle}>{clientData.address}</Text>
+            </View>
+            <View style={[tableCellViewBase, tableCellHeaderViewSpecifics, tw('w-min-content')]} >
+              <Text style={tableCellTextContentStyle}>City:</Text>
+            </View>
+            <View style={[tableCellViewBase, tableCellValueViewSpecifics, tw('min-w-0')]}>
+              <Text style={tableCellTextContentStyle}>{clientData.city}</Text>
+            </View>
+            <View style={[tableCellViewBase, tableCellHeaderViewSpecifics, tw('w-min-content')]} >
+              <Text style={tableCellTextContentStyle}>State:</Text>
+            </View>
+            <View style={[tableCellViewBase, tableCellValueViewSpecifics, tw('min-w-0')]}>
+              <Text style={tableCellTextContentStyle}>{clientData.state}</Text>
+            </View>
+            <View style={[tableCellViewBase, tableCellHeaderViewSpecifics, tw('w-min-content')]} >
+              <Text style={tableCellTextContentStyle}>Zip:</Text>
+            </View>
+            <View style={[tableCellViewBase, tableCellValueViewSpecifics, tw('min-w-0')]}>
+              <Text style={tableCellTextContentStyle}>{clientData.zip}</Text>
+            </View>
           </View>
           {/* Phone & Email */}
           <View style={tw('flex-row')}>
-            <Text style={[tableCellHeaderStyle, tw('w-[25%]')]} >Telephone Number:</Text>
-            <Text style={[tableCellValueStyle, tw('min-w-0')]}>{clientData.phone}</Text>
-            <Text style={[tableCellHeaderStyle, tw('w-[15%]')]} >E-mail:</Text>
-            <Text style={[tableCellValueStyle, tw('min-w-0')]}>{clientData.email}</Text>
+            <View style={[tableCellViewBase, tableCellHeaderViewSpecifics, tw('w-min-content')]} >
+              <Text style={tableCellTextContentStyle}>Telephone Number:</Text>
+            </View>
+            <View style={[tableCellViewBase, tableCellValueViewSpecifics, tw('min-w-0')]}>
+              <Text style={tableCellTextContentStyle}>{clientData.phone}</Text>
+            </View>
+            <View style={[tableCellViewBase, tableCellHeaderViewSpecifics, tw('w-min-content')]} >
+              <Text style={tableCellTextContentStyle}>E-mail:</Text>
+            </View>
+            <View style={[tableCellViewBase, tableCellValueViewSpecifics, tw('min-w-0')]}>
+              <Text style={tableCellTextContentStyle}>{clientData.email}</Text>
+            </View>
           </View>
           {/* Emergency Contact */}
           <View style={tw('flex-row')}>
-            <Text style={[tableCellHeaderStyle, tw('w-1/3')]}>Emergency contact (cannot be victim):</Text>
-            <Text style={tableCellValueStyle}>{clientData.emergencyContact}</Text>
+            <View style={[tableCellViewBase, tableCellHeaderViewSpecifics, tw('w-min-content')]}>
+              <Text style={tableCellTextContentStyle}>Emergency contact (cannot be victim):</Text>
+            </View>
+            <View style={[tableCellViewBase, tableCellValueViewSpecifics]}>
+              <Text style={tableCellTextContentStyle}>{clientData.emergencyContact}</Text>
+            </View>
           </View>
            {/* Agent/Caseworker */}
           <View style={tw('flex-row')}>
-            <Text style={[tableCellHeaderStyle, tw('w-1/3')]}>Agent/Caseworker/referral source:</Text>
-            <Text style={tableCellValueStyle}>{clientData.agentCaseworker}</Text>
+            <View style={[tableCellViewBase, tableCellHeaderViewSpecifics, tw('w-1/3')]}>
+              <Text style={tableCellTextContentStyle}>Agent/Caseworker/referral source:</Text>
+            </View>
+            <View style={[tableCellViewBase, tableCellValueViewSpecifics]}>
+              <Text style={tableCellTextContentStyle}>{clientData.agentCaseworker}</Text>
+            </View>
           </View>
            {/* Safety Question */}
           <View style={tw('flex-row')}>
-            <Text style={[tableCellHeaderStyle, tw('w-1/3')]}>Are you safe in your current living environment?</Text>
-            <Text style={tableCellValueStyle}>{clientData.isSafe}</Text>
+            <View style={[tableCellViewBase, tableCellHeaderViewSpecifics, tw('w-1/3')]}>
+              <Text style={tableCellTextContentStyle}>Are you safe in your current living environment?</Text>
+            </View>
+            <View style={[tableCellViewBase, tableCellValueViewSpecifics]}>
+              <Text style={tableCellTextContentStyle}>{clientData.isSafe}</Text>
+            </View>
           </View>
            {/* Environment Question */}
           <View style={tw('flex-row')}>
-            <Text style={[tableCellHeaderStyle, tw('w-1/3')]}>Is your current living environment helpful for your successful completion of this program, please explain:</Text>
-            <Text style={tableCellValueStyle}>{clientData.environmentHelpful}</Text>
+            <View style={[tableCellViewBase, tableCellHeaderViewSpecifics, tw('w-1/3')]}>
+              <Text style={tableCellTextContentStyle}>Is your current living environment helpful for your successful completion of this program, please explain:</Text>
+            </View>
+            <View style={[tableCellViewBase, tableCellValueViewSpecifics]}>
+              <Text style={tableCellTextContentStyle}>{clientData.environmentHelpful}</Text>
+            </View>
           </View>
         </View>
 
         <Text style={tw('text-base font-bold mt-3 text-center')}>General Standards for</Text>
         <Text style={tw('text-base font-bold mb-1 text-center')}>Educational Classes</Text>
-        
+
         {[
           "All individual and group sessions must be attended, and participants are to arrive on time. If you are late you will not be allowed to receive credit for that session. While in attendance clients will actively participate, be in a room alone with no other people present, and be viewable on camera at all times during class.",
           "A total of two (2) absences are allowed in substance abuse level one.",
@@ -156,7 +200,7 @@ const MyDocument: React.FC<MyDocumentProps> = ({ clientData, selectedClass }) =>
             <Text style={listItemTextStyle}>{item}</Text>
           </View>
         ))}
-        
+
         <Text style={tw('text-base font-bold mt-3 mb-1 text-center')}>Fee and Payment Policies</Text>
         {[
           "Three Trees only accepts secured payments; therefore, fees may be paid by cash or money order, or online at www.threetreescenterforchange.com.",
@@ -197,16 +241,16 @@ const MyDocument: React.FC<MyDocumentProps> = ({ clientData, selectedClass }) =>
         <Text style={tw('text-xs')}>I, <Text style={tw('underline font-bold')}>{clientData.name}</Text> (client&apos;s name) authorize Three Trees Center for Change, LLC to exchange the below specified information with anyone who is involved in the court mandated monitoring of my treatment. To include, but not limited to, the Department of Social Services, Probation and Parole, Victim Advocates, Pre-Trial Intervention, County Solicitor&apos;s Office, or Court employees, and my own legal counsel.</Text>
         <Text style={tw('mt-2 text-xs')}>I further authorize Three Trees Center for Change, LLC to exchange information with the following additional individuals/groups:</Text>
         {[1, 2, 3, 4].map(i => (
-            <Text key={`auth-${i}`} style={tw('text-xs mt-0.5')}>{i}. <Text style={tw('border-b border-black min-w-[300px] px-0.5')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Text></Text>
+          <Text key={`auth-${i}`} style={tw('text-xs mt-0.5')}>{i}. <Text style={tw('border-b border-black min-w-[300px] px-0.5')}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Text></Text>
         ))}
-        
+
         <Text style={tw('text-sm font-bold mb-0.5 mt-3')}>The following information will be shared:</Text>
         {[
-            "Re-offenses of violence towards anyone",
-            "Violations of court orders",
-            "Missed appointments and compliance with other program rules",
-            "Treatment progress",
-            "Information relevant to safety, assessment and treatment planning"
+          "Re-offenses of violence towards anyone",
+          "Violations of court orders",
+          "Missed appointments and compliance with other program rules",
+          "Treatment progress",
+          "Information relevant to safety, assessment and treatment planning"
         ].map((item, index) => (
           <View key={`shared-${index}`} style={tw('mb-1 flex-row')}>
             <Text style={listItemNumberStyle}>{index + 1}.</Text>

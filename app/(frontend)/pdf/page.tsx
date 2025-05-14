@@ -15,7 +15,7 @@ const ClientPDFViewer = dynamic(() =>
 
 const initialClientData = {
   name: 'Jane Doe',
-  address: '123 Main St, Anytown, USA',
+  address: '123 Main St',
   city: 'Anytown',
   state: 'CA',
   zip: '90210',
@@ -43,11 +43,11 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="App" style={{ height: '100vh' }}>
 
       {isClient && (
         <>
-          <ClientPDFViewer width="100%" height="800px" className="pdf-viewer">
+          <ClientPDFViewer width="100%" height="100%" className="pdf-viewer">
             <MyDocument {...documentProps} />
           </ClientPDFViewer>
         </>
