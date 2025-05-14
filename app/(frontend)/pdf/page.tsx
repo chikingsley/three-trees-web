@@ -1,12 +1,10 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic'; // Added for dynamic imports
-// Removed SignatureCanvas import as it's no longer used
+import dynamic from 'next/dynamic';
 import MyDocument from './mydocument';
 import './app.css';
 
-// Dynamically import PDF components to ensure client-side only rendering
 const ClientPDFViewer = dynamic(() =>
   import('@react-pdf/renderer').then((mod) => mod.PDFViewer),
   {
@@ -15,7 +13,6 @@ const ClientPDFViewer = dynamic(() =>
   }
 );
 
-// Placeholder data, replace with actual data source or props
 const initialClientData = {
   name: 'Jane Doe',
   address: '123 Main St, Anytown, USA',
@@ -28,7 +25,6 @@ const initialClientData = {
   agentCaseworker: 'Ms. Smith (Probation)',
   isSafe: 'Yes',
   environmentHelpful: 'Yes, it is quiet and supportive.',
-  // Add any other fields MyDocument expects for clientData
 };
 
 const initialSelectedClass = "Working with Anger";
@@ -41,29 +37,18 @@ function App() {
     setIsClient(true);
   }, []);
 
-  // Default empty values for signature-related props to satisfy MyDocument's expected props
-  // Ideally, MyDocument should be updated to not require these or handle their absence.
   const documentProps = {
     clientData: initialClientData,
     selectedClass: initialSelectedClass,
-    confidentialitySignature: { type: '', value: '' },
-    confidentialityDate: '',
-    finalAcknowledgementSignature: { type: '', value: '' },
-    finalAcknowledgementDate: '',
-    releaseAuthSignature: { type: '', value: '' },
-    releaseAuthDate: '',
-    releaseAuthName: '',
-    releaseAuthBirthDate: '',
   };
 
   return (
     <div className="App">
+
       {isClient && (
         <>
-          <ClientPDFViewer width="100%" height="800px" className="pdf-viewer"> {/* Use ClientPDFViewer */}
-            <React.Fragment>
-              <MyDocument {...documentProps} />
-            </React.Fragment>
+          <ClientPDFViewer width="100%" height="800px" className="pdf-viewer">
+            <MyDocument {...documentProps} />
           </ClientPDFViewer>
         </>
       )}
