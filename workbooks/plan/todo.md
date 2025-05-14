@@ -153,8 +153,7 @@ This document outlines the phased development plan for the Three Trees platform,
     * [ ] Store attendance records (Present, Absent Excused/Unexcused) in Payload/Supabase.
   * [ ] Client Progress View (Admin): Detailed view (classes completed/remaining, absences, payments).
   * [ ] Class Roster UI: Enhanced view of spots filled/total.
-
----
+  * [ ] **Admin UI Enhancements:** Improve usability of the 'Classes' list view with comprehensive sorting and filtering options (e.g., by program, day, time, availability, active status). Consider limitations and solutions for virtual fields.
 
 ## Phase 3: Portal Expansion & Facilitator Tools
 
@@ -177,8 +176,6 @@ This document outlines the phased development plan for the Three Trees platform,
   * [ ] View hours/classes taught.
   * [ ] **Payload:** `Facilitators` collection, links to `ClassSlots`.
 
----
-
 ## Phase 4: Advanced Features & Platform Maturity
 
 **Goal:** Integrate live video classes and further automate processes.
@@ -192,8 +189,6 @@ This document outlines the phased development plan for the Three Trees platform,
   * [ ] Email/SMS for classes, payments, milestones.
 * [ ] 16. Advanced Reporting & Analytics (Admin)
   * [ ] Dashboards for key metrics.
-
----
 
 ## Phase X: Original `todo.md` Items Review
 
