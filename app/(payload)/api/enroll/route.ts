@@ -16,6 +16,7 @@ const ENROLLMENT_JWT_EXPIRES_IN = '1h' // Token valid for 1 hour
 // Removed selectedClassSlotId, added class relationship
 type ClientUpdateData = Omit<Partial<Client>, 'selectedClassSlot'> & {
   class?: string | null; // ID of the Classes document
+  signature?: string; // Added for typed signature
   enrollmentProcessStatus?: string;
 };
 
@@ -322,9 +323,14 @@ export async function POST(request: NextRequest) {
 
     } else if (submissionPhase === 'consent') {
       const { documents } = rawRequestBody
-      if (!documents || typeof documents.agreedToTerms !== 'boolean') return NextResponse.json({ error: 'Consent information is required.' }, { status: 400 })
+      // Expect agreedToTerms and signature now
+      if (!documents || typeof documents.agreedToTerms !== 'boolean' || typeof documents.signature !== 'string') { 
+        return NextResponse.json({ error: 'Consent information (agreement and signature) is required.' }, { status: 400 });
+      }
       const updateData: ClientUpdateData = {
-        agreedToTerms: documents.agreedToTerms, enrollmentProcessStatus: 'consent_agreed',
+        agreedToTerms: documents.agreedToTerms,
+        signature: documents.signature, // Save the signature
+        enrollmentProcessStatus: 'consent_agreed', // Update status
       }
       await payload.update({ collection: 'clients', id: targetClient.id, data: updateData })
       return NextResponse.json({ message: 'Consent info saved.', phase: submissionPhase }, { status: 200 })
@@ -411,10 +417,11 @@ export async function POST(request: NextRequest) {
         referralSource: finalReferralSourceId, 
         referralSourceOther: personalInfo.referralSourceOther || undefined,
         whyReferred: personalInfo.whyReferred || undefined, 
-        selectedProgram: finalProgramDocumentId, // Use the resolved UUID
+        selectedProgram: finalProgramDocumentId, 
         consentToContact: personalInfo.consentToContact ?? undefined, 
         class: scheduling.selectedClassId, 
         agreedToTerms: documents.agreedToTerms,
+        signature: documents.signature,
         paymentOption: payment.paymentOption as Client['paymentOption'],
         agreeToRecurring: payment.agreeToRecurring ?? false,
         enrollmentProcessStatus: 'final_data_collected_pending_payment',

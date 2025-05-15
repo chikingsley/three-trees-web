@@ -1,24 +1,36 @@
 "use client"
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import StepHeader from "@/components/StepHeader";
 import type { EnrollmentFormData } from "@/lib/form-types";
+import { FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 const ConsentFormStep: React.FC = () => {
   const {
     control,
     setValue,
     watch,
+    trigger,
     formState: { errors },
   } = useFormContext<EnrollmentFormData>();
 
   const firstName = watch("personalInfo.firstName");
   const lastName = watch("personalInfo.lastName");
   const clientDisplayName = (firstName && lastName) ? `${firstName} ${lastName}` : "[Client\'s Name]";
+
+  const signatureValue = watch("documents.signature");
+  const agreedToTermsValue = watch("documents.agreedToTerms");
+
+  useEffect(() => {
+    if (agreedToTermsValue) {
+      trigger("documents.signature");
+    }
+  }, [signatureValue, agreedToTermsValue, trigger]);
 
   return (
     <>
@@ -27,7 +39,7 @@ const ConsentFormStep: React.FC = () => {
         subtitle="Please read and sign the following document"
       />
       <div className="space-y-4 rounded-lg">
-        <div className="flex-1 overflow-y-auto p-3 rounded-lg border border-border mb-2 text-xs">
+        <div className="h-60 overflow-y-auto p-3 rounded-lg border border-border mb-2 text-xs">
           {/* General Standards for Educational Classes */}
           <h3 className="text-sm font-semibold mb-2">General Standards for Educational Classes</h3>
           <ol className="list-decimal list-inside space-y-1 mb-3 text-muted-foreground">
@@ -117,29 +129,38 @@ const ConsentFormStep: React.FC = () => {
           <p className="text-xs text-red-500 px-2 -mt-2">{errors.documents.agreedToTerms.message as string}</p>
         )}
 
-        {/* Electronic Signature - This is a placeholder. Real e-signature is complex. */}
-        {/* For RHF, if signature was a text field, you would register it. */}
-        {/* Since it's a visual concept here, we don't tie it to RHF state unless it becomes an input */}
-        <div className="p-2 rounded-lg mt-2">
-          <Label className="block text-sm font-medium mb-2">Electronic Signature</Label>
-          <div className="border border-border rounded-md h-20 flex items-center justify-center bg-background">
-            {/* If methods.watch("documents.signature") had a value, you could display it here */}
-            <span className="text-muted-foreground text-sm">Sign here (Visual Placeholder)</span>
-          </div>
-          <Button
+        {/* Electronic Signature - Typed Name Input */}
+        <Controller
+          name="documents.signature" // Ensure this path is in your Zod schema if validation is needed
+          control={control}
+          render={({ field }) => (
+            <FormItem className="mt-4">
+              <FormLabel className="block text-sm font-medium mb-1">
+                Electronic Signature (Type your full name as: <span className="font-semibold">{clientDisplayName}</span>)
+              </FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="Type your full name to sign"
+                  {...field} 
+                  className="bg-white"
+                />
+              </FormControl>
+              <FormMessage /> {/* For displaying validation errors for the signature field */}
+            </FormItem>
+          )}
+        />
+        <Button
             variant="link"
+            type="button" // Ensure it doesn't submit the form
             className="mt-1 p-0 h-auto text-primary text-xs"
-            onClick={() => setValue("documents.signature", "", { shouldValidate: false, shouldDirty: false })} // Example: Clear a signature if it were RHF state
+            onClick={() => setValue("documents.signature", "", { shouldValidate: true, shouldDirty: true })} // Clear and validate
           >
             Clear signature
-          </Button>
-          {errors.documents?.signature?.message && (
-            <p className="text-xs text-red-500 pt-1">{errors.documents.signature.message as string}</p>
-          )}
-        </div>
+        </Button>
+        {/* The error message below Controller will now work if documents.signature has Zod validation */}
       </div>
     </>
   );
 };
 
-export default ConsentFormStep; 
+export default ConsentFormStep;

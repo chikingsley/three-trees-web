@@ -68,7 +68,9 @@ export const personalInfoSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Invalid email address").min(1, "Email is required"),
-  phone: z.string().min(1, "Phone is required"),
+  phone: z.string()
+           .min(1, "Phone is required")
+           .regex(/^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$/, "Must be a valid 10-digit phone number"),
   city: z.string().min(1, "City is required"),
   state: z.string().min(1, "State is required"),
   zipcode: z.string().regex(/^\d{5}$/, "Zip code must be 5 digits"),
@@ -111,7 +113,7 @@ export const schedulingSchema = z.object({
 
 export const documentsSchema = z.object({
   agreedToTerms: z.boolean().refine(val => val === true, "You must agree to the program agreement"),
-  signature: z.string().optional(), 
+  signature: z.string().min(1, "Signature (full name) is required"), 
 });
 
 // Update paymentSchema to use PaymentOption type if desired, or keep as string
@@ -145,6 +147,19 @@ export const enrollmentFormSchema = z.object({
   scheduling: schedulingSchema,
   documents: documentsSchema,
   payment: paymentSchema,
+}).superRefine((data, ctx) => {
+  // Validate signature against name if terms are agreed to
+  if (data.documents.agreedToTerms && data.personalInfo.firstName && data.personalInfo.lastName) {
+    const fullName = `${data.personalInfo.firstName} ${data.personalInfo.lastName}`.trim();
+    if (data.documents.signature !== fullName) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Signature must match the first and last name: ${fullName}`,
+        path: ['documents', 'signature'],
+      });
+    }
+  }
+  // You can add other cross-field validations here if needed
 });
 
 // Infer TypeScript type from Zod schema

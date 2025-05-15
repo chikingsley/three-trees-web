@@ -1,7 +1,7 @@
 "use client"
 
-import React from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import React, { useEffect } from "react"
+import { useFormContext } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
@@ -18,9 +18,31 @@ import StepHeader from "@/components/StepHeader"
 import { cn } from "@/lib/utils"
 
 const ProgramInfoStep: React.FC = () => {
-  const { control } = useFormContext<EnrollmentFormData>();
-  const watchedReferralSource = useWatch({ control, name: "personalInfo.referralSource" });
-  const watchedCounty = useWatch({ control, name: "personalInfo.county" });
+  const { control, watch, setValue, clearErrors } = useFormContext<EnrollmentFormData>();
+  const watchedReferralSource = watch("personalInfo.referralSource");
+  const watchedCounty = watch("personalInfo.county");
+
+  // Effect to clear countyOther if county is not 'Other'
+  useEffect(() => {
+    if (watchedCounty !== 'Other') {
+      const countyOtherValue = watch("personalInfo.countyOther"); // Get current value before clearing
+      if (countyOtherValue) { // Only clear if it has a value
+        setValue("personalInfo.countyOther", "", { shouldValidate: true });
+        clearErrors("personalInfo.countyOther");
+      }
+    }
+  }, [watchedCounty, setValue, clearErrors, watch]); // watch is stable, but good to include if directly used
+
+  // Effect to clear referralSourceOther if referralSource is not 'Other'
+  useEffect(() => {
+    if (watchedReferralSource !== 'Other') {
+      const referralSourceOtherValue = watch("personalInfo.referralSourceOther");
+      if (referralSourceOtherValue) { // Only clear if it has a value
+        setValue("personalInfo.referralSourceOther", "", { shouldValidate: true });
+        clearErrors("personalInfo.referralSourceOther");
+      }
+    }
+  }, [watchedReferralSource, setValue, clearErrors, watch]);
 
   const isReferralOtherActive = watchedReferralSource === 'Other';
   const isCountyOtherActive = watchedCounty === 'Other';

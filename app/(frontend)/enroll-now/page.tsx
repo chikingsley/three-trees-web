@@ -131,11 +131,34 @@ export default function EnrollmentForm() {
   }, [methods]);
 
   const enrollmentSteps = [
-    { id: "contact-info", title: "Contact Information", initialIcon: UserIcon, completedIcon: CheckCircle2 },
-    { id: "program-info", title: "Program Information", initialIcon: UserIcon, completedIcon: CheckCircle2 },
-    { id: "scheduling", title: "Schedule Your Sessions", initialIcon: Calendar, completedIcon: CalendarCheck },
-    { id: "documents", title: "Review Your Consent Form", initialIcon: FileText, completedIcon: FileCheck },
-    { id: "payment", title: "Complete Payment", initialIcon: CircleDollarSign, completedIcon: ShieldCheck },
+    {
+      id: "contact-info", title: "Contact Information", initialIcon: UserIcon, completedIcon: CheckCircle2,
+      fields: [
+        'personalInfo.firstName', 'personalInfo.lastName', 'personalInfo.email', 'personalInfo.phone',
+        'personalInfo.city', 'personalInfo.state', 'personalInfo.zipcode', 'personalInfo.sex',
+        'personalInfo.consentToContact'
+      ] as Path<EnrollmentFormData>[]
+    },
+    {
+      id: "program-info", title: "Program Information", initialIcon: UserIcon, completedIcon: CheckCircle2,
+      fields: [
+        'personalInfo.referralSource', 'personalInfo.selectedProgram', 'personalInfo.whyReferred',
+        'personalInfo.county', 'personalInfo.countyOther' // countyOther validation is handled by Zod superRefine based on county
+      ] as Path<EnrollmentFormData>[]
+    },
+    {
+      id: "scheduling", title: "Schedule Your Sessions", initialIcon: Calendar, completedIcon: CalendarCheck,
+      fields: ['scheduling.selectedClassId'] as Path<EnrollmentFormData>[]
+    },
+    {
+      id: "documents", title: "Review Your Consent Form", initialIcon: FileText, completedIcon: FileCheck,
+      fields: ['documents.agreedToTerms', 'documents.signature'] as Path<EnrollmentFormData>[]
+    },
+    {
+      id: "payment", title: "Complete Payment", initialIcon: CircleDollarSign, completedIcon: ShieldCheck,
+      // Fields for the payment step itself, before final submission (if any)
+      fields: ['payment.paymentOption', 'payment.agreeToRecurring'] as Path<EnrollmentFormData>[] 
+    },
   ];
 
   const stepComponents = [
@@ -175,7 +198,8 @@ export default function EnrollmentForm() {
       }
       case 4: { // ConsentFormStep (was step 3)
         const docs = watchedDocuments;
-        return !!(docs && docs.agreedToTerms);
+        // Check both agreedToTerms and if signature is filled (and ideally matches name via Zod)
+        return !!(docs && docs.agreedToTerms && docs.signature && docs.signature.trim() !== "");
       }
       case 5: { // PaymentStep (was step 4)
         const payment = watchedPaymentInfo;
@@ -187,7 +211,48 @@ export default function EnrollmentForm() {
     }
   };
 
-  const canProceed = isStepComplete(currentStep);
+  // Helper to get fields for the current UI step based on enrollmentSteps definition
+  const getCurrentStepFieldsForValidation = (stepIndex: number): Path<EnrollmentFormData>[] => {
+    if (stepIndex > 0 && stepIndex <= enrollmentSteps.length) { 
+      const stepConfig = enrollmentSteps[stepIndex - 1]; 
+      return stepConfig.fields || [];
+    }
+    return [];
+  };
+
+  // Determine if current step's specific fields are valid according to Zod
+  const currentStepFieldsBeingValidated = getCurrentStepFieldsForValidation(currentStep);
+  const formErrors = methods.formState.errors;
+  let currentStepHasLocalZodErrors = false;
+  if (currentStepFieldsBeingValidated.length > 0) {
+    for (const fieldPath of currentStepFieldsBeingValidated) {
+      let errorForField = formErrors;
+      const pathSegments = (fieldPath as string).split('.');
+      let pathIsValid = true;
+      for (const segment of pathSegments) {
+        if (errorForField && typeof errorForField === 'object' && segment in errorForField) {
+          // @ts-expect-error - Accessing nested error object dynamically
+          errorForField = errorForField[segment];
+        } else {
+          pathIsValid = false;
+          break;
+        }
+      }
+      // @ts-expect-error - Accessing message property on potentially dynamic error object
+      if (pathIsValid && errorForField && errorForField.message) {
+        currentStepHasLocalZodErrors = true;
+        break;
+      }
+    }
+  }
+  
+  if (currentStep === 4 && formErrors.documents?.signature?.message) { 
+      currentStepHasLocalZodErrors = true;
+  }
+
+  const areCurrentStepFieldsZodValid = currentStep === 0 ? true : !currentStepHasLocalZodErrors;
+  const canProceed = isStepComplete(currentStep) && areCurrentStepFieldsZodValid;
+
   // console.log(`Current Step: ${currentStep}, Can Proceed: ${canProceed}, Watched Scheduling:`, watchedScheduling);
 
   // Helper to get step ID/hash for a given index
@@ -255,69 +320,118 @@ export default function EnrollmentForm() {
   }, []); // Run only on mount and unmount
 
   const goToNextStep = async () => {
-    if (!isStepComplete(currentStep)) {
-      // Trigger validation for the current step's fields if needed
-      // This depends on how granular you want the validation trigger to be.
-      // For example, for step 1 (ContactInfo), trigger validation for personalInfo fields.
-      let fieldsToValidate: Path<EnrollmentFormData>[] = [];
-      if (currentStep === 1) { // ContactInfo
-        fieldsToValidate = Object.keys(methods.getValues('personalInfo')).map(k => `personalInfo.${k}` as Path<EnrollmentFormData>);
-      } else if (currentStep === 2) { // ProgramInfo
-        fieldsToValidate = ['personalInfo.referralSource', 'personalInfo.referralSourceOther', 'personalInfo.selectedProgram', 'personalInfo.whyReferred', 'personalInfo.county', 'personalInfo.countyOther'];
-      } else if (currentStep === 3) { // Scheduling
-        fieldsToValidate = ['scheduling.selectedClassId']; // Changed here
-      } else if (currentStep === 4) { // Documents
-        fieldsToValidate = ['documents.agreedToTerms', 'documents.signature'];
-      } else if (currentStep === 5) { // Payment
-        fieldsToValidate = ['payment.paymentOption', 'payment.agreeToRecurring'];
+    // Handle Welcome step: No API call, just advance UI
+    if (currentStep === 0) {
+      setCurrentStep((prev) => prev + 1);
+      const nextStepId = getStepIdForIndex(1);
+      if (nextStepId) {
+        window.history.pushState({ step: 1, id: nextStepId }, "", `#${nextStepId}`);
       }
-      
-      const allValid = await methods.trigger(fieldsToValidate.length > 0 ? fieldsToValidate : undefined );
-      if (!allValid) return;
+      contentRef.current?.scrollTo(0, 0);
+      return; 
     }
 
-    setIsLoading(true);
+    // Determine fields to validate and API phase based on currentStep
+    let fieldsToValidate: Path<EnrollmentFormData>[] = [];
     let submissionPhase = "";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let dataToSend: any = {}; 
 
-    // Determine submission phase and data based on currentStep
-    if (currentStep === 0) { // Welcome step, no API call, just advance
-        setIsLoading(false);
-        const nextStepIndex = currentStep + 1;
-        const nextStepId = getStepIdForIndex(nextStepIndex);
-        if (nextStepId) {
-            window.history.pushState({ step: nextStepIndex, id: nextStepId }, "", `#${nextStepId}`);
-        }
-        setCurrentStep(nextStepIndex);
-        contentRef.current?.scrollTo(0, 0); // Scroll to top
-        return;
-    }
+    // Define field lists for each step that needs validation & API call
     if (currentStep === 1) { // ContactInfoStep
       submissionPhase = "contactInfo";
+      fieldsToValidate = [
+        'personalInfo.firstName', 'personalInfo.lastName', 'personalInfo.email', 'personalInfo.phone',
+        'personalInfo.city', 'personalInfo.state', 'personalInfo.zipcode', 'personalInfo.sex',
+        'personalInfo.consentToContact'
+      ];
       dataToSend = { personalInfo: watchedPersonalInfo };
     } else if (currentStep === 2) { // ProgramInfoStep
       submissionPhase = "programInfo";
+      fieldsToValidate = [
+        'personalInfo.referralSource', 'personalInfo.selectedProgram', 'personalInfo.whyReferred',
+        'personalInfo.county' 
+        // 'personalInfo.referralSourceOther' and 'personalInfo.countyOther' are validated by Zod superRefine based on main field
+      ];
       dataToSend = { personalInfo: watchedPersonalInfo }; 
     } else if (currentStep === 3) { // SchedulingSection
       submissionPhase = "scheduling";
-      dataToSend = { scheduling: { selectedClassId: watchedScheduling.selectedClassId } }; // Changed here
+      fieldsToValidate = ['scheduling.selectedClassId'];
+      dataToSend = { scheduling: { selectedClassId: watchedScheduling.selectedClassId } };
     } else if (currentStep === 4) { // ConsentFormStep
       submissionPhase = "consent";
-      dataToSend = { documents: watchedDocuments };
+      fieldsToValidate = ['documents.agreedToTerms', 'documents.signature'];
+      dataToSend = { documents: { agreedToTerms: watchedDocuments.agreedToTerms, signature: watchedDocuments.signature } };
     } else if (currentStep === 5) { // PaymentStep - this is the final step before success view
       submissionPhase = "final";
-      // For the final step, send all form data according to EnrollmentFormData structure
-      dataToSend = { ...methods.getValues() }; // Send all form data
+      // For the final step, validate all fields. RHF should do this with zodResolver by default if no specific fields are passed to trigger.
+      // Or, list all fields from all schemas if you want to be explicit.
+      // For simplicity and given zodResolver is on the form, let trigger() validate all if no specific fields listed for this phase.
+      // fieldsToValidate = []; // This would make trigger() validate the whole form
+      dataToSend = { ...methods.getValues() }; 
     }
 
+    // Perform client-side validation for the current step's fields
+    if (fieldsToValidate.length > 0) {
+      const isValidForStep = await methods.trigger(fieldsToValidate);
+      if (!isValidForStep) {
+        console.log(`Validation failed for step ${currentStep} fields:`, fieldsToValidate, methods.formState.errors);
+        // toast.error("Please correct the highlighted errors before proceeding.");
+        setIsLoading(false); // Ensure loading is stopped if it was set
+        return; // Stop if validation fails
+      }
+    } else if (submissionPhase === "final") {
+      // For the final step, if no specific fieldsToValidate, trigger validation for the whole form
+      const isFormTotallyValid = await methods.trigger();
+      if (!isFormTotallyValid) {
+        console.log("Final form validation failed:", methods.formState.errors);
+        // toast.error("Please ensure all parts of the form are correctly filled out.");
+        setIsLoading(false);
+        return;
+      }
+    }
+
+    // If no submissionPhase is set (e.g., for steps that just navigate without API call, though welcome is handled),
+    // or if it's a step that should proceed without API call (like navigating to payment before final submit)
     if (!submissionPhase) {
+      // This case should ideally be handled by the specific step logic if it doesn't make an API call
+      // For example, the PaymentStep (currentStep === 5) might just advance UI without an API call here,
+      // deferring the 'final' API call to an action within PaymentStep itself.
+      // For now, we assume if submissionPhase is determined, an API call is intended.
+      // If it was the payment step and we intended to just go to it:
+      if (currentStep === 5 && submissionPhase !== 'final') { // Example: if payment step isn't the final API submit itself
+          console.log("Proceeding to Payment step UI.");
+          setIsLoading(false); // Stop loading if it was set by mistake
+          const nextStepIndex = currentStep + 1;
+          // ... (UI advancement logic from below can be used here) ...
+          setCurrentStep(nextStepIndex);
+          contentRef.current?.scrollTo(0, 0);
+          const nextStepId = getStepIdForIndex(nextStepIndex);
+          if (nextStepId) window.history.pushState({ step: nextStepIndex, id: nextStepId }, "", `#${nextStepId}`);
+          return;
+      }
+      // If other steps don't set a phase but need to advance:
+      // else if (currentStep < stepComponents.length - 1) { ... advance UI ... }
+      // For now, if no submissionPhase, we assume it's an unhandled case or a step that should just advance UI.
+      // The welcome step (currentStep === 0) is already handled.
+      // If it is just a UI step without API:
+      if (currentStep < enrollmentSteps.length - 1) { // If not the success step
+          setIsLoading(true); // To show loading while transitioning
+          const nextStepIndex = currentStep + 1;
+          setCurrentStep(nextStepIndex);
+          contentRef.current?.scrollTo(0, 0);
+          const nextStepId = getStepIdForIndex(nextStepIndex);
+          if (nextStepId) window.history.pushState({ step: nextStepIndex, id: nextStepId }, "", `#${nextStepId}`);
+          setIsLoading(false);
+          return;
+      }
       setIsLoading(false);
-      console.error("Invalid step or submissionPhase not set.");
-      // Optionally, show an error to the user
-      return;
+      return; // If no submission phase determined and not a simple UI advance, stop.
     }
+    
+    setIsLoading(true); // Ensure isLoading is true before API call if not already.
 
+    // API Call Logic (remains largely the same)
     try {
       const headers: HeadersInit = { 'Content-Type': 'application/json' };
       if (enrollmentToken && submissionPhase !== 'contactInfo') {
@@ -331,42 +445,42 @@ export default function EnrollmentForm() {
       });
 
       const result = await response.json();
-      setIsLoading(false);
+      // setIsLoading(false); // Moved to finally block
 
       if (!response.ok) {
         console.error("API Error:", result);
-        // Handle specific errors, e.g., token expiration
         if (response.status === 401 && result.error?.includes("token")) {
-            // Token issue, perhaps clear token and redirect to contact info or show message
             setEnrollmentToken(null);
-            // Optionally, force user back to contact info step or show a specific message
-            // setCurrentStep(getIndexForStepId('contact-info') || 1);
-            alert("Your session has expired or is invalid. Please start over from the contact information step if issues persist.");
+            localStorage.removeItem(LOCAL_STORAGE_KEY); // Also clear RHF form data if session invalid
+            alert("Your session has expired or is invalid. Please start over.");
+            setCurrentStep(0); 
+            const stepId = getStepIdForIndex(0);
+            if (stepId) window.history.replaceState({ step: 0, id: stepId }, "", `#${stepId}`);
         } else {
             alert(`Error: ${result.error || 'An unknown error occurred.'}`);
         }
-        return; // Stop processing on error
+        setIsLoading(false); // Ensure loading is stopped
+        return; 
       }
 
-      // Store token from contactInfo response
       if (submissionPhase === "contactInfo" && result.enrollmentToken) {
         setEnrollmentToken(result.enrollmentToken);
+        localStorage.setItem('enrollmentToken', result.enrollmentToken);
       }
       
-      // If this was the last actual data submission step (Payment / step 5)
-      // and it was successful, advance to the SuccessStep (index 6)
-      const nextStepIndex = currentStep === 5 ? currentStep + 1 : currentStep + 1;
+      const nextStepIndex = currentStep + 1; // Always advance by 1 after successful API call
       const nextStepId = getStepIdForIndex(nextStepIndex);
       if (nextStepId) {
         window.history.pushState({ step: nextStepIndex, id: nextStepId }, "", `#${nextStepId}`);
       }
       setCurrentStep(nextStepIndex);
-      contentRef.current?.scrollTo(0, 0); // Scroll to top
+      contentRef.current?.scrollTo(0, 0); 
 
     } catch (error) {
-      setIsLoading(false);
       console.error("Network or other error:", error);
       alert("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 

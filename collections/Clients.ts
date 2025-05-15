@@ -173,6 +173,11 @@ export const Clients: CollectionConfig = {
       label: 'Agreed to Program Agreement & Consent',
       type: 'checkbox',
     },
+    {
+      name: 'signature',
+      label: 'Electronic Signature (Typed Name)',
+      type: 'text',
+    },
     // { // Example for more complex signature data if needed later
     //   name: 'signatureData',
     //   type: 'json', // or textarea
