@@ -18,10 +18,35 @@ import { PROGRAM_DATA, PaymentOption as PaymentOptionType } from "@/lib/form-typ
 import StepHeader from "@/components/StepHeader";
 import PaymentOptionCard from "./PaymentOptionCard";
 
-// Augment the Window interface to include Square
+// Minimal interfaces for Square Web Payments SDK objects we interact with
+interface SquarePayments {
+  card(): Promise<SquareCard>;
+  // Add other payment methods here if you use them (e.g., applePay, googlePay)
+}
+
+interface SquareCard {
+  attach(selector: string): Promise<void>;
+  tokenize(): Promise<SquareTokenizeResult>;
+  // Add other card methods if you use them
+}
+
+interface SquareTokenizeResultError {
+  field: string;
+  message: string;
+  detail?: string;
+  category?: string;
+}
+interface SquareTokenizeResult {
+  status: string; // 'OK' on success
+  token?: string; // The card nonce
+  errors?: SquareTokenizeResultError[];
+}
+
 declare global {
   interface Window {
-    Square?: any; // Or a more specific type if you have Square's SDK types
+    Square?: {
+      payments(applicationId: string, locationId: string): SquarePayments;
+    };
   }
 }
 
@@ -33,8 +58,9 @@ const paymentOptionIcons = {
 };
 
 // Ensure you have these in your environment variables or replace them
-const SQUARE_APP_ID = process.env.NEXT_PUBLIC_SQUARE_APP_ID || "YOUR_SQUARE_APP_ID";
+const SQUARE_APPLICATION_ID = process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID || "YOUR_SQUARE_APPLICATION_ID";
 const SQUARE_LOCATION_ID = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID || "YOUR_SQUARE_LOCATION_ID";
+const SQUARE_ENVIRONMENT_ENDPOINT = process.env.NEXT_PUBLIC_SQUARE_ENVIRONMENT_ENDPOINT || "https://sandbox.web.squarecdn.com/v1/square.js";
 
 const PaymentStep: React.FC = () => {
   const {
@@ -44,7 +70,7 @@ const PaymentStep: React.FC = () => {
     formState: { errors }
   } = useFormContext<EnrollmentFormData>();
 
-  const [card, setCard] = useState<any>(null);
+  const [card, setCard] = useState<SquareCard | null>(null);
   const [isSquareSdkLoaded, setIsSquareSdkLoaded] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
@@ -86,25 +112,25 @@ const PaymentStep: React.FC = () => {
     title: string;
     discountText: string;
   }> = [
-    {
-      id: "pay_as_you_go",
-      title: "Pay As You Go",
-      discountText: "No discount",
-    },
-    {
-      id: "autopay_weekly",
-      title: "Autopay Weekly",
-      discountText: "Save 5%",
-    },
-    {
-      id: "full_program",
-      title: "Prepay Full Program",
-      discountText: "Save 10%",
-    },
-  ];
+      {
+        id: "pay_as_you_go",
+        title: "Pay As You Go",
+        discountText: "No discount",
+      },
+      {
+        id: "autopay_weekly",
+        title: "Autopay Weekly",
+        discountText: "Save 5%",
+      },
+      {
+        id: "full_program",
+        title: "Prepay Full Program",
+        discountText: "Save 10%",
+      },
+    ];
 
   useEffect(() => {
-    if (isSquareSdkLoaded && SQUARE_APP_ID && SQUARE_LOCATION_ID) {
+    if (isSquareSdkLoaded && SQUARE_APPLICATION_ID && SQUARE_LOCATION_ID) {
       const initializeCard = async () => {
         if (!window.Square) {
           console.error("Square SDK not loaded yet");
@@ -112,7 +138,7 @@ const PaymentStep: React.FC = () => {
           return;
         }
         try {
-          const payments = window.Square.payments(SQUARE_APP_ID, SQUARE_LOCATION_ID);
+          const payments = window.Square.payments(SQUARE_APPLICATION_ID, SQUARE_LOCATION_ID);
           const cardInstance = await payments.card();
           await cardInstance.attach('#card-container');
           setCard(cardInstance);
@@ -124,8 +150,8 @@ const PaymentStep: React.FC = () => {
         }
       };
       initializeCard();
-    } else if (SQUARE_APP_ID === "YOUR_SQUARE_APP_ID" || SQUARE_LOCATION_ID === "YOUR_SQUARE_LOCATION_ID"){
-        setPaymentError("Payment system is not configured. Please contact support.");
+    } else if (SQUARE_APPLICATION_ID === "YOUR_SQUARE_APPLICATION_ID" || SQUARE_LOCATION_ID === "YOUR_SQUARE_LOCATION_ID") {
+      setPaymentError("Payment system is not configured. Please contact support.");
     }
   }, [isSquareSdkLoaded]);
 
@@ -139,7 +165,7 @@ const PaymentStep: React.FC = () => {
     try {
       const result = await card.tokenize();
       if (result.status === 'OK') {
-        const token = result.token; // This is the cardNonce
+        const token = result.token;
         console.log("Card Nonce:", token);
         // TODO: Send this token and form data to your backend API with phase 'finalPayment'
         // Example: await submitFinalPayment({ cardNonce: token, formData: methods.getValues() });
@@ -149,7 +175,8 @@ const PaymentStep: React.FC = () => {
       } else {
         let errorMessage = `Tokenization failed with status: ${result.status}`;
         if (result.errors) {
-          errorMessage += `\nErrors: ${result.errors.map((error: { field: string; message: string; detail?: string; category?: string; }) => 
+          // Use the defined type for error mapping
+          errorMessage += `\nErrors: ${result.errors.map((error: SquareTokenizeResultError) =>
             `Field: ${error.field}, Message: ${error.message}${error.detail ? `, Detail: ${error.detail}` : ''}`
           ).join(", ")}`;
         }
@@ -157,10 +184,14 @@ const PaymentStep: React.FC = () => {
         setPaymentError(errorMessage);
         alert(`Payment Error: ${errorMessage}`); // User-friendly error
       }
-    } catch (e: any) {
+    } catch (e) {
+      let errorMessage = "An unexpected error occurred during payment.";
+      if (e instanceof Error) {
+        errorMessage = e.message;
+      }
       console.error("Error during Square tokenization:", e);
-      setPaymentError(e.message || "An unexpected error occurred during payment.");
-      alert(`Payment Error: ${e.message || "An unexpected error occurred."}`);
+      setPaymentError(errorMessage);
+      alert(`Payment Error: ${errorMessage}`);
     } finally {
       setIsProcessingPayment(false);
     }
@@ -168,15 +199,15 @@ const PaymentStep: React.FC = () => {
 
   return (
     <>
-      <Script 
-        src="https://web.squarecdn.com/v1/square.js" 
+      <Script
+        src={SQUARE_ENVIRONMENT_ENDPOINT}
         onLoad={() => {
           console.log("Square SDK Script loaded.");
           setIsSquareSdkLoaded(true);
         }}
         onError={() => {
-            console.error("Failed to load Square SDK script.");
-            setPaymentError("Payment system could not be loaded. Please check your internet connection and refresh the page.");
+          console.error("Failed to load Square SDK script.");
+          setPaymentError("Payment system could not be loaded. Please check your internet connection and refresh the page.");
         }}
       />
       <motion.div className="pt-6 px-0">
