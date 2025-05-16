@@ -71,13 +71,13 @@ Develop positive parenting skills and family relationships.
 
 This 10-week program helps parents build effective communication skills, implement positive discipline techniques, and understand child development. Designed specifically for parents involved in custody disputes or child welfare cases.
 
-### Call to Action
+### Court ReferCall to Action
 
 Sign Up for Court-Ordered Classes
 
 ## College Programs
 
-### Overview
+### College Overview
 
 Three Trees partners with colleges and universities to create safer campus communities through specialized intervention and education programs. Our curricula are designed to address the unique challenges of the campus environment.
 
@@ -99,13 +99,13 @@ Educational programs focused on substance abuse awareness and prevention for col
 
 This harm-reduction approach to substance education helps students make informed decisions about alcohol and drugs, recognize warning signs of abuse, and access campus resources when needed.
 
-### Call to Action
+### College ReferProfessional Call to Action
 
 Sign Up for College Programs
 
 ## Corporate & Hospitals
 
-### Overview
+### Corporate Overview
 
 Three Trees provides customized training and certification programs for workplace environments, with specialized solutions for healthcare settings. Our programs improve workplace culture, reduce conflict, and enhance team performance.
 
@@ -127,7 +127,7 @@ Specialized referral programs tailored for healthcare institutions.
 
 Our hospital partnership program creates a seamless referral pipeline for patients who could benefit from behavioral health interventions. We work closely with emergency departments, social work teams, and discharge planners.
 
-### Call to Action
+### Professional Call to Action
 
 Sign Up for Corporate Programs
 
@@ -151,14 +151,14 @@ We track outcomes rigorously and provide detailed reporting for courts, institut
 
 ## Testimonials
 
-> "The Three Trees anger management program gave me tools I use every day. For the first time, I feel in control of my reactions instead of letting them control me."
-> — Michael R., Program Graduate
+"The Three Trees anger management program gave me tools I use every day. For the first time, I feel in control of my reactions instead of letting them control me."
+— Michael R., Program Graduate
 
-> "As a judge, I've seen the difference in recidivism rates for defendants who complete the Three Trees program versus other options. The results speak for themselves."
-> — Hon. Sandra Martinez, County Circuit Court
+"As a judge, I've seen the difference in recidivism rates for defendants who complete the Three Trees program versus other options. The results speak for themselves."
+— Hon. Sandra Martinez, County Circuit Court
 
-> "Implementing Three Trees training across our hospital system has significantly reduced workplace conflicts and improved staff retention. The investment has paid for itself many times over."
-> — James Wilson, HR Director, Metropolitan Healthcare
+"Implementing Three Trees training across our hospital system has significantly reduced workplace conflicts and improved staff retention. The investment has paid for itself many times over."
+— James Wilson, HR Director, Metropolitan Healthcare
 
 ## Enrollment Process
 

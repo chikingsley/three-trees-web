@@ -54,9 +54,9 @@ This document outlines the phased development plan for the Three Trees platform,
 * [ ] 7. Desktop View: Review and adapt the enrollment form for a polished desktop experience
   * Consider how `max-w-md` behaves
   * Evaluate if wider layouts/adjustments are needed for desktop form usability
-* [ ] 8. Digital Signature for Consent Form
-  * [ ] Research and implement MVP digital signature method (e.g., typed name affirmation, checkbox with explicit consent language)
-    * **Decision:** For "go-live next week," simplest acceptable is checkbox affirming "I have read and agree..." with form data submission logged as proof of consent
+* [x] 8. Digital Signature for Consent Form
+  * [x] Research and implement MVP digital signature method (typed name affirmation implemented with validation against client's name, alongside checkbox).
+  * [x] **Decision:** For "go-live next week," simplest acceptable is checkbox affirming "I have read and agree..." with form data submission logged as proof of consent (Typed signature now implemented as MVP)
   * [ ] **Storage:** Determine how signed consent representation (e.g., PDF snapshot, timestamped affirmation text) will be stored (e.g., S3 via Supabase Storage or Payload Storage) and linked to the Client record in Payload
 * [ ] 9. Backend - Initial Setup (Payload CMS with Supabase/PostgreSQL Backend)
   * [x] Payload CMS project initialized.
@@ -69,13 +69,13 @@ This document outlines the phased development plan for the Three Trees platform,
     * [x] `Enrollments` (now obsolete; client-class link refactored)
   * [x] **Decision** Data Migration: No bulk migration for MVP.
   * [ ] API for Enrollment Form Submission (`/api/enroll` - NextJS API Route):
-    * [x] Validate incoming `EnrollmentFormData` (phased validation implemented; final step includes full Zod schema validation)
+    * [x] Validate incoming `EnrollmentFormData` (phased validation implemented; final step includes full Zod schema validation; client-side validation for steps also enhanced)
     * [x] Create/Update `Client` record (via Payload, targeting Supabase)
     * [ ] Handle payment processing via Square (see below).
     * [ ] Store digital consent link/data.
     * [x] Create `Enrollment` record. (Obsolete - client/class link refactored to direct relationships in Clients and Classes collections)
     * [ ] Send confirmation email (client & admin).
-    * [x] Implement error handling (basic API error handling on frontend; JWT error handling on backend).
+    * [x] Implement error handling (basic API error handling on frontend; JWT error handling on backend; client-side error display for Zod also improved).
     * [x] (Future Enhancement Idea) Consider refactor to save form data incrementally per step for abandonment recovery and analytics. (Implemented with phased submission API and JWT-based enrollment session)
 * [ ] 10. Payments - Square Integration (MVP)
   * **Frontend (`PaymentStep.tsx`):**
