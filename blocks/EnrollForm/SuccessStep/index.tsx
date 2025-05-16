@@ -15,7 +15,7 @@ const SuccessStep: React.FC = () => {
   const RHFformData = getValues(); // Get current RHF form values
 
   const firstName = RHFformData.personalInfo?.firstName;
-  const selectedSlotId = RHFformData.scheduling?.selectedClassSlotId;
+  const selectedSlotId = RHFformData.scheduling?.selectedClassId;
 
   let dayTimeDisplay = "";
   if (selectedSlotId) {
