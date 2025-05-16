@@ -1,39 +1,8 @@
 'use client'
 
-import React, { useState, useEffect, Suspense, ComponentType } from 'react';
-import dynamic from 'next/dynamic';
 import MyDocument from './mydocument';
+import { PDFViewer } from '@react-pdf/renderer';
 import './app.css';
-
-// Using dynamic import with Suspense for better loading state handling
-const PDFViewer = dynamic<React.ComponentProps<typeof import('@react-pdf/renderer').PDFViewer>>(
-  () => import('@react-pdf/renderer').then((mod) => mod.PDFViewer as ComponentType<React.ComponentProps<typeof mod.PDFViewer>>),
-  {
-    ssr: false,
-    loading: () => <div className="flex items-center justify-center h-full">Loading PDF Viewer...</div>,
-  }
-);
-
-// Wrap the PDF viewer in a client component that handles the dynamic import
-function PDFViewerWrapper({ children, ...props }: React.ComponentProps<typeof PDFViewer>) {
-  const [isMounted, setIsMounted] = useState(false);
-  
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return <div className="flex items-center justify-center h-full">Initializing PDF Viewer...</div>;
-  }
-
-  return (
-    <Suspense fallback={<div className="flex items-center justify-center h-full">Loading PDF...</div>}>
-      <PDFViewer {...props}>
-        {children}
-      </PDFViewer>
-    </Suspense>
-  );
-}
 
 const initialClientData = {
   name: 'Jane Doe',
@@ -62,9 +31,9 @@ function App() {
 
   return (
     <div className="App" style={{ height: '100vh' }}>
-      <PDFViewerWrapper width="100%" height="100%" className="pdf-viewer">
+      <PDFViewer width="100%" height="100%" className="pdf-viewer">
         <MyDocument {...documentProps} />
-      </PDFViewerWrapper>
+      </PDFViewer>
     </div>
   );
 }
