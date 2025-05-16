@@ -4,15 +4,15 @@ export const Programs: CollectionConfig = {
   slug: 'programs',
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['programId', 'name', 'durationText', 'costPerSession', 'enrollmentFee'],
+    defaultColumns: ['programId', 'name', 'durationText', 'costPerSession', 'enrollmentFee', 'programGroup'],
     group: 'Program Setup', // Example group
     description: 'Define the programs offered, their structure, and pricing.',
   },
   access: {
     read: () => true,
-    create: () => true, // Decide admin access
-    update: () => true,
-    delete: () => true,
+    create: ({ req }) => req.user?.roles?.includes('admin') ?? false,
+    update: ({ req }) => req.user?.roles?.includes('admin') ?? false,
+    delete: ({ req }) => req.user?.roles?.includes('admin') ?? false,
   },
   fields: [
     {
@@ -72,7 +72,7 @@ export const Programs: CollectionConfig = {
           type: 'number',
           min: 0,
           required: true,
-          admin: { width: '33%' },
+          admin: { width: '50%' },
         },
         {
           name: 'enrollmentFee',
@@ -80,21 +80,20 @@ export const Programs: CollectionConfig = {
           type: 'number',
           min: 0,
           required: true,
-          admin: { width: '33%' },
-        },
-        {
-          name: 'spotsPerClass',
-          label: 'Spots Per Class Instance',
-          type: 'number',
-          min: 1,
-          required: true,
-          defaultValue: 1,
-          admin: { 
-            width: '33%',
-            description: 'The maximum number of clients allowed in a single class instance of this program.'
-          },
+          admin: { width: '50%' },
         },
       ]
+    },
+    {
+      name: 'programGroup',
+      label: 'Program Group (for Shared Capacity)',
+      type: 'relationship',
+      relationTo: 'program-groups',
+      required: true,
+      hasMany: false,
+      admin: {
+        description: 'Link to the program group that defines shared class capacity.'
+      }
     },
     {
         name: 'programCategory',

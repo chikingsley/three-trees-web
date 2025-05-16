@@ -178,12 +178,6 @@ export const Clients: CollectionConfig = {
       label: 'Electronic Signature (Typed Name)',
       type: 'text',
     },
-    // { // Example for more complex signature data if needed later
-    //   name: 'signatureData',
-    //   type: 'json', // or textarea
-    //   label: 'Signature Affirmation Data (e.g., typed name, timestamp)'
-    // },
-
     // Payment
     {
       name: 'paymentOption',

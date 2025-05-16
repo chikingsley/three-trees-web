@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Level 1 Shared Capacity Programs",
+    "sharedProgramId": "L1_SHARED",
+    "spotsPerClassInstance": 12,
+    "isActive": true
+  },
+  {
+    "name": "Domestic Violence (Male) Programs",
+    "sharedProgramId": "DV_MALE_SHARED",
+    "spotsPerClassInstance": 10,
+    "isActive": true
+  },
+  {
+    "name": "Domestic Violence (Female) Programs",
+    "sharedProgramId": "DV_FEMALE_SHARED",
+    "spotsPerClassInstance": 10,
+    "isActive": true
+  },
+  {
+    "name": "Sex Offender Responsible Thinking Programs",
+    "sharedProgramId": "SORT_SHARED",
+    "spotsPerClassInstance": 8,
+    "isActive": true
+  }
+] 

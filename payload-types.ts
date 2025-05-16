@@ -74,6 +74,7 @@ export interface Config {
     locations: Location;
     media: Media;
     payments: Payment;
+    'program-groups': ProgramGroup;
     programTypes: ProgramType;
     programs: Program;
     'referral-sources': ReferralSource;
@@ -94,6 +95,7 @@ export interface Config {
     locations: LocationsSelect<false> | LocationsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     payments: PaymentsSelect<false> | PaymentsSelect<true>;
+    'program-groups': ProgramGroupsSelect<false> | ProgramGroupsSelect<true>;
     programTypes: ProgramTypesSelect<false> | ProgramTypesSelect<true>;
     programs: ProgramsSelect<false> | ProgramsSelect<true>;
     'referral-sources': ReferralSourcesSelect<false> | ReferralSourcesSelect<true>;
@@ -531,14 +533,14 @@ export interface Location {
   createdAt: string;
 }
 /**
- * Define scheduled blocks of classes for specific programs, days, and times.
+ * Define scheduled blocks of classes for groups of programs.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "classes".
  */
 export interface Class {
   id: string;
-  program: string | Program;
+  programGroup: string | ProgramGroup;
   /**
    * How many instances of this class run simultaneously at this time.
    */
@@ -605,7 +607,7 @@ export interface Class {
    */
   clients?: (string | Client)[] | null;
   /**
-   * Calculated: Number of Parallel Classes * Spots Per Class defined on the Program.
+   * Calculated: Number of Parallel Classes * Spots Per Class Instance (from Program Group).
    */
   spotsTotal?: number | null;
   /**
@@ -621,36 +623,25 @@ export interface Class {
   createdAt: string;
 }
 /**
- * Define the programs offered, their structure, and pricing.
+ * Define groups of programs that share class slots and capacity.
  *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "programs".
+ * via the `definition` "program-groups".
  */
-export interface Program {
+export interface ProgramGroup {
   id: string;
   /**
-   * A unique code for this program (e.g., dv_male, am, sort). This is used for linking.
+   * Descriptive name for the group (e.g., "Level 1 Programs")
    */
-  programId: string;
   name: string;
-  description?: string | null;
-  durationText?: string | null;
-  weeks?: number | null;
-  sessionsPerWeek?: number | null;
-  costPerSession: number;
-  enrollmentFee: number;
   /**
-   * The maximum number of clients allowed in a single class instance of this program.
+   * A unique code for this group used in scheduling (e.g., "L1_SHARED")
    */
-  spotsPerClass: number;
+  sharedProgramId: string;
   /**
-   * Categorize the program for filtering or display purposes.
+   * Max clients in one class instance belonging to this group.
    */
-  programCategory?: ('court_ordered' | 'college_university' | 'corporate_hospital' | 'general_wellness') | null;
-  /**
-   * Active programs can be selected during enrollment.
-   */
-  isActive?: boolean | null;
+  spotsPerClassInstance: number;
   updatedAt: string;
   createdAt: string;
 }
@@ -696,6 +687,7 @@ export interface Client {
    */
   selectedClassSlot?: (string | null) | Class;
   agreedToTerms?: boolean | null;
+  signature?: string | null;
   paymentOption?: ('pay_as_you_go' | 'autopay_weekly' | 'full_program') | null;
   agreeToRecurring?: boolean | null;
   enrollmentProcessStatus?:
@@ -806,6 +798,40 @@ export interface ReferralSourceType {
   createdAt: string;
 }
 /**
+ * Define the programs offered, their structure, and pricing.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programs".
+ */
+export interface Program {
+  id: string;
+  /**
+   * A unique code for this program (e.g., dv_male, am, sort). This is used for linking.
+   */
+  programId: string;
+  name: string;
+  description?: string | null;
+  durationText?: string | null;
+  weeks?: number | null;
+  sessionsPerWeek?: number | null;
+  costPerSession: number;
+  enrollmentFee: number;
+  /**
+   * Link to the program group that defines shared class capacity.
+   */
+  programGroup: string | ProgramGroup;
+  /**
+   * Categorize the program for filtering or display purposes.
+   */
+  programCategory?: ('court_ordered' | 'college_university' | 'corporate_hospital' | 'general_wellness') | null;
+  /**
+   * Active programs can be selected during enrollment.
+   */
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Records of financial transactions.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -863,6 +889,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'payments';
         value: string | Payment;
+      } | null)
+    | ({
+        relationTo: 'program-groups';
+        value: string | ProgramGroup;
       } | null)
     | ({
         relationTo: 'programTypes';
@@ -981,7 +1011,7 @@ export interface BlogPostsSelect<T extends boolean = true> {
  * via the `definition` "classes_select".
  */
 export interface ClassesSelect<T extends boolean = true> {
-  program?: T;
+  programGroup?: T;
   numberOfParallelClasses?: T;
   day?: T;
   time?: T;
@@ -1017,6 +1047,7 @@ export interface ClientsSelect<T extends boolean = true> {
   selectedProgram?: T;
   selectedClassSlot?: T;
   agreedToTerms?: T;
+  signature?: T;
   paymentOption?: T;
   agreeToRecurring?: T;
   enrollmentProcessStatus?: T;
@@ -1139,6 +1170,17 @@ export interface PaymentsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "program-groups_select".
+ */
+export interface ProgramGroupsSelect<T extends boolean = true> {
+  name?: T;
+  sharedProgramId?: T;
+  spotsPerClassInstance?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "programTypes_select".
  */
 export interface ProgramTypesSelect<T extends boolean = true> {
@@ -1186,7 +1228,7 @@ export interface ProgramsSelect<T extends boolean = true> {
   sessionsPerWeek?: T;
   costPerSession?: T;
   enrollmentFee?: T;
-  spotsPerClass?: T;
+  programGroup?: T;
   programCategory?: T;
   isActive?: T;
   updatedAt?: T;

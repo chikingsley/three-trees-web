@@ -8,16 +8,44 @@ import { ZodError } from 'zod'; // Import ZodError
 import type { Client, Program } from '@/payload-types'
 import jwt from 'jsonwebtoken'
 
+import { SquareClient, SquareEnvironment, SquareError } from 'square';
+import { v4 as uuidV4 } from 'uuid';
+
 // TODO: Move to environment variables
 const ENROLLMENT_JWT_SECRET = process.env.ENROLLMENT_JWT_SECRET || 'your-fallback-enrollment-secret-key-for-dev'
 const ENROLLMENT_JWT_EXPIRES_IN = '1h' // Token valid for 1 hour
 
+const SQUARE_ACCESS_TOKEN = process.env.SQUARE_ACCESS_TOKEN;
+const SQUARE_LOCATION_ID = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID; // Used for payments & subscriptions
+const SQUARE_ENV_FOR_SDK = process.env.SQUARE_ENVIRONMENT?.toLowerCase() === 'production' 
+                            ? SquareEnvironment.Production 
+                            : SquareEnvironment.Sandbox;
+
+let squareClientInstance: SquareClient | null = null;
+
+if (SQUARE_ACCESS_TOKEN) {
+  try {
+    squareClientInstance = new SquareClient({
+      accessToken: SQUARE_ACCESS_TOKEN,
+      environment: SQUARE_ENV_FOR_SDK,
+    });
+    console.log('Square SDK Client initialized.');
+  } catch (e) {
+    console.error('Failed to initialize Square SDK Client:', e);
+  }
+} else {
+  console.warn('SQUARE_ACCESS_TOKEN is missing. Payment processing disabled.');
+}
+
 // Define a type for the data used to update/create clients
 // Removed selectedClassSlotId, added class relationship
-type ClientUpdateData = Omit<Partial<Client>, 'selectedClassSlot'> & {
+type ClientUpdateData = Omit<Partial<Client>, 'selectedClassSlot' | 'selectedClassSlotId'> & {
   class?: string | null; // ID of the Classes document
   signature?: string; // Added for typed signature
   enrollmentProcessStatus?: string;
+  paymentStatus?: Client['paymentStatus']; // Use the type from generated Client
+  squareCustomerId?: string | null;
+  squareSubscriptionId?: string | null;
 };
 
 export async function POST(request: NextRequest) {
@@ -39,7 +67,7 @@ export async function POST(request: NextRequest) {
     let clientRecordFromToken: Client | null = null // Renamed for clarity
     let clientIdFromToken: string | null = null
 
-    if (submissionPhase !== 'contactInfo') { // JWT logic only applies after contactInfo
+    if (submissionPhase !== 'contactInfo') {
       const authHeader = request.headers.get('authorization')
       if (authHeader?.startsWith('Bearer ')) {
         const token = authHeader.substring(7, authHeader.length)
@@ -47,7 +75,8 @@ export async function POST(request: NextRequest) {
           const decoded = jwt.verify(token, ENROLLMENT_JWT_SECRET) as { clientId: string }
           clientIdFromToken = decoded.clientId
           if (clientIdFromToken) {
-            clientRecordFromToken = await payload.findByID({ collection: 'clients', id: clientIdFromToken })
+            // Fetch with depth 1 to ensure selectedProgram is populated if it's an object
+            clientRecordFromToken = await payload.findByID({ collection: 'clients', id: clientIdFromToken, depth: 1 })
           }
         } catch (err) {
           console.warn('Invalid or expired enrollment JWT:', err)
@@ -430,6 +459,158 @@ export async function POST(request: NextRequest) {
       // The scheduling phase should handle this, but a final check might be prudent depending on flow.
       await payload.update({ collection: 'clients', id: targetClient.id, data: finalClientData })
       return NextResponse.json({ message: 'Enrollment data finalized. Ready for payment processing.' }, { status: 200 })
+    } else if (submissionPhase === 'finalPayment') {
+      if (!squareClientInstance) { 
+        payload.logger.error('Square SDK not initialized. Cannot process payment.');
+        return NextResponse.json({ error: 'Payment processing unavailable.' }, { status: 503 }); 
+      }
+      
+      const { paymentDetails } = rawRequestBody;
+      if (!paymentDetails || !paymentDetails.cardNonce || typeof paymentDetails.dueTodayAmount !== 'number' || !paymentDetails.paymentOption) {
+        return NextResponse.json({ error: 'Missing required payment details.' }, { status: 400 });
+      }
+
+      const { cardNonce, dueTodayAmount, paymentOption } = paymentDetails;
+      const targetClient = clientRecordFromToken!;
+      const idempotencyKey = uuidV4();
+      const amountToCharge = BigInt(Math.round(dueTodayAmount * 100));
+
+      payload.logger.info(`Processing finalPayment for client: ${targetClient.id}, amount: ${amountToCharge}, option: ${paymentOption}`);
+
+      try {
+        if (paymentOption === 'full_program' || paymentOption === 'pay_as_you_go') {
+          payload.logger.info(`Attempting one-time payment with nonce for amount ${amountToCharge}`);
+          const paymentResponse = await squareClientInstance.payments.create({
+            sourceId: cardNonce,
+            idempotencyKey: idempotencyKey,
+            amountMoney: {
+              amount: amountToCharge,
+              currency: 'USD',
+            },
+            locationId: SQUARE_LOCATION_ID, 
+          });
+
+          if (paymentResponse.result.payment) {
+            const paymentResult = paymentResponse.result.payment;
+            payload.logger.info(`Payment successful: ${paymentResult.id}, Status: ${paymentResult.status}`);
+            
+            let newPaymentStatus: Client['paymentStatus'] = 'payment_issue'; // Default to issue if logic error
+            if (paymentOption === 'full_program') newPaymentStatus = 'active_paid_full';
+            else if (paymentOption === 'pay_as_you_go') newPaymentStatus = 'active_paid_enrollment_fee';
+            
+            await payload.update({ collection: 'clients', id: targetClient.id, data: { 
+                paymentStatus: newPaymentStatus, 
+                enrollmentProcessStatus: 'enrollment_complete' 
+            }});
+            // TODO: Create Payment record in Payload
+            return NextResponse.json({ message: 'Payment successful and enrollment complete!', paymentId: paymentResult.id }, { status: 200 });
+          } else {
+            payload.logger.error('Square payment error.', paymentResponse.result.errors);
+            return NextResponse.json({ error: 'Payment failed.', details: paymentResponse.result.errors }, { status: 500 });
+          }
+        } else if (paymentOption === 'autopay_weekly') {
+          payload.logger.info('Processing autopay_weekly...');
+          let currentSquareCustomerId = targetClient.squareCustomerId;
+
+          // Step 1: Charge Enrollment Fee (if any)
+          if (targetClient.selectedProgram && typeof targetClient.selectedProgram === 'object' && targetClient.selectedProgram.enrollmentFee > 0) {
+            const enrollFee = BigInt(Math.round(targetClient.selectedProgram.enrollmentFee * 100));
+            payload.logger.info(`Charging enrollment fee: ${enrollFee}`);
+            const feePaymentResponse = await squareClientInstance.payments.create({
+                sourceId: cardNonce,
+                idempotencyKey: uuidV4(), // New idempotency key for this payment
+                amountMoney: { amount: enrollFee, currency: 'USD' },
+                locationId: SQUARE_LOCATION_ID,
+            });
+            if (!feePaymentResponse.result.payment || feePaymentResponse.result.payment.status !== 'COMPLETED') {
+                payload.logger.error('Enrollment fee payment failed.', feePaymentResponse.result.errors);
+                return NextResponse.json({ error: 'Enrollment fee payment failed.', details: feePaymentResponse.result.errors }, { status: 500 });
+            }
+            payload.logger.info(`Enrollment fee payment successful: ${feePaymentResponse.result.payment.id}`);
+            // TODO: Create Payment record in Payload for enrollment fee
+          }
+
+          // Step 2: Create/Retrieve Square Customer
+          if (!currentSquareCustomerId) {
+            payload.logger.info('No Square Customer ID found, creating one...');
+            const customerResponse = await squareClientInstance.customers.create({
+              idempotencyKey: uuidV4(),
+              givenName: targetClient.firstName,
+              familyName: targetClient.lastName,
+              emailAddress: targetClient.email || undefined,
+              phoneNumber: targetClient.phone || undefined,
+              referenceId: targetClient.id, // Link to our client ID
+            });
+            if (customerResponse.result.customer?.id) {
+              currentSquareCustomerId = customerResponse.result.customer.id;
+              await payload.update({collection: 'clients', id: targetClient.id, data: { squareCustomerId: currentSquareCustomerId }});
+              payload.logger.info(`Square Customer created: ${currentSquareCustomerId}`);
+            } else {
+              payload.logger.error('Failed to create Square customer.', customerResponse.result.errors);
+              return NextResponse.json({ error: 'Failed to set up customer for autopay.', details: customerResponse.result.errors }, { status: 500 });
+            }
+          }
+
+          // Step 3: Create Card on File for Customer
+          payload.logger.info(`Creating card on file for customer: ${currentSquareCustomerId}`);
+          const cardResponse = await squareClientInstance.cards.create({
+            idempotencyKey: uuidV4(),
+            sourceId: cardNonce, // This nonce is for the card itself
+            card: {
+              customerId: currentSquareCustomerId,
+              // billingAddress: { ... } // Optional: map from clientData if available & needed
+              cardholderName: `${targetClient.firstName} ${targetClient.lastName}`,
+            }
+          });
+          if (!cardResponse.result.card?.id) {
+            payload.logger.error('Failed to create card on file.', cardResponse.result.errors);
+            return NextResponse.json({ error: 'Failed to save card for autopay.', details: cardResponse.result.errors }, { status: 500 });
+          }
+          const cardOnFilId = cardResponse.result.card.id;
+          payload.logger.info(`Card on file created: ${cardOnFilId}`);
+
+          // Step 4: Create Subscription
+          // IMPORTANT: Replace 'YOUR_PLAN_VARIATION_ID' with the actual ID from your Square Dashboard
+          const planVariationId = process.env.SQUARE_AUTOPAY_WEEKLY_PLAN_ID;
+          if (!planVariationId) {
+            payload.logger.error('Square Autopay Weekly Plan ID is not configured.');
+            return NextResponse.json({ error: 'Autopay configuration error.' }, { status: 500 });
+          }
+          payload.logger.info(`Creating subscription with plan: ${planVariationId}`);
+          const subscriptionResponse = await squareClientInstance.subscriptionsApi.createSubscription({
+            idempotencyKey: uuidV4(),
+            locationId: SQUARE_LOCATION_ID!,
+            planVariationId: planVariationId,
+            customerId: currentSquareCustomerId!,
+            cardId: cardOnFilId,
+            // startDate: YYYY-MM-DD // Optional: if you want to set a specific start date
+          });
+
+          if (subscriptionResponse.result.subscription?.id) {
+            const subscriptionId = subscriptionResponse.result.subscription.id;
+            payload.logger.info(`Subscription created: ${subscriptionId}`);
+            await payload.update({collection: 'clients', id: targetClient.id, data: { 
+                squareSubscriptionId: subscriptionId, 
+                paymentStatus: 'active_autopay', 
+                enrollmentProcessStatus: 'enrollment_complete' 
+            }});
+            return NextResponse.json({ message: 'Autopay subscription set up successfully!', subscriptionId }, { status: 200 });
+          } else {
+            payload.logger.error('Failed to create subscription.', subscriptionResponse.result.errors);
+            return NextResponse.json({ error: 'Failed to set up autopay subscription.', details: subscriptionResponse.result.errors }, { status: 500 });
+          }
+        } else {
+          return NextResponse.json({ error: 'Invalid payment option for final payment.' }, { status: 400 });
+        }
+      } catch (error: unknown) {
+        payload.logger.error('Error processing Square payment:', error);
+        if (error instanceof SquareError) { 
+          return NextResponse.json({ error: 'Square API Error', details: error.errors }, { status: error.statusCode || 500 });
+        } else {
+          const message = error instanceof Error ? error.message : 'Internal Server Error during payment processing.';
+          return NextResponse.json({ error: message }, { status: 500 });
+        }
+      }
     } else {
       return NextResponse.json({ error: 'Invalid submission phase' }, { status: 400 })
     }

@@ -8,7 +8,7 @@
     "sessionsPerWeek": 1,
     "costPerSession": 35,
     "enrollmentFee": 50,
-    "spotsPerClass": 10,
+    "programGroupSharedId": "DV_MALE_SHARED",
     "programCategory": "court_ordered",
     "isActive": true
   },
@@ -21,7 +21,7 @@
     "sessionsPerWeek": 1,
     "costPerSession": 35,
     "enrollmentFee": 50,
-    "spotsPerClass": 10,
+    "programGroupSharedId": "DV_FEMALE_SHARED",
     "programCategory": "court_ordered",
     "isActive": true
   },
@@ -34,7 +34,7 @@
     "sessionsPerWeek": 1,
     "costPerSession": 40,
     "enrollmentFee": 90,
-    "spotsPerClass": 8,
+    "programGroupSharedId": "SORT_SHARED",
     "programCategory": "court_ordered",
     "isActive": true
   },
@@ -47,7 +47,7 @@
     "sessionsPerWeek": 1,
     "costPerSession": 35,
     "enrollmentFee": 50,
-    "spotsPerClass": 12,
+    "programGroupSharedId": "L1_SHARED",
     "programCategory": "court_ordered",
     "isActive": true
   },
@@ -60,7 +60,7 @@
     "sessionsPerWeek": 1,
     "costPerSession": 35,
     "enrollmentFee": 50,
-    "spotsPerClass": 12,
+    "programGroupSharedId": "L1_SHARED",
     "programCategory": "court_ordered",
     "isActive": true
   },
@@ -73,7 +73,7 @@
     "sessionsPerWeek": 1,
     "costPerSession": 35,
     "enrollmentFee": 50,
-    "spotsPerClass": 12,
+    "programGroupSharedId": "L1_SHARED",
     "programCategory": "court_ordered",
     "isActive": true
   }

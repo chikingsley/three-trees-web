@@ -14,6 +14,7 @@ import { Counties } from './collections/Counties.ts'
 import { Locations } from './collections/Locations.ts'
 import { Media } from './collections/Media.ts'
 import { Payments } from './collections/Payments.ts'
+import { ProgramGroups } from './collections/ProgramGroups.ts'
 import { ProgramTypes } from './collections/ProgramTypes.ts'
 import { Programs } from './collections/Programs.ts'
 import { ReferralSources } from './collections/ReferralSources.ts'
@@ -40,6 +41,7 @@ export default buildConfig({
     Locations,
     Media,
     Payments,
+    ProgramGroups,
     ProgramTypes,
     Programs,
     ReferralSources,

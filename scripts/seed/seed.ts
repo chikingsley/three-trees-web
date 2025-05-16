@@ -66,7 +66,7 @@ async function seedCollection(
         createdCount++;
 
     } catch (error) {
-      console.error(`Error creating ${collectionSlug} item:`, item, error);
+      console.error(`Error creating ${collectionSlug} item:`, JSON.stringify(item, null, 2), error);
     }
   }
 
@@ -91,14 +91,104 @@ async function runSeed() {
   try {
     await seedCollection(payload, 'counties', 'counties.json', 'name');
     await seedCollection(payload, 'referral-source-types', 'referral-source-types.json', 'name');
-    await seedCollection(payload, 'programs', 'programs.json', 'programId');
+    await seedCollection(payload, 'program-groups', 'program-groups.json', 'sharedProgramId');
+    await seedPrograms(payload);
     await seedClasses(payload);
+
+    // TODO: Add seeding for clients
+    // TODO: Add seeding for referral sources
+    // TODO: Add seeding for services
+    // TODO: Add seeding for testimonials
+    // TODO: Add seeding for users
+    // TODO: Add seeding for media
+    // TODO: Add seeding for blog posts
+    
     console.log('\nSeeding completed successfully.');
     process.exit(0);
   } catch (error) {
     console.error('Seeding failed:', error);
     process.exit(1);
   }
+}
+
+// New function to seed Programs with ProgramGroup ID lookup
+async function seedPrograms(payload: Payload) {
+  const dataFilePath = path.resolve(__dirname, 'data', 'programs.json');
+  console.log(`\n--- Seeding programs from programs.json ---`);
+
+  if (!fs.existsSync(dataFilePath)) {
+    console.warn(`Warning: Data file not found at ${dataFilePath}. Skipping programs.`);
+    return;
+  }
+
+  let dataToSeed;
+  try {
+    const jsonData = fs.readFileSync(dataFilePath, 'utf-8');
+    dataToSeed = JSON.parse(jsonData);
+    if (!Array.isArray(dataToSeed)) {
+      console.error(`Error: Expected an array in programs.json, but got ${typeof dataToSeed}. Skipping.`);
+      return;
+    }
+  } catch (e) {
+    console.error(`Error reading or parsing ${dataFilePath}:`, e);
+    return;
+  }
+
+  let createdCount = 0;
+  let skippedCount = 0;
+
+  for (const item of dataToSeed as any[]) {
+    try {
+      // Check if program already exists by programId
+      const existingProgram = await payload.find({
+        collection: 'programs',
+        where: { programId: { equals: item.programId } },
+        limit: 1,
+        depth: 0,
+      });
+
+      if (existingProgram.docs.length > 0) {
+        skippedCount++;
+        continue;
+      }
+
+      // Find the ProgramGroup document by its sharedProgramId field
+      if (!item.programGroupSharedId) {
+        console.warn(`Warning: Program item missing programGroupSharedId. Skipping program:`, item);
+        skippedCount++;
+        continue;
+      }
+
+      const programGroupDocs = await payload.find({
+        collection: 'program-groups',
+        where: { sharedProgramId: { equals: item.programGroupSharedId } },
+        limit: 1,
+        depth: 0, // We only need the ID
+      });
+
+      if (programGroupDocs.docs.length === 0) {
+        console.warn(`Warning: ProgramGroup with sharedProgramId '${item.programGroupSharedId}' not found for program '${item.programId}'. Skipping program:`, item);
+        skippedCount++;
+        continue;
+      }
+      const programGroupId = programGroupDocs.docs[0].id;
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { programGroupSharedId, ...programData } = item;
+
+      await payload.create({
+        collection: 'programs' as any,
+        data: {
+          ...programData,
+          programGroup: programGroupId, // Use the actual ID for the relationship
+        },
+      });
+      createdCount++;
+    } catch (error) {
+      console.error(`Error creating programs item:`, JSON.stringify(item, null, 2), error);
+    }
+  }
+  console.log(`Seeded ${createdCount} programs. Skipped ${skippedCount} existing or unlinked.`);
 }
 
 // New function to seed Classes with Program ID lookup
@@ -134,36 +224,50 @@ async function seedClasses(payload: Payload) {
         collection: 'programs',
         where: { programId: { equals: item.programId } },
         limit: 1,
-        depth: 0, // We only need the ID
+        depth: 1, // We need to populate programGroup
       });
 
       if (programDocs.docs.length === 0) {
-        console.warn(`Warning: Program with programId '${item.programId}' not found. Skipping class:`, item);
+        console.warn(`Warning: Program with programId '${item.programId}' not found. Skipping class:`, JSON.stringify(item, null, 2));
         skippedCount++;
         continue;
       }
-      const programActualId = programDocs.docs[0].id;
+      // const programActualId = programDocs.docs[0].id; // This was the Program ID
 
-      // Check if a similar class block already exists (program, day, time, genderSpecific)
+      const programDoc = programDocs.docs[0];
+      if (!programDoc.programGroup || typeof programDoc.programGroup !== 'object' || !programDoc.programGroup.id) {
+         if (typeof programDoc.programGroup === 'string') { // It might be an ID string if depth didn't populate
+            // If it's a string, assume it's the ID and try to use it.
+            // This case implies depth: 1 didn't populate the object fully as expected,
+            // or programGroup is stored as just an ID.
+             console.warn(`Warning: programGroup for Program '${item.programId}' is an ID string. Using it directly. This may indicate an issue with population or data structure.`);
+
+         } else {
+            console.warn(`Warning: Program '${item.programId}' does not have a valid populated programGroup or programGroup.id. Skipping class:`, JSON.stringify(item, null, 2));
+            console.warn(`Program document details: programGroup is '${typeof programDoc.programGroup}', value: ${JSON.stringify(programDoc.programGroup)}`);
+            skippedCount++;
+            continue;
+        }
+      }
+      
+      const programGroupId = (typeof programDoc.programGroup === 'string') ? programDoc.programGroup : programDoc.programGroup.id;
+
+
+      // Check if a similar class block already exists (programGroup, day, time, genderSpecific)
       const existingClass = await payload.find({
         collection: 'classes',
         where: {
-          program: { equals: programActualId },
+          programGroup: { equals: programGroupId }, // Check against the ProgramGroup ID
           day: { equals: item.day },
           time: { equals: item.time },
-          ...(item.genderSpecific && { genderSpecific: { equals: item.genderSpecific } }),
-          // If genderSpecific is not in item, don't include it in the query
-          // or ensure it matches documents where genderSpecific is null or not set.
-          // For simplicity here, if item.genderSpecific is undefined, we are looking for classes
-          // where genderSpecific is also not set or null.
-          // A more robust check might be needed if genderSpecific: null has a different meaning than undefined.
+          ...(item.genderSpecific ? { genderSpecific: { equals: item.genderSpecific } } : { genderSpecific: { exists: false } }),
         },
         limit: 1,
         depth: 0,
       });
 
       if (existingClass.docs.length > 0) {
-        console.log(`Skipping existing class block: ${item.programId} ${item.day} ${item.time}`);
+        // console.log(`Skipping existing class block: PG '${programGroupId}' ${item.day} ${item.time}`);
         skippedCount++;
         continue;
       }
@@ -176,13 +280,13 @@ async function seedClasses(payload: Payload) {
         collection: 'classes' as any,
         data: {
           ...classData,
-          program: programActualId, // Use the actual ID for the relationship
+          programGroup: programGroupId, // Use the ProgramGroup ID for the relationship
           clients: [], // Initialize with empty clients array
         },
       });
       createdCount++;
     } catch (error) {
-      console.error(`Error creating classes item:`, item, error);
+      console.error(`Error creating classes item:`, JSON.stringify(item, null, 2), error);
     }
   }
   console.log(`Seeded ${createdCount} classes. Skipped ${skippedCount} existing or unlinked.`);

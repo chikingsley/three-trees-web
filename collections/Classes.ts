@@ -1,6 +1,6 @@
 import type { CollectionConfig, FieldHook } from 'payload'
 import type { Payload } from 'payload'
-import type { Program } from '../payload-types'
+import type { ProgramGroup } from '../payload-types'
 
 // Helper function to generate time options
 const generateTimeOptions = () => {
@@ -22,31 +22,31 @@ const generateTimeOptions = () => {
 
 // Field Hook to calculate spotsTotal and spotsAvailable
 const calculateSpots: FieldHook = async ({ req, data }) => {
-  if (!data || !data.program || typeof data.numberOfParallelClasses !== 'number') {
+  if (!data || !data.programGroup || typeof data.numberOfParallelClasses !== 'number') {
     return { spotsTotal: 0, spotsAvailable: 0 };
   }
 
   const payload = req.payload as Payload;
-  let programDoc: Program | null = null;
+  let groupDoc: ProgramGroup | null = null;
 
-  // Check if program is already populated (e.g., after create/update)
-  if (typeof data.program === 'object' && data.program?.id) {
-    programDoc = data.program as Program;
-  } else if (typeof data.program === 'string') {
-    // Fetch the program if only the ID is present
+  // Check if programGroup is already populated (e.g., after create/update)
+  if (typeof data.programGroup === 'object' && data.programGroup?.id) {
+    groupDoc = data.programGroup as ProgramGroup;
+  } else if (typeof data.programGroup === 'string') {
+    // Fetch the programGroup if only the ID is present
     try {
-      programDoc = await payload.findByID({
-        collection: 'programs',
-        id: data.program,
+      groupDoc = await payload.findByID({
+        collection: 'program-groups',
+        id: data.programGroup,
         depth: 0, // Don't need relationships here
       });
     } catch (error) {
-      payload.logger.error(`Error fetching program ${data.program} for spot calculation: ${error}`);
+      payload.logger.error(`Error fetching program group ${data.programGroup} for spot calculation: ${error}`);
     }
   }
 
-  const spotsPerClass = programDoc?.spotsPerClass ?? 0;
-  const spotsTotal = data.numberOfParallelClasses * spotsPerClass;
+  const spotsPerClassInstance = groupDoc?.spotsPerClassInstance ?? 0;
+  const spotsTotal = data.numberOfParallelClasses * spotsPerClassInstance;
 
   // Calculate available spots
   const enrolledClientCount = Array.isArray(data.clients) ? data.clients.length : 0;
@@ -54,42 +54,41 @@ const calculateSpots: FieldHook = async ({ req, data }) => {
 
   // Return the calculated values. These are added to the document *after* it's read.
   // Important: These should NOT be stored in the DB via beforeChange/beforeValidate
-  // as they depend on runtime data (program.spotsPerClass, clients.length).
+  // as they depend on runtime data (programGroup.spotsPerClassInstance, clients.length).
   return { spotsTotal, spotsAvailable };
 }
 
 
 // Field Hook to generate the identifier
 const generateIdentifier: FieldHook = async ({ req, data }) => {
-  if (!data || !data.program || !data.day || !data.time || typeof data.numberOfParallelClasses !== 'number') {
+  if (!data || !data.programGroup || !data.day || !data.time || typeof data.numberOfParallelClasses !== 'number') {
     return `Class Block - ${data?.id || 'Unknown ID'}`;
   }
 
   const payload = req.payload as Payload;
-  let programName = String(data.program); // Default to ID
+  let groupName = String(data.programGroup); // Default to ID
 
-  // Check if program is populated
-  if (typeof data.program === 'object' && data.program?.name) {
-    programName = data.program.name;
-  } else if (typeof data.program === 'string') {
-    // Fetch the program if only the ID is present
+  // Check if programGroup is populated
+  if (typeof data.programGroup === 'object' && data.programGroup?.name) {
+    groupName = data.programGroup.name;
+  } else if (typeof data.programGroup === 'string') {
+    // Fetch the programGroup if only the ID is present
     try {
-      const programDoc = await payload.findByID({
-        collection: 'programs',
-        id: data.program,
+      const groupDoc = await payload.findByID({
+        collection: 'program-groups',
+        id: data.programGroup,
         depth: 0,
       });
-      if (programDoc?.name) {
-        programName = programDoc.name;
+      if (groupDoc?.name) {
+        groupName = groupDoc.name;
       }
     } catch (error) {
-      payload.logger.error(`Error fetching program ${data.program} for identifier generation: ${error}`);
+      payload.logger.error(`Error fetching program group ${data.programGroup} for identifier generation: ${error}`);
     }
   }
 
-  return `${programName} - ${data.day} ${data.time} (x${data.numberOfParallelClasses})`;
+  return `${groupName} - ${data.day} ${data.time} (x${data.numberOfParallelClasses})`;
 }
-
 
 export const Classes: CollectionConfig = {
   slug: 'classes', // Renamed slug
@@ -97,7 +96,7 @@ export const Classes: CollectionConfig = {
     useAsTitle: 'classBlockIdentifier', // Use the virtual field
     defaultColumns: ['classBlockIdentifier', 'spotsAvailable', 'spotsTotal', 'isActive'], // Updated columns
     group: 'Program Setup',
-    description: 'Define scheduled blocks of classes for specific programs, days, and times.', // Updated description
+    description: 'Define scheduled blocks of classes for groups of programs.', // Updated description
   },
   access: {
     read: () => true,
@@ -107,9 +106,10 @@ export const Classes: CollectionConfig = {
   },
   fields: [
     {
-      name: 'program', // Relationship to Programs collection
+      name: 'programGroup', // Changed from 'program'
+      label: 'Program Group',
       type: 'relationship',
-      relationTo: 'programs', 
+      relationTo: 'program-groups', // Relates to ProgramGroups
       required: true,
       admin: {
         position: 'sidebar',
@@ -184,7 +184,7 @@ export const Classes: CollectionConfig = {
         type: 'number', 
         admin: { 
             readOnly: true, 
-            description: 'Calculated: Number of Parallel Classes * Spots Per Class defined on the Program.'
+            description: 'Calculated: Number of Parallel Classes * Spots Per Class Instance (from Program Group).'
         }, 
         access: { create: () => false, update: () => false }, // Prevent setting via API
         hooks: {
