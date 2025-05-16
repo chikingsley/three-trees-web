@@ -1,0 +1,1827 @@
+{
+    "objects": [
+      {
+        "type": "ITEM",
+        "id": "KWVB6EBAI6VQJPL3JHMXRQBC",
+        "updated_at": "2025-05-16T07:21:09.754Z",
+        "created_at": "2025-05-16T06:35:44.05Z",
+        "version": 1747380069754,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Positive Parenting Program - Pay in Full (12 Weeks) + Enrollment Fee",
+          "description": "Full payment for 12 weeks of the Positive Parenting Program session fees. Includes 10% discount.  Enrollment fee is included.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "PHGFB4VZX7F2ZORKWUIAGFXI",
+              "updated_at": "2025-05-16T07:21:09.754Z",
+              "created_at": "2025-05-16T07:12:13.289Z",
+              "version": 1747380069754,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "KWVB6EBAI6VQJPL3JHMXRQBC",
+                "name": "Regular",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 47000,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "skip_modifier_screen": false,
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "R74PDG6O22D5F3WJ4FON3FC5",
+              "ordinal": -2251731094208512
+            }
+          ],
+          "description_html": "<p>Full payment for 12 weeks of the Positive Parenting Program session fees. Includes 10% discount.  Enrollment fee is included.</p>",
+          "description_plaintext": "Full payment for 12 weeks of the Positive Parenting Program session fees. Includes 10% discount.  Enrollment fee is included.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "DL2SP2CS44QDXR7CLWLRJCAA",
+        "updated_at": "2025-05-16T07:12:45.676Z",
+        "created_at": "2025-05-16T06:35:44.05Z",
+        "version": 1747379565676,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Substance Abuse + Critical Thinking (SACT) Program - Pay in Full (12 Weeks) + Enrollment Fee",
+          "description": "Full payment for 12 weeks of the Substance Abuse + Critical Thinking Program session fees. Includes 10% discount. Enrollment fee is included.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "CQTLGQDVUIONT3G5P7GA2A6T",
+              "updated_at": "2025-05-16T07:09:54.727Z",
+              "created_at": "2025-05-16T07:09:16.503Z",
+              "version": 1747379394727,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "DL2SP2CS44QDXR7CLWLRJCAA",
+                "name": "",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 47000,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "skip_modifier_screen": false,
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "R74PDG6O22D5F3WJ4FON3FC5",
+              "ordinal": -2251662374731776
+            }
+          ],
+          "description_html": "<p>Full payment for 12 weeks of the Substance Abuse + Critical Thinking Program session fees. Includes 10% discount. Enrollment fee is included.</p>",
+          "description_plaintext": "Full payment for 12 weeks of the Substance Abuse + Critical Thinking Program session fees. Includes 10% discount. Enrollment fee is included.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "JBYPKCE45KDT4RJCFYKWQRHL",
+        "updated_at": "2025-05-16T07:20:38.818Z",
+        "created_at": "2025-05-16T06:35:44.05Z",
+        "version": 1747380038818,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Enrollment - Positive Parenting Program",
+          "description": "One-time enrollment fee for the 12-week Positive Parenting Program.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "DXUPUWEMGHJAOKWVYJJDGFWM",
+              "updated_at": "2025-05-16T07:20:38.818Z",
+              "created_at": "2025-05-16T07:11:41.274Z",
+              "version": 1747380038818,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "JBYPKCE45KDT4RJCFYKWQRHL",
+                "name": "Regular",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 5000,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "skip_modifier_screen": false,
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "7FCBMNJAZELWWAP6TBE6SYFO",
+              "ordinal": -2251662374731776
+            }
+          ],
+          "description_html": "<p>One-time enrollment fee for the 12-week Positive Parenting Program.</p>",
+          "description_plaintext": "One-time enrollment fee for the 12-week Positive Parenting Program.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "KG2WKWFKNY35M3UV5EHTIMZ2",
+        "updated_at": "2025-05-16T07:18:59.078Z",
+        "created_at": "2025-05-16T06:35:44.05Z",
+        "version": 1747379939078,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Anger Management Program - Pay in Full (12 Weeks) + Enrollment Fee",
+          "description": "Full payment for 12 weeks of the Anger Management Program session fees. Includes 10% discount. Enrollment fee is included.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "EHYV7GLXRT7Y7GWITY7J3AKY",
+              "updated_at": "2025-05-16T07:18:59.078Z",
+              "created_at": "2025-05-16T07:18:32.501Z",
+              "version": 1747379939078,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "KG2WKWFKNY35M3UV5EHTIMZ2",
+                "name": "Regular",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 47000,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "skip_modifier_screen": false,
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "R74PDG6O22D5F3WJ4FON3FC5",
+              "ordinal": -2251593655255040
+            }
+          ],
+          "description_html": "<p>Full payment for 12 weeks of the Anger Management Program session fees. Includes 10% discount. Enrollment fee is included.</p>",
+          "description_plaintext": "Full payment for 12 weeks of the Anger Management Program session fees. Includes 10% discount. Enrollment fee is included.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "L2UDV3L4GVTYGNZITT3LJRUS",
+        "updated_at": "2025-05-16T07:20:12.185Z",
+        "created_at": "2025-05-16T06:35:44.05Z",
+        "version": 1747380012185,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Enrollment - Domestic Violence (DV) Female Program",
+          "description": "One-time enrollment fee for the 26-week Domestic Violence (Female) Program.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "RQDCKVQBHHPCPDUF7COIMZOT",
+              "updated_at": "2025-05-16T07:20:12.185Z",
+              "created_at": "2025-05-16T07:11:24.188Z",
+              "version": 1747380012185,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "L2UDV3L4GVTYGNZITT3LJRUS",
+                "name": "Regular",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 5000,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "skip_modifier_screen": false,
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "7FCBMNJAZELWWAP6TBE6SYFO",
+              "ordinal": -2251593655255040
+            }
+          ],
+          "description_html": "<p>One-time enrollment fee for the 26-week Domestic Violence (Female) Program.</p>",
+          "description_plaintext": "One-time enrollment fee for the 26-week Domestic Violence (Female) Program.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "ONHQW7G66Z25EJQ2IKTHQAJA",
+        "updated_at": "2025-05-16T07:09:52.788Z",
+        "created_at": "2025-05-16T06:35:44.05Z",
+        "version": 1747379392788,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Enrollment - Domestic Violence (DV) Male Program",
+          "description": "One-time enrollment fee for the 26-week Domestic Violence (Male) Program.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "P5WCJYRSZVBRB6YPBKHACYEY",
+              "updated_at": "2025-05-16T07:09:52.788Z",
+              "created_at": "2025-05-16T07:09:16.503Z",
+              "version": 1747379392788,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "ONHQW7G66Z25EJQ2IKTHQAJA",
+                "name": "",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 5000,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "7FCBMNJAZELWWAP6TBE6SYFO",
+              "ordinal": -2251524935778304
+            }
+          ],
+          "description_html": "<p>One-time enrollment fee for the 26-week Domestic Violence (Male) Program.</p>",
+          "description_plaintext": "One-time enrollment fee for the 26-week Domestic Violence (Male) Program.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "EQVCTMLRLTOJNVYFAJK3QHP4",
+        "updated_at": "2025-05-16T07:19:45.018Z",
+        "created_at": "2025-05-16T06:35:44.05Z",
+        "version": 1747379985018,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Domestic Violence (DV) Male Program - Pay in Full (26 Weeks) + Enrollment Fee",
+          "description": "Full payment for 26 weeks of the Domestic Violence (Male) Program session fees. Includes 10% discount.  Enrollment fee is included.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "47D6XNAD5EZNSB6L573LAVY6",
+              "updated_at": "2025-05-16T07:19:45.018Z",
+              "created_at": "2025-05-16T07:11:00.414Z",
+              "version": 1747379985018,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "EQVCTMLRLTOJNVYFAJK3QHP4",
+                "name": "Regular",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 96000,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "skip_modifier_screen": false,
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "R74PDG6O22D5F3WJ4FON3FC5",
+              "ordinal": -2251524935778304
+            }
+          ],
+          "description_html": "<p>Full payment for 26 weeks of the Domestic Violence (Male) Program session fees. Includes 10% discount.  Enrollment fee is included.</p>",
+          "description_plaintext": "Full payment for 26 weeks of the Domestic Violence (Male) Program session fees. Includes 10% discount.  Enrollment fee is included.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "D5QCTVTWQKMBOV3Z5BVONSAE",
+        "updated_at": "2025-05-16T07:12:31.459Z",
+        "created_at": "2025-05-16T06:35:44.05Z",
+        "version": 1747379551459,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Sex Offender Responsible Thinking (SORT) Program - Pay in Full (78 Weeks) + Enrollment Fee",
+          "description": "Full payment for 78 weeks (18 months) of the SORT Program session fees. Includes 10% discount. Enrollment fee is included.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "7BQAWISFU6TDMHM6CXCYW7LO",
+              "updated_at": "2025-05-16T07:09:55.003Z",
+              "created_at": "2025-05-16T07:09:16.503Z",
+              "version": 1747379395003,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "D5QCTVTWQKMBOV3Z5BVONSAE",
+                "name": "",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 321000,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "skip_modifier_screen": false,
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "R74PDG6O22D5F3WJ4FON3FC5",
+              "ordinal": -2251456216301568
+            }
+          ],
+          "description_html": "<p>Full payment for 78 weeks (18 months) of the SORT Program session fees. Includes 10% discount. Enrollment fee is included.</p>",
+          "description_plaintext": "Full payment for 78 weeks (18 months) of the SORT Program session fees. Includes 10% discount. Enrollment fee is included.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "LX3I34MHKVZB7VVRRLK2S6CC",
+        "updated_at": "2025-05-16T07:19:19.717Z",
+        "created_at": "2025-05-16T06:35:44.05Z",
+        "version": 1747379959717,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Domestic Violence (DV) Female Program - Pay in Full (26 Weeks) + Enrollment Fee",
+          "description": "Full payment for 26 weeks of the Domestic Violence (Female) Program session fees. Includes 10% discount. Enrollment fee is included.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "RGUFSEVVTYRKHWRJSE62SBX6",
+              "updated_at": "2025-05-16T07:19:19.717Z",
+              "created_at": "2025-05-16T07:10:41.364Z",
+              "version": 1747379959717,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "LX3I34MHKVZB7VVRRLK2S6CC",
+                "name": "Regular",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 96000,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "skip_modifier_screen": false,
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "R74PDG6O22D5F3WJ4FON3FC5",
+              "ordinal": -2251387496824832
+            }
+          ],
+          "description_html": "<p>Full payment for 26 weeks of the Domestic Violence (Female) Program session fees. Includes 10% discount. Enrollment fee is included.</p>",
+          "description_plaintext": "Full payment for 26 weeks of the Domestic Violence (Female) Program session fees. Includes 10% discount. Enrollment fee is included.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "4DN5B5IDWGSNMPPFWRD3JLDG",
+        "updated_at": "2025-05-16T07:09:55.289Z",
+        "created_at": "2025-05-16T06:35:44.05Z",
+        "version": 1747379395289,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Enrollment - Sex Offender Responsible Thinking (SORT) Program",
+          "description": "One-time enrollment fee for the 78-week (18-month) Sex Offender Responsible Thinking Program.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "IMFC3OFJ3UVE3P72A4WACT7Z",
+              "updated_at": "2025-05-16T07:09:55.289Z",
+              "created_at": "2025-05-16T07:09:16.503Z",
+              "version": 1747379395289,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "4DN5B5IDWGSNMPPFWRD3JLDG",
+                "name": "",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 9000,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "7FCBMNJAZELWWAP6TBE6SYFO",
+              "ordinal": -2251456216301568
+            }
+          ],
+          "description_html": "<p>One-time enrollment fee for the 78-week (18-month) Sex Offender Responsible Thinking Program.</p>",
+          "description_plaintext": "One-time enrollment fee for the 78-week (18-month) Sex Offender Responsible Thinking Program.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "SKUMYIMRS7J6IRWXSSCMBMY4",
+        "updated_at": "2025-05-16T07:09:53.126Z",
+        "created_at": "2025-05-16T06:35:44.05Z",
+        "version": 1747379393126,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Enrollment - Substance Abuse + Critical Thinking (SACT) Program",
+          "description": "One-time enrollment fee for the 12-week Substance Abuse + Critical Thinking Program.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "VQ7QBST4USJPXXY665OXQH7H",
+              "updated_at": "2025-05-16T07:09:53.126Z",
+              "created_at": "2025-05-16T07:09:16.503Z",
+              "version": 1747379393126,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "SKUMYIMRS7J6IRWXSSCMBMY4",
+                "name": "",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 5000,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "7FCBMNJAZELWWAP6TBE6SYFO",
+              "ordinal": -2251387496824832
+            }
+          ],
+          "description_html": "<p>One-time enrollment fee for the 12-week Substance Abuse + Critical Thinking Program.</p>",
+          "description_plaintext": "One-time enrollment fee for the 12-week Substance Abuse + Critical Thinking Program.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "LSQYZFA6GGL6ZUZAU62I4LEK",
+        "updated_at": "2025-05-16T07:09:52.911Z",
+        "created_at": "2025-05-16T07:06:52.51Z",
+        "version": 1747379392911,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Enrollment - Anger Management Program",
+          "description": "One-time enrollment fee for the 12-week Anger Management Program.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "VUJ35BLI53MWQXCJVWTSBBCU",
+              "updated_at": "2025-05-16T07:09:52.911Z",
+              "created_at": "2025-05-16T07:09:16.503Z",
+              "version": 1747379392911,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "LSQYZFA6GGL6ZUZAU62I4LEK",
+                "name": "",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 5000,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "description_html": "<p>One-time enrollment fee for the 12-week Anger Management Program.</p>",
+          "description_plaintext": "One-time enrollment fee for the 12-week Anger Management Program.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "QXP7DNEWOMYD36A4JCVWYRVR",
+        "updated_at": "2025-05-16T07:09:55.757Z",
+        "created_at": "2025-05-16T07:09:16.503Z",
+        "version": 1747379395757,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Sex Offender Responsible Thinking (SORT) Program - Single Session",
+          "description": "Payment for one session of the SORT Program.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "PAY6QIM5RXU7RVERBST46ZTE",
+              "updated_at": "2025-05-16T07:09:16.418Z",
+              "created_at": "2025-05-16T07:09:16.503Z",
+              "version": 1747379356418,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "QXP7DNEWOMYD36A4JCVWYRVR",
+                "name": "",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 4000,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "subscription_plan_ids": [
+                  "YBZMO2C7SFQ4Q3VWVYW5DIP3"
+                ],
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "ZXCCV7ZHJLFBUYMYBG3P5NBT",
+              "ordinal": -2251731094208512
+            }
+          ],
+          "description_html": "<p>Payment for one session of the SORT Program.</p>",
+          "description_plaintext": "Payment for one session of the SORT Program.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "J73JAJVQYRSEPJ54DZXFBXKU",
+        "updated_at": "2025-05-16T07:09:53.723Z",
+        "created_at": "2025-05-16T07:09:16.503Z",
+        "version": 1747379393723,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Domestic Violence (DV) Female Program - Single Session",
+          "description": "Payment for one session of the Domestic Violence (Female) Program.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "TKT6KZGUWYYPCZTZEPNQTAK5",
+              "updated_at": "2025-05-16T07:09:16.418Z",
+              "created_at": "2025-05-16T07:09:16.503Z",
+              "version": 1747379356418,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "J73JAJVQYRSEPJ54DZXFBXKU",
+                "name": "",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 3500,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "subscription_plan_ids": [
+                  "5SREHPJWKGLOOWDVURQOO4OZ"
+                ],
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "ZXCCV7ZHJLFBUYMYBG3P5NBT",
+              "ordinal": -2251662374731776
+            }
+          ],
+          "description_html": "<p>Payment for one session of the Domestic Violence (Female) Program.</p>",
+          "description_plaintext": "Payment for one session of the Domestic Violence (Female) Program.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "LFPPKNLTUAZD42PET6P64CYU",
+        "updated_at": "2025-05-16T07:09:53.35Z",
+        "created_at": "2025-05-16T07:09:16.503Z",
+        "version": 1747379393350,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Substance Abuse + Critical Thinking (SACT) Program - Single Session",
+          "description": "Payment for one session of the Substance Abuse + Critical Thinking Program.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "QJ36GESMFKKSDOV3IVNS4OAG",
+              "updated_at": "2025-05-16T07:09:16.418Z",
+              "created_at": "2025-05-16T07:09:16.503Z",
+              "version": 1747379356418,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "LFPPKNLTUAZD42PET6P64CYU",
+                "name": "",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 3500,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "subscription_plan_ids": [
+                  "ZDHW6WJQ5HWVEJLFT7LK4J5J"
+                ],
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "ZXCCV7ZHJLFBUYMYBG3P5NBT",
+              "ordinal": -2251593655255040
+            }
+          ],
+          "description_html": "<p>Payment for one session of the Substance Abuse + Critical Thinking Program.</p>",
+          "description_plaintext": "Payment for one session of the Substance Abuse + Critical Thinking Program.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "ZZLLITHA7O6VBS5KURWFSQRH",
+        "updated_at": "2025-05-16T07:09:53.225Z",
+        "created_at": "2025-05-16T07:09:16.503Z",
+        "version": 1747379393225,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Anger Management Program - Single Session",
+          "description": "Payment for one session of the Anger Management Program.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "HQVQZ2HXQV3JCNZVGWG2CFQD",
+              "updated_at": "2025-05-16T07:09:16.418Z",
+              "created_at": "2025-05-16T07:09:16.503Z",
+              "version": 1747379356418,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "ZZLLITHA7O6VBS5KURWFSQRH",
+                "name": "",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 3500,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "subscription_plan_ids": [
+                  "XDXBZO32T2X54TVVH2ZPCLBJ"
+                ],
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "ZXCCV7ZHJLFBUYMYBG3P5NBT",
+              "ordinal": -2251524935778304
+            }
+          ],
+          "description_html": "<p>Payment for one session of the Anger Management Program.</p>",
+          "description_plaintext": "Payment for one session of the Anger Management Program.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "UTUKICXKASVZDEBOKGSOSGAM",
+        "updated_at": "2025-05-16T07:09:55.952Z",
+        "created_at": "2025-05-16T07:09:16.503Z",
+        "version": 1747379395952,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Domestic Violence (DV) Male Program - Single Session",
+          "description": "Payment for one session of the Domestic Violence (Male) Program.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "UO7O7KBTDFPWQTJU2NCVSDOX",
+              "updated_at": "2025-05-16T07:09:16.418Z",
+              "created_at": "2025-05-16T07:09:16.503Z",
+              "version": 1747379356418,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "UTUKICXKASVZDEBOKGSOSGAM",
+                "name": "",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 3500,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "subscription_plan_ids": [
+                  "AS4S5PWZAKZKAFHL3ZL2V2VW"
+                ],
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "ZXCCV7ZHJLFBUYMYBG3P5NBT",
+              "ordinal": -2251456216301568
+            }
+          ],
+          "description_html": "<p>Payment for one session of the Domestic Violence (Male) Program.</p>",
+          "description_plaintext": "Payment for one session of the Domestic Violence (Male) Program.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "ITEM",
+        "id": "AP2IRVYCNJQGPCE3K4OSNVGH",
+        "updated_at": "2025-05-16T07:09:53.469Z",
+        "created_at": "2025-05-16T07:09:16.503Z",
+        "version": 1747379393469,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "item_data": {
+          "name": "Positive Parenting Program - Single Session",
+          "description": "Payment for one session of the Positive Parenting Program.",
+          "is_taxable": true,
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "D36GZIRZNCURMKIXOSTXBKQM",
+              "updated_at": "2025-05-16T07:09:16.418Z",
+              "created_at": "2025-05-16T07:09:16.503Z",
+              "version": 1747379356418,
+              "is_deleted": false,
+              "present_at_all_locations": false,
+              "present_at_location_ids": [
+                "CPZBMJBK8GSAN"
+              ],
+              "item_variation_data": {
+                "item_id": "AP2IRVYCNJQGPCE3K4OSNVGH",
+                "name": "",
+                "ordinal": 1,
+                "pricing_type": "FIXED_PRICING",
+                "price_money": {
+                  "amount": 3500,
+                  "currency": "USD"
+                },
+                "sellable": true,
+                "stockable": true,
+                "subscription_plan_ids": [
+                  "SFPA46WEXPORZCNDBUR64R6P"
+                ],
+                "channels": [
+                  "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+                ]
+              }
+            }
+          ],
+          "product_type": "DIGITAL",
+          "ecom_available": true,
+          "ecom_visibility": "VISIBLE",
+          "categories": [
+            {
+              "id": "ZXCCV7ZHJLFBUYMYBG3P5NBT",
+              "ordinal": -2251387496824832
+            }
+          ],
+          "description_html": "<p>Payment for one session of the Positive Parenting Program.</p>",
+          "description_plaintext": "Payment for one session of the Positive Parenting Program.",
+          "channels": [
+            "CH_GnI1Enm3iQ3jObI8q6MZaiJP9z0SxyLWyOkjwQlQuYC"
+          ],
+          "is_archived": false,
+          "is_alcoholic": false
+        }
+      },
+      {
+        "type": "CATEGORY",
+        "id": "R74PDG6O22D5F3WJ4FON3FC5",
+        "updated_at": "2025-05-16T06:21:48.696Z",
+        "created_at": "2025-05-16T06:21:48.745Z",
+        "version": 1747376508696,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "category_data": {
+          "name": "Program Services - Pay in Full",
+          "category_type": "REGULAR_CATEGORY",
+          "parent_category": {
+            "ordinal": -2251662374731776
+          },
+          "is_top_level": true,
+          "online_visibility": true
+        }
+      },
+      {
+        "type": "CATEGORY",
+        "id": "7FCBMNJAZELWWAP6TBE6SYFO",
+        "updated_at": "2025-05-16T06:21:48.696Z",
+        "created_at": "2025-05-16T06:21:48.745Z",
+        "version": 1747376508696,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "category_data": {
+          "name": "Enrollment Fees",
+          "category_type": "REGULAR_CATEGORY",
+          "parent_category": {
+            "ordinal": -2251593655255040
+          },
+          "is_top_level": true,
+          "online_visibility": true
+        }
+      },
+      {
+        "type": "CATEGORY",
+        "id": "ZXCCV7ZHJLFBUYMYBG3P5NBT",
+        "updated_at": "2025-05-16T07:09:16.122Z",
+        "created_at": "2025-05-16T07:09:16.166Z",
+        "version": 1747379356122,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "category_data": {
+          "name": "Program Services - Pay Per Session",
+          "category_type": "REGULAR_CATEGORY",
+          "parent_category": {
+            "ordinal": -2251524935778304
+          },
+          "is_top_level": true,
+          "online_visibility": true
+        }
+      },
+      {
+        "type": "DISCOUNT",
+        "id": "CYYUUZNE5Q42WW53I5ZGQF6N",
+        "updated_at": "2025-05-16T07:01:33.049Z",
+        "created_at": "2025-05-16T07:01:33.096Z",
+        "version": 1747378893049,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "discount_data": {
+          "name": "Domestic Violence (DV) Male Program - Weekly Autop 5%",
+          "discount_type": "FIXED_PERCENTAGE",
+          "percentage": "5.0"
+        }
+      },
+      {
+        "type": "DISCOUNT",
+        "id": "7CHD2U7BIL4ZAMRLAS6KHCJ6",
+        "updated_at": "2025-05-16T07:15:13.642Z",
+        "created_at": "2025-05-16T07:15:13.682Z",
+        "version": 1747379713642,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "discount_data": {
+          "name": "Domestic Violence (DV) Female Program - Weekly Aut 5%",
+          "discount_type": "FIXED_PERCENTAGE",
+          "percentage": "5.0"
+        }
+      },
+      {
+        "type": "DISCOUNT",
+        "id": "QVDCVTJH5ICZZS3EBIFSCRHD",
+        "updated_at": "2025-05-16T07:16:05.16Z",
+        "created_at": "2025-05-16T07:16:05.208Z",
+        "version": 1747379765160,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "discount_data": {
+          "name": "Sex Offender Responsible Thinking (SORT) Program - 5%",
+          "discount_type": "FIXED_PERCENTAGE",
+          "percentage": "5.0"
+        }
+      },
+      {
+        "type": "DISCOUNT",
+        "id": "BVRXXRAWLPC7G7GKG22UYWTX",
+        "updated_at": "2025-05-16T07:16:31.092Z",
+        "created_at": "2025-05-16T07:16:31.13Z",
+        "version": 1747379791092,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "discount_data": {
+          "name": "Anger Management Program - Weekly Autopay 5%",
+          "discount_type": "FIXED_PERCENTAGE",
+          "percentage": "5.0"
+        }
+      },
+      {
+        "type": "DISCOUNT",
+        "id": "UEASVY7BWUR7B46YQAAOIU2Z",
+        "updated_at": "2025-05-16T07:17:12.843Z",
+        "created_at": "2025-05-16T07:17:12.884Z",
+        "version": 1747379832843,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "discount_data": {
+          "name": "Substance Abuse + Critical Thinking (SACT) Program 5%",
+          "discount_type": "FIXED_PERCENTAGE",
+          "percentage": "5.0"
+        }
+      },
+      {
+        "type": "DISCOUNT",
+        "id": "YOUNRXFDKQNH56L35K3PYIZL",
+        "updated_at": "2025-05-16T07:17:49.565Z",
+        "created_at": "2025-05-16T07:17:49.608Z",
+        "version": 1747379869565,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "discount_data": {
+          "name": "Positive Parenting Program - Weekly Autopay 5%",
+          "discount_type": "FIXED_PERCENTAGE",
+          "percentage": "5.0"
+        }
+      },
+      {
+        "type": "SUBSCRIPTION_PLAN_VARIATION",
+        "id": "XCODKTQN7KNJQ6V6AXJR5KN2",
+        "updated_at": "2025-05-16T07:14:28.782Z",
+        "created_at": "2025-05-16T07:01:33.53Z",
+        "version": 1747379668782,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "subscription_plan_variation_data": {
+          "name": "Domestic Violence (DV) Male Program - Weekly Autopay",
+          "phases": [
+            {
+              "uid": "U4AMGULLKYRKS2JZYO56GUFQ",
+              "cadence": "WEEKLY",
+              "periods": 26,
+              "ordinal": 0,
+              "pricing": {
+                "type": "RELATIVE",
+                "discount_ids": [
+                  "CYYUUZNE5Q42WW53I5ZGQF6N"
+                ]
+              }
+            }
+          ],
+          "subscription_plan_id": "AS4S5PWZAKZKAFHL3ZL2V2VW"
+        }
+      },
+      {
+        "type": "SUBSCRIPTION_PLAN_VARIATION",
+        "id": "3VMK4GOSSNTVU4ZEHFYD7V2D",
+        "updated_at": "2025-05-16T07:15:14.082Z",
+        "created_at": "2025-05-16T07:15:14.129Z",
+        "version": 1747379714082,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "subscription_plan_variation_data": {
+          "name": "Domestic Violence (DV) Female Program - Weekly Autopay",
+          "phases": [
+            {
+              "uid": "HVOMQHHK3S5IXLHVNBE37R25",
+              "cadence": "WEEKLY",
+              "periods": 26,
+              "ordinal": 0,
+              "pricing": {
+                "type": "RELATIVE",
+                "discount_ids": [
+                  "7CHD2U7BIL4ZAMRLAS6KHCJ6"
+                ]
+              }
+            }
+          ],
+          "subscription_plan_id": "5SREHPJWKGLOOWDVURQOO4OZ"
+        }
+      },
+      {
+        "type": "SUBSCRIPTION_PLAN_VARIATION",
+        "id": "OZXMQS2TKSHA4KCBYOSMU2YE",
+        "updated_at": "2025-05-16T07:16:06.261Z",
+        "created_at": "2025-05-16T07:16:06.298Z",
+        "version": 1747379766261,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "subscription_plan_variation_data": {
+          "name": "Sex Offender Responsible Thinking (SORT) Program - Weekly Autopay",
+          "phases": [
+            {
+              "uid": "MEHNRIKVGPG5LNUXDAYIAYUI",
+              "cadence": "WEEKLY",
+              "periods": 78,
+              "ordinal": 0,
+              "pricing": {
+                "type": "RELATIVE",
+                "discount_ids": [
+                  "QVDCVTJH5ICZZS3EBIFSCRHD"
+                ]
+              }
+            }
+          ],
+          "subscription_plan_id": "YBZMO2C7SFQ4Q3VWVYW5DIP3"
+        }
+      },
+      {
+        "type": "SUBSCRIPTION_PLAN_VARIATION",
+        "id": "JWKYRLIT6IXYTXGAYGWJKVWR",
+        "updated_at": "2025-05-16T07:16:31.475Z",
+        "created_at": "2025-05-16T07:16:31.514Z",
+        "version": 1747379791475,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "subscription_plan_variation_data": {
+          "name": "Anger Management Program - Weekly Autopay",
+          "phases": [
+            {
+              "uid": "KCJSIQCUM65V6RUJYRAEODXI",
+              "cadence": "WEEKLY",
+              "periods": 12,
+              "ordinal": 0,
+              "pricing": {
+                "type": "RELATIVE",
+                "discount_ids": [
+                  "BVRXXRAWLPC7G7GKG22UYWTX"
+                ]
+              }
+            }
+          ],
+          "subscription_plan_id": "XDXBZO32T2X54TVVH2ZPCLBJ"
+        }
+      },
+      {
+        "type": "SUBSCRIPTION_PLAN_VARIATION",
+        "id": "I4C5VMV36MEHCKDJTEW32A5Q",
+        "updated_at": "2025-05-16T07:17:13.249Z",
+        "created_at": "2025-05-16T07:17:13.296Z",
+        "version": 1747379833249,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "subscription_plan_variation_data": {
+          "name": "Substance Abuse + Critical Thinking (SACT) Program - Weekly Autopay",
+          "phases": [
+            {
+              "uid": "3AVMKT2CQV6OKVMHO7QXP3GW",
+              "cadence": "WEEKLY",
+              "periods": 12,
+              "ordinal": 0,
+              "pricing": {
+                "type": "RELATIVE",
+                "discount_ids": [
+                  "UEASVY7BWUR7B46YQAAOIU2Z"
+                ]
+              }
+            }
+          ],
+          "subscription_plan_id": "ZDHW6WJQ5HWVEJLFT7LK4J5J"
+        }
+      },
+      {
+        "type": "SUBSCRIPTION_PLAN_VARIATION",
+        "id": "PFYCPJC2ZEB7OG7YQP6TI3SV",
+        "updated_at": "2025-05-16T07:17:49.965Z",
+        "created_at": "2025-05-16T07:17:50.002Z",
+        "version": 1747379869965,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "subscription_plan_variation_data": {
+          "name": "Positive Parenting Program - Weekly Autopay",
+          "phases": [
+            {
+              "uid": "AHFVHFSCXXLGE2JWQVL3QISZ",
+              "cadence": "WEEKLY",
+              "periods": 12,
+              "ordinal": 0,
+              "pricing": {
+                "type": "RELATIVE",
+                "discount_ids": [
+                  "YOUNRXFDKQNH56L35K3PYIZL"
+                ]
+              }
+            }
+          ],
+          "subscription_plan_id": "SFPA46WEXPORZCNDBUR64R6P"
+        }
+      },
+      {
+        "type": "CUSTOM_ATTRIBUTE_DEFINITION",
+        "id": "FSWYL5DKNREKG4FBTEICV6PK",
+        "updated_at": "2024-12-02T14:07:33.832Z",
+        "created_at": "2024-12-02T14:07:33.871Z",
+        "version": 1733148453832,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "custom_attribute_definition_data": {
+          "type": "BOOLEAN",
+          "name": "Is Alcoholic",
+          "description": "Enabling this toggle on an item indicates that it contains alcohol.",
+          "source_application": {
+            "application_id": "sq0idp-w46nJ_NCNDMSOywaCY0mwA",
+            "name": "Square Online Store"
+          },
+          "allowed_object_types": [
+            "ITEM"
+          ],
+          "seller_visibility": "SELLER_VISIBILITY_READ_WRITE_VALUES",
+          "app_visibility": "APP_VISIBILITY_HIDDEN",
+          "key": "is_alcoholic"
+        }
+      },
+      {
+        "type": "CUSTOM_ATTRIBUTE_DEFINITION",
+        "id": "FEEBL25O7HDPG7FWF5B4UNQB",
+        "updated_at": "2024-12-02T14:07:34.056Z",
+        "created_at": "2024-12-02T14:07:34.088Z",
+        "version": 1733148454056,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "custom_attribute_definition_data": {
+          "type": "STRING",
+          "name": "Ecom Storefront Classic Site ID",
+          "description": "Ecommerce bridge target storefront classic site ID. Used to create site-item associations after copying items.",
+          "source_application": {
+            "application_id": "sq0idp-w46nJ_NCNDMSOywaCY0mwA",
+            "name": "Square Online Store"
+          },
+          "allowed_object_types": [
+            "ITEM"
+          ],
+          "seller_visibility": "SELLER_VISIBILITY_HIDDEN",
+          "app_visibility": "APP_VISIBILITY_HIDDEN",
+          "string_config": {
+            "enforce_uniqueness": false
+          },
+          "key": "ecom_target_classic_site_id"
+        }
+      },
+      {
+        "type": "CUSTOM_ATTRIBUTE_DEFINITION",
+        "id": "OSCYEFELQKV52GUMESMZJAOO",
+        "updated_at": "2024-12-02T14:07:34.254Z",
+        "created_at": "2024-12-02T14:07:34.288Z",
+        "version": 1733148454254,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "custom_attribute_definition_data": {
+          "type": "BOOLEAN",
+          "name": "Ecom Gifting Enabled",
+          "description": "Enables the item to be sold as a gift on Square Online.",
+          "source_application": {
+            "application_id": "sq0idp-w46nJ_NCNDMSOywaCY0mwA",
+            "name": "Square Online Store"
+          },
+          "allowed_object_types": [
+            "ITEM"
+          ],
+          "seller_visibility": "SELLER_VISIBILITY_READ_WRITE_VALUES",
+          "app_visibility": "APP_VISIBILITY_READ_WRITE_VALUES",
+          "key": "ecom_gifting_enabled"
+        }
+      },
+      {
+        "type": "QUICK_AMOUNTS_SETTINGS",
+        "id": "7BPPZPE54K4I5MLS2344S73Z",
+        "updated_at": "2025-02-09T13:40:11.162Z",
+        "created_at": "2024-05-30T19:37:17.551Z",
+        "version": 1739108411162,
+        "is_deleted": false,
+        "present_at_all_locations": false,
+        "present_at_location_ids": [
+          "CPZBMJBK8GSAN"
+        ],
+        "quick_amounts_settings_data": {
+          "option": "AUTO",
+          "eligible_for_auto_amounts": true,
+          "amounts": [
+            {
+              "type": "QUICK_AMOUNT_TYPE_AUTO",
+              "amount": {
+                "amount": 10000,
+                "currency": "USD"
+              },
+              "score": 0
+            },
+            {
+              "type": "QUICK_AMOUNT_TYPE_AUTO",
+              "amount": {
+                "amount": 5000,
+                "currency": "USD"
+              },
+              "score": 0
+            },
+            {
+              "type": "QUICK_AMOUNT_TYPE_AUTO",
+              "amount": {
+                "amount": 15000,
+                "currency": "USD"
+              },
+              "score": 0
+            }
+          ]
+        }
+      },
+      {
+        "type": "SUBSCRIPTION_PLAN",
+        "id": "AS4S5PWZAKZKAFHL3ZL2V2VW",
+        "updated_at": "2025-05-16T07:14:28.782Z",
+        "created_at": "2025-05-16T07:01:33.53Z",
+        "version": 1747379668782,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "subscription_plan_data": {
+          "name": "Domestic Violence (DV) Male Program - Weekly Autopay",
+          "subscription_plan_variations": [
+            {
+              "type": "SUBSCRIPTION_PLAN_VARIATION",
+              "id": "XCODKTQN7KNJQ6V6AXJR5KN2",
+              "updated_at": "2025-05-16T07:14:28.782Z",
+              "created_at": "2025-05-16T07:01:33.53Z",
+              "version": 1747379668782,
+              "is_deleted": false,
+              "present_at_all_locations": true,
+              "subscription_plan_variation_data": {
+                "name": "Domestic Violence (DV) Male Program - Weekly Autopay",
+                "phases": [
+                  {
+                    "uid": "U4AMGULLKYRKS2JZYO56GUFQ",
+                    "cadence": "WEEKLY",
+                    "periods": 26,
+                    "ordinal": 0,
+                    "pricing": {
+                      "type": "RELATIVE",
+                      "discount_ids": [
+                        "CYYUUZNE5Q42WW53I5ZGQF6N"
+                      ]
+                    }
+                  }
+                ],
+                "subscription_plan_id": "AS4S5PWZAKZKAFHL3ZL2V2VW"
+              }
+            }
+          ],
+          "eligible_item_ids": [
+            "UTUKICXKASVZDEBOKGSOSGAM"
+          ],
+          "all_items": false
+        }
+      },
+      {
+        "type": "SUBSCRIPTION_PLAN",
+        "id": "5SREHPJWKGLOOWDVURQOO4OZ",
+        "updated_at": "2025-05-16T07:15:14.082Z",
+        "created_at": "2025-05-16T07:15:14.129Z",
+        "version": 1747379714082,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "subscription_plan_data": {
+          "name": "Domestic Violence (DV) Female Program - Weekly Autopay",
+          "subscription_plan_variations": [
+            {
+              "type": "SUBSCRIPTION_PLAN_VARIATION",
+              "id": "3VMK4GOSSNTVU4ZEHFYD7V2D",
+              "updated_at": "2025-05-16T07:15:14.082Z",
+              "created_at": "2025-05-16T07:15:14.129Z",
+              "version": 1747379714082,
+              "is_deleted": false,
+              "present_at_all_locations": true,
+              "subscription_plan_variation_data": {
+                "name": "Domestic Violence (DV) Female Program - Weekly Autopay",
+                "phases": [
+                  {
+                    "uid": "HVOMQHHK3S5IXLHVNBE37R25",
+                    "cadence": "WEEKLY",
+                    "periods": 26,
+                    "ordinal": 0,
+                    "pricing": {
+                      "type": "RELATIVE",
+                      "discount_ids": [
+                        "7CHD2U7BIL4ZAMRLAS6KHCJ6"
+                      ]
+                    }
+                  }
+                ],
+                "subscription_plan_id": "5SREHPJWKGLOOWDVURQOO4OZ"
+              }
+            }
+          ],
+          "eligible_item_ids": [
+            "J73JAJVQYRSEPJ54DZXFBXKU"
+          ],
+          "all_items": false
+        }
+      },
+      {
+        "type": "SUBSCRIPTION_PLAN",
+        "id": "YBZMO2C7SFQ4Q3VWVYW5DIP3",
+        "updated_at": "2025-05-16T07:16:06.261Z",
+        "created_at": "2025-05-16T07:16:06.298Z",
+        "version": 1747379766261,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "subscription_plan_data": {
+          "name": "Sex Offender Responsible Thinking (SORT) Program - Weekly Autopay",
+          "subscription_plan_variations": [
+            {
+              "type": "SUBSCRIPTION_PLAN_VARIATION",
+              "id": "OZXMQS2TKSHA4KCBYOSMU2YE",
+              "updated_at": "2025-05-16T07:16:06.261Z",
+              "created_at": "2025-05-16T07:16:06.298Z",
+              "version": 1747379766261,
+              "is_deleted": false,
+              "present_at_all_locations": true,
+              "subscription_plan_variation_data": {
+                "name": "Sex Offender Responsible Thinking (SORT) Program - Weekly Autopay",
+                "phases": [
+                  {
+                    "uid": "MEHNRIKVGPG5LNUXDAYIAYUI",
+                    "cadence": "WEEKLY",
+                    "periods": 78,
+                    "ordinal": 0,
+                    "pricing": {
+                      "type": "RELATIVE",
+                      "discount_ids": [
+                        "QVDCVTJH5ICZZS3EBIFSCRHD"
+                      ]
+                    }
+                  }
+                ],
+                "subscription_plan_id": "YBZMO2C7SFQ4Q3VWVYW5DIP3"
+              }
+            }
+          ],
+          "eligible_item_ids": [
+            "QXP7DNEWOMYD36A4JCVWYRVR"
+          ],
+          "all_items": false
+        }
+      },
+      {
+        "type": "SUBSCRIPTION_PLAN",
+        "id": "XDXBZO32T2X54TVVH2ZPCLBJ",
+        "updated_at": "2025-05-16T07:16:31.475Z",
+        "created_at": "2025-05-16T07:16:31.514Z",
+        "version": 1747379791475,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "subscription_plan_data": {
+          "name": "Anger Management Program - Weekly Autopay",
+          "subscription_plan_variations": [
+            {
+              "type": "SUBSCRIPTION_PLAN_VARIATION",
+              "id": "JWKYRLIT6IXYTXGAYGWJKVWR",
+              "updated_at": "2025-05-16T07:16:31.475Z",
+              "created_at": "2025-05-16T07:16:31.514Z",
+              "version": 1747379791475,
+              "is_deleted": false,
+              "present_at_all_locations": true,
+              "subscription_plan_variation_data": {
+                "name": "Anger Management Program - Weekly Autopay",
+                "phases": [
+                  {
+                    "uid": "KCJSIQCUM65V6RUJYRAEODXI",
+                    "cadence": "WEEKLY",
+                    "periods": 12,
+                    "ordinal": 0,
+                    "pricing": {
+                      "type": "RELATIVE",
+                      "discount_ids": [
+                        "BVRXXRAWLPC7G7GKG22UYWTX"
+                      ]
+                    }
+                  }
+                ],
+                "subscription_plan_id": "XDXBZO32T2X54TVVH2ZPCLBJ"
+              }
+            }
+          ],
+          "eligible_item_ids": [
+            "ZZLLITHA7O6VBS5KURWFSQRH"
+          ],
+          "all_items": false
+        }
+      },
+      {
+        "type": "SUBSCRIPTION_PLAN",
+        "id": "ZDHW6WJQ5HWVEJLFT7LK4J5J",
+        "updated_at": "2025-05-16T07:17:13.249Z",
+        "created_at": "2025-05-16T07:17:13.296Z",
+        "version": 1747379833249,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "subscription_plan_data": {
+          "name": "Substance Abuse + Critical Thinking (SACT) Program - Weekly Autopay",
+          "subscription_plan_variations": [
+            {
+              "type": "SUBSCRIPTION_PLAN_VARIATION",
+              "id": "I4C5VMV36MEHCKDJTEW32A5Q",
+              "updated_at": "2025-05-16T07:17:13.249Z",
+              "created_at": "2025-05-16T07:17:13.296Z",
+              "version": 1747379833249,
+              "is_deleted": false,
+              "present_at_all_locations": true,
+              "subscription_plan_variation_data": {
+                "name": "Substance Abuse + Critical Thinking (SACT) Program - Weekly Autopay",
+                "phases": [
+                  {
+                    "uid": "3AVMKT2CQV6OKVMHO7QXP3GW",
+                    "cadence": "WEEKLY",
+                    "periods": 12,
+                    "ordinal": 0,
+                    "pricing": {
+                      "type": "RELATIVE",
+                      "discount_ids": [
+                        "UEASVY7BWUR7B46YQAAOIU2Z"
+                      ]
+                    }
+                  }
+                ],
+                "subscription_plan_id": "ZDHW6WJQ5HWVEJLFT7LK4J5J"
+              }
+            }
+          ],
+          "eligible_item_ids": [
+            "LFPPKNLTUAZD42PET6P64CYU"
+          ],
+          "all_items": false
+        }
+      },
+      {
+        "type": "SUBSCRIPTION_PLAN",
+        "id": "SFPA46WEXPORZCNDBUR64R6P",
+        "updated_at": "2025-05-16T07:17:49.965Z",
+        "created_at": "2025-05-16T07:17:50.002Z",
+        "version": 1747379869965,
+        "is_deleted": false,
+        "present_at_all_locations": true,
+        "subscription_plan_data": {
+          "name": "Positive Parenting Program - Weekly Autopay",
+          "subscription_plan_variations": [
+            {
+              "type": "SUBSCRIPTION_PLAN_VARIATION",
+              "id": "PFYCPJC2ZEB7OG7YQP6TI3SV",
+              "updated_at": "2025-05-16T07:17:49.965Z",
+              "created_at": "2025-05-16T07:17:50.002Z",
+              "version": 1747379869965,
+              "is_deleted": false,
+              "present_at_all_locations": true,
+              "subscription_plan_variation_data": {
+                "name": "Positive Parenting Program - Weekly Autopay",
+                "phases": [
+                  {
+                    "uid": "AHFVHFSCXXLGE2JWQVL3QISZ",
+                    "cadence": "WEEKLY",
+                    "periods": 12,
+                    "ordinal": 0,
+                    "pricing": {
+                      "type": "RELATIVE",
+                      "discount_ids": [
+                        "YOUNRXFDKQNH56L35K3PYIZL"
+                      ]
+                    }
+                  }
+                ],
+                "subscription_plan_id": "SFPA46WEXPORZCNDBUR64R6P"
+              }
+            }
+          ],
+          "eligible_item_ids": [
+            "AP2IRVYCNJQGPCE3K4OSNVGH"
+          ],
+          "all_items": false
+        }
+      }
+    ]
+  }

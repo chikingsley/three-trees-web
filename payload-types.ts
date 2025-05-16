@@ -704,7 +704,8 @@ export interface Client {
   paymentStatus?:
     | (
         | 'pending_enrollment_fee'
-        | 'pending_subscription'
+        | 'active_paid_enrollment_fee'
+        | 'pending_subscription_setup'
         | 'active_autopay'
         | 'active_paid_full'
         | 'payment_issue'
@@ -832,7 +833,7 @@ export interface Program {
   createdAt: string;
 }
 /**
- * Records of financial transactions.
+ * Records of financial transactions, primarily from Square.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payments".
@@ -840,17 +841,43 @@ export interface Program {
 export interface Payment {
   id: string;
   client: string | Client;
+  program?: (string | null) | Program;
   /**
-   * Amount in USD (e.g., 50.00 for $50.00)
+   * The unique ID of the payment from Square.
+   */
+  squarePaymentId?: string | null;
+  /**
+   * The unique ID of the subscription from Square, if this payment is for one.
+   */
+  squareSubscriptionId?: string | null;
+  /**
+   * The Square Customer ID associated with this payment.
+   */
+  squareCustomerId?: string | null;
+  /**
+   * Payment amount in currency units (e.g., dollars). Assumed to be in the system currency (e.g., USD).
    */
   amount: number;
-  paymentDate: string;
-  type: 'enrollment_fee' | 'session_fee' | 'full_program_prepayment' | 'other';
   /**
-   * e.g., Square Online, Manual Offline
+   * Currency code (e.g., USD).
+   */
+  currency: string;
+  /**
+   * The status of the payment (e.g., COMPLETED, FAILED, PENDING). Often from Square.
+   */
+  status: string;
+  /**
+   * The date and time the payment was processed.
+   */
+  paymentDate: string;
+  /**
+   * The nature of the payment.
+   */
+  type: 'enrollment_fee' | 'session_fee_subscription' | 'session_fee_payg' | 'program_fee_pif' | 'refund' | 'other';
+  /**
+   * e.g., Square Online, Manual Offline, Check
    */
   paymentMethod?: string | null;
-  squareTransactionId?: string | null;
   notes?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -1159,11 +1186,16 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface PaymentsSelect<T extends boolean = true> {
   client?: T;
+  program?: T;
+  squarePaymentId?: T;
+  squareSubscriptionId?: T;
+  squareCustomerId?: T;
   amount?: T;
+  currency?: T;
+  status?: T;
   paymentDate?: T;
   type?: T;
   paymentMethod?: T;
-  squareTransactionId?: T;
   notes?: T;
   updatedAt?: T;
   createdAt?: T;

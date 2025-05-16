@@ -232,7 +232,8 @@ export const Clients: CollectionConfig = {
       type: 'select',
       options: [
         { label: 'Pending Enrollment Fee', value: 'pending_enrollment_fee' },
-        { label: 'Pending Subscription', value: 'pending_subscription' },
+        { label: 'Active - Paid Enrollment Fee', value: 'active_paid_enrollment_fee' },
+        { label: 'Pending Subscription Setup', value: 'pending_subscription_setup' },
         { label: 'Active - Autopaying', value: 'active_autopay' },
         { label: 'Active - Paid in Full', value: 'active_paid_full' },
         { label: 'Payment Issue', value: 'payment_issue' },

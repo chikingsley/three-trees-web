@@ -1,0 +1,117 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+title: Payload CMS Collection Conventions
+tags: ["payload", "collection", "typescript", "backend"]
+---
+
+# Payload CMS Collection Conventions
+
+This guide outlines the standard conventions for defining Payload CMS collections in this project. Adhering to these conventions ensures consistency and leverages Payload's features effectively.
+
+## File Structure and Naming
+
+- Each collection should be defined in its own TypeScript file (e.g., `Users.ts`, `Products.ts`) within the `[collections](mdc:collections)` directory.
+- Collection file names should be PascalCase and typically plural (e.g., `Posts.ts`).
+
+## Core Configuration (`CollectionConfig`)
+
+Refer to the official documentation for all available options: [Payload Collection Config Docs](mdc:https:/payloadcms.com/docs/configuration/collections)
+
+A typical collection definition looks like this:
+
+```typescript
+import type { CollectionConfig } from 'payload'; // Correct import
+// Optionally import your User type for access control clarity
+// import type { User } from '../payload-types';
+
+export const MyCollection: CollectionConfig = {
+  slug: 'my-collection', // URL-friendly, unique identifier
+  admin: {
+    useAsTitle: 'title', // Or 'name', 'email', 'id', etc.
+    // ... other admin options
+  },
+  access: {
+    // Access control functions, see below
+  },
+  fields: [
+    // Field definitions
+  ],
+  // ... other collection options (hooks, versions, etc.)
+};
+```
+
+### Key Properties:
+
+1.  **Import `CollectionConfig`**:
+    *   Always import `CollectionConfig` from `'payload'`:
+        ```typescript
+        import type { CollectionConfig } from 'payload';
+        ```
+2.  **`slug` (Required)**:
+    *   A unique, URL-friendly string (e.g., `'posts'`, `'user-profiles'`).
+    *   This is a **mandatory** field.
+3.  **`fields` (Required)**:
+    *   An array defining the schema of the collection.
+    *   This is a **mandatory** field.
+    *   Field names (`name` property within a field object) should generally be **camelCase** (e.g., `firstName`, `articleBody`).
+4.  **`admin`**:
+    *   Controls how the collection appears and behaves in the Admin Panel.
+    *   `useAsTitle`: Specify a top-level field (e.g., `'name'`, `'title'`, `'email'`) to be used as the document title in the admin UI. If not set, the document `id` is used.
+5.  **`access`**:
+    *   Defines permissions for `create`, `read`, `update`, and `delete` operations.
+    *   **Pattern**: Use inline arrow functions directly destructuring `req`.
+        ```typescript
+        access: {
+          read: ({ req }) => {
+            if (!req.user) { // Always check if user exists
+              return false; // Or true for public readability
+            }
+            // Example: Allow admins to read everything
+            if (req.user.roles?.includes('admin')) {
+              return true;
+            }
+            // Example: Allow users to read their own documents (if applicable)
+            // if (req.user.id === /* document owner id */) {
+            //   return true;
+            // }
+            return false;
+          },
+          create: ({ req }) => { // req.user might be undefined for public creation
+            if (req.user?.roles?.includes('admin')) return true;
+            // Allow public creation (e.g., for a contact form or public enrollment)
+            // return true; 
+            return false;
+          },
+          update: ({ req }) => {
+            if (!req.user) return false;
+            if (req.user.roles?.includes('admin')) return true;
+            return false;
+          },
+          delete: ({ req }) => {
+            if (!req.user) return false;
+            if (req.user.roles?.includes('admin')) return true;
+            return false;
+          },
+        },
+        ```
+    *   Always check for `req.user` before accessing its properties.
+    *   Use optional chaining (`req.user.roles?.includes('someRole')`) for safety when checking roles.
+    *   Ensure that any roles used (e.g., `'admin'`, `'editor'`) are consistent with your `User` collection's role definitions and the generated types in `[payload-types.ts](mdc:payload-types.ts)`.
+
+## Example Collection Files:
+
+- For a client management collection, see `[collections/Clients.ts](mdc:collections/Clients.ts)`.
+- For a payments tracking collection, see `[collections/Payments.ts](mdc:collections/Payments.ts)`.
+
+## General Best Practices:
+
+-   Keep collections focused on a single type of data.
+-   Organize fields logically. Use `row` and `collapsible` layout fields for better admin UI.
+-   Leverage hooks for side effects (e.g., sending emails after creation, data validation/manipulation).
+-   For collections that manage user authentication, configure the `auth: { ... }` property.
+
+By following these conventions, we can maintain a clean, understandable, and robust Payload CMS setup.

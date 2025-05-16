@@ -1,17 +1,39 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, ComponentType } from 'react';
 import dynamic from 'next/dynamic';
 import MyDocument from './mydocument';
 import './app.css';
 
-const ClientPDFViewer = dynamic(() =>
-  import('@react-pdf/renderer').then((mod) => mod.PDFViewer),
+// Using dynamic import with Suspense for better loading state handling
+const PDFViewer = dynamic<React.ComponentProps<typeof import('@react-pdf/renderer').PDFViewer>>(
+  () => import('@react-pdf/renderer').then((mod) => mod.PDFViewer as ComponentType<React.ComponentProps<typeof mod.PDFViewer>>),
   {
     ssr: false,
-    loading: () => <p>Loading PDF Viewer...</p>,
+    loading: () => <div className="flex items-center justify-center h-full">Loading PDF Viewer...</div>,
   }
 );
+
+// Wrap the PDF viewer in a client component that handles the dynamic import
+function PDFViewerWrapper({ children, ...props }: React.ComponentProps<typeof PDFViewer>) {
+  const [isMounted, setIsMounted] = useState(false);
+  
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return <div className="flex items-center justify-center h-full">Initializing PDF Viewer...</div>;
+  }
+
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-full">Loading PDF...</div>}>
+      <PDFViewer {...props}>
+        {children}
+      </PDFViewer>
+    </Suspense>
+  );
+}
 
 const initialClientData = {
   name: 'Jane Doe',
@@ -31,11 +53,7 @@ const initialSelectedClass = "Working with Anger";
 
 // Main App component for the page
 function App() {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  // Removed unused client state since we're handling mounting in the PDFViewerWrapper
 
   const documentProps = {
     clientData: initialClientData,
@@ -44,14 +62,9 @@ function App() {
 
   return (
     <div className="App" style={{ height: '100vh' }}>
-
-      {isClient && (
-        <>
-          <ClientPDFViewer width="100%" height="100%" className="pdf-viewer">
-            <MyDocument {...documentProps} />
-          </ClientPDFViewer>
-        </>
-      )}
+      <PDFViewerWrapper width="100%" height="100%" className="pdf-viewer">
+        <MyDocument {...documentProps} />
+      </PDFViewerWrapper>
     </div>
   );
 }
