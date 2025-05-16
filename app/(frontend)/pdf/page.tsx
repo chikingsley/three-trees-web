@@ -1,8 +1,18 @@
 'use client'
 
+import dynamic from 'next/dynamic';
 import MyDocument from './mydocument';
-import { PDFViewer } from '@react-pdf/renderer';
+// Removed direct import: import { PDFViewer } from '@react-pdf/renderer';
 import './app.css';
+
+// Dynamically import PDFViewer with SSR turned off
+const PDFViewerWithNoSSR = dynamic(
+  () => import('@react-pdf/renderer').then(mod => mod.PDFViewer),
+  { 
+    ssr: false, 
+    loading: () => <p style={{ textAlign: 'center', marginTop: '50px' }}>Loading PDF Viewer...</p> 
+  }
+);
 
 const initialClientData = {
   name: 'Jane Doe',
@@ -31,9 +41,10 @@ function App() {
 
   return (
     <div className="App" style={{ height: '100vh' }}>
-      <PDFViewer width="100%" height="100%" className="pdf-viewer">
+      {/* Use the dynamically imported PDFViewer */}
+      <PDFViewerWithNoSSR width="100%" height="100%" className="pdf-viewer">
         <MyDocument {...documentProps} />
-      </PDFViewer>
+      </PDFViewerWithNoSSR>
     </div>
   );
 }
