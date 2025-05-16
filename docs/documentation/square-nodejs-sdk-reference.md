@@ -1,16 +1,14 @@
-<!-- markdownlint-disable -->
-
 # Reference
 
 ## Mobile
 
-client.mobile.authorizationCode({ ...params }) -> Square.CreateMobileAuthorizationCodeResponse
+### client.mobile.authorizationCode({ ...params }) -> Square.CreateMobileAuthorizationCodeResponse
 
 ```typescript
 client.mobile.authorizationCode({ ...params }) -> Square.CreateMobileAuthorizationCodeResponse
 ```
 
-### Description
+#### Description (mobile authorization code)
 
 **Note:** This endpoint is used by the deprecated Reader SDK.
 Developers should update their integration to use the [Mobile Payments SDK](https://developer.squareup.com/docs/mobile-payments-sdk), which includes its own authorization methods.
@@ -21,14 +19,14 @@ Authorization codes are one-time-use codes and expire 60 minutes after being iss
 
 The `Authorization` header you provide to this endpoint must have the following format:
 
-```
+```typescript
 Authorization: Bearer ACCESS_TOKEN
 ```
 
 Replace `ACCESS_TOKEN` with a
 [valid production authorization credential](https://developer.squareup.com/docs/build-basics/access-tokens).
 
-### Usage
+#### Usage (mobile authorization code)
 
 ```typescript
 await client.mobile.authorizationCode({
@@ -36,7 +34,7 @@ await client.mobile.authorizationCode({
 });
 ```
 
-### Parameters
+#### Parameters (mobile authorization code)
 
 **request:** `Square.CreateMobileAuthorizationCodeRequest`
 
@@ -44,9 +42,9 @@ await client.mobile.authorizationCode({
 
 ## OAuth
 
-client.oAuth.revokeToken({ ...params }) -> Square.RevokeTokenResponse
+### client.oAuth.revokeToken({ ...params }) -> Square.RevokeTokenResponse
 
-### Description
+#### Description (revoke token)
 
 Revokes an access token generated with the OAuth flow.
 
@@ -56,14 +54,14 @@ endpoint revokes all of them, regardless of which token you specify.
 **Important:** The `Authorization` header for this endpoint must have the
 following format:
 
-```
+```typescript
 Authorization: Client APPLICATION_SECRET
 ```
 
 Replace `APPLICATION_SECRET` with the application secret on the **OAuth**
 page for your application in the Developer Dashboard.
 
-### Usage
+#### Usage (revoke token)
 
 ```typescript
 await client.oAuth.revokeToken({
@@ -72,15 +70,15 @@ await client.oAuth.revokeToken({
 });
 ```
 
-### Parameters
+#### Parameters (revoke token)
 
 **request:** `Square.RevokeTokenRequest`
 
 **requestOptions:** `OAuth.RequestOptions`
 
-client.oAuth.obtainToken({ ...params }) -> Square.ObtainTokenResponse
+### client.oAuth.obtainToken({ ...params }) -> Square.ObtainTokenResponse
 
-### Description
+#### Description (obtain token)
 
 Returns an OAuth access token and refresh token using the `authorization_code`
 or `refresh_token` grant type.
@@ -106,7 +104,7 @@ expires in 24 hours.
 **Important:** OAuth tokens should be encrypted and stored on a secure server.
 Application clients should never interact directly with OAuth tokens.
 
-### Usage
+#### Usage (obtain token)
 
 ```typescript
 await client.oAuth.obtainToken({
@@ -117,15 +115,15 @@ await client.oAuth.obtainToken({
 });
 ```
 
-### Parameters
+#### Parameters (obtain token)
 
 **request:** `Square.ObtainTokenRequest`
 
 **requestOptions:** `OAuth.RequestOptions`
 
-client.oAuth.retrieveTokenStatus() -> Square.RetrieveTokenStatusResponse
+### client.oAuth.retrieveTokenStatus() -> Square.RetrieveTokenStatusResponse
 
-### Description
+#### Description (retrieve token status)
 
 Returns information about an [OAuth access token](https://developer.squareup.com/docs/build-basics/access-tokens#get-an-oauth-access-token) or an application’s [personal access token](https://developer.squareup.com/docs/build-basics/access-tokens#get-a-personal-access-token).
 
@@ -133,7 +131,7 @@ Add the access token to the Authorization header of the request.
 
 **Important:** The `Authorization` header you provide to this endpoint must have the following format:
 
-```
+```typescript
 Authorization: Bearer ACCESS_TOKEN
 ```
 
@@ -142,37 +140,37 @@ where `ACCESS_TOKEN` is a
 
 If the access token is expired or not a valid access token, the endpoint returns an `UNAUTHORIZED` error.
 
-### Usage
+#### Usage (retrieve token status)
 
 ```typescript
 await client.oAuth.retrieveTokenStatus();
 ```
 
-### Parameters
+#### Parameters (retrieve token status)
 
 **requestOptions:** `OAuth.RequestOptions`
 
-client.oAuth.authorize() -> void
+### client.oAuth.authorize() -> void
 
-### Usage
+#### Usage (authorize)
 
 ```typescript
 await client.oAuth.authorize();
 ```
 
-### Parameters
+#### Parameters (authorize)
 
 **requestOptions:** `OAuth.RequestOptions`
 
 ## V1Transactions
 
-client.v1Transactions.v1ListOrders({ ...params }) -> Square.V1Order[]
+### client.v1Transactions.v1ListOrders({ ...params }) -> Square.V1Order[]
 
-### Description
+#### Description (v1 list orders)
 
 Provides summary information for a merchant's online store orders.
 
-### Usage
+#### Usage (v1 list orders)
 
 ```typescript
 await client.v1Transactions.v1ListOrders({
@@ -180,19 +178,19 @@ await client.v1Transactions.v1ListOrders({
 });
 ```
 
-### Parameters
+#### Parameters (v1 list orders)
 
 **request:** `Square.V1ListOrdersRequest`
 
 **requestOptions:** `V1Transactions.RequestOptions`
 
-client.v1Transactions.v1RetrieveOrder({ ...params }) -> Square.V1Order
+### client.v1Transactions.v1RetrieveOrder({ ...params }) -> Square.V1Order
 
-### Description
+#### Description (v1 retrieve order)
 
 Provides comprehensive information for a single online store order, including the order's history.
 
-### Usage
+#### Usage (v1 retrieve order)
 
 ```typescript
 await client.v1Transactions.v1RetrieveOrder({
@@ -201,19 +199,19 @@ await client.v1Transactions.v1RetrieveOrder({
 });
 ```
 
-### Parameters
+#### Parameters (v1 retrieve order)
 
 **request:** `Square.V1RetrieveOrderRequest`
 
 **requestOptions:** `V1Transactions.RequestOptions`
 
-client.v1Transactions.v1UpdateOrder({ ...params }) -> Square.V1Order
+### client.v1Transactions.v1UpdateOrder({ ...params }) -> Square.V1Order
 
-### Description
+#### Description (v1 update order)
 
 Updates the details of an online store order. Every update you perform on an order corresponds to one of three actions:
 
-### Usage
+#### Usage (v1 update order)
 
 ```typescript
 await client.v1Transactions.v1UpdateOrder({
@@ -223,7 +221,7 @@ await client.v1Transactions.v1UpdateOrder({
 });
 ```
 
-### Parameters
+#### Parameters (v1 update order)
 
 **request:** `Square.V1UpdateOrderRequest`
 
@@ -231,9 +229,9 @@ await client.v1Transactions.v1UpdateOrder({
 
 ## ApplePay
 
-client.applePay.registerDomain({ ...params }) -> Square.RegisterDomainResponse
+### client.applePay.registerDomain({ ...params }) -> Square.RegisterDomainResponse
 
-### Description
+#### Description (apple pay register domain)
 
 Activates a domain for use with Apple Pay on the Web and Square. A validation
 is performed on this domain by Apple to ensure that it is properly set up as
@@ -243,14 +241,14 @@ This endpoint provides an easy way for platform developers to bulk activate
 Apple Pay on the Web with Square for merchants using their platform.
 
 Note: You will need to host a valid domain verification file on your domain to support Apple Pay. The
-current version of this file is always available at https://app.squareup.com/digital-wallets/apple-pay/apple-developer-merchantid-domain-association,
+current version of this file is always available at [https://app.squareup.com/digital-wallets/apple-pay/apple-developer-merchantid-domain-association](https://app.squareup.com/digital-wallets/apple-pay/apple-developer-merchantid-domain-association),
 and should be hosted at `.well_known/apple-developer-merchantid-domain-association` on your
 domain. This file is subject to change; we strongly recommend checking for updates regularly and avoiding
 long-lived caches that might not keep in sync with the correct file version.
 
 To learn more about the Web Payments SDK and how to add Apple Pay, see [Take an Apple Pay Payment](https://developer.squareup.com/docs/web-payments/apple-pay).
 
-### Usage
+#### Usage (apple pay register domain)
 
 ```typescript
 await client.applePay.registerDomain({
@@ -258,7 +256,7 @@ await client.applePay.registerDomain({
 });
 ```
 
-### Parameters
+#### Parameters (apple pay register domain)
 
 **request:** `Square.RegisterDomainRequest`
 
@@ -266,13 +264,13 @@ await client.applePay.registerDomain({
 
 ## BankAccounts
 
-client.bankAccounts.list({ ...params }) -> core.Page
+### client.bankAccounts.list({ ...params }) -> core.Page
 
-### Description
+#### Description (bank accounts list)
 
 Returns a list of [BankAccount](entity:BankAccount) objects linked to a Square account.
 
-### Usage
+#### Usage (bank accounts list)
 
 ```typescript
 const response = await client.bankAccounts.list();
@@ -287,19 +285,19 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (bank accounts list)
 
 **request:** `Square.ListBankAccountsRequest`
 
 **requestOptions:** `BankAccounts.RequestOptions`
 
-client.bankAccounts.getByV1Id({ ...params }) -> Square.GetBankAccountByV1IdResponse
+### client.bankAccounts.getByV1Id({ ...params }) -> Square.GetBankAccountByV1IdResponse
 
-### Description
+#### Description (bank accounts get by v1 id)
 
 Returns details of a [BankAccount](entity:BankAccount) identified by V1 bank account ID.
 
-### Usage
+#### Usage (bank accounts get by v1 id)
 
 ```typescript
 await client.bankAccounts.getByV1Id({
@@ -307,20 +305,20 @@ await client.bankAccounts.getByV1Id({
 });
 ```
 
-### Parameters
+#### Parameters (bank accounts get by v1 id)
 
 **request:** `Square.GetByV1IdBankAccountsRequest`
 
 **requestOptions:** `BankAccounts.RequestOptions`
 
-client.bankAccounts.get({ ...params }) -> Square.GetBankAccountResponse
+### client.bankAccounts.get({ ...params }) -> Square.GetBankAccountResponse
 
-### Description
+#### Description (bank accounts get)
 
 Returns details of a [BankAccount](entity:BankAccount)
 linked to a Square account.
 
-### Usage
+#### Usage (bank accounts get)
 
 ```typescript
 await client.bankAccounts.get({
@@ -328,7 +326,7 @@ await client.bankAccounts.get({
 });
 ```
 
-### Parameters
+#### Parameters (bank accounts get)
 
 **request:** `Square.GetBankAccountsRequest`
 
@@ -336,16 +334,16 @@ await client.bankAccounts.get({
 
 ## Bookings
 
-client.bookings.list({ ...params }) -> core.Page
+### client.bookings.list({ ...params }) -> core.Page
 
-### Description
+#### Description (bookings list)
 
 Retrieve a collection of bookings.
 
 To call this endpoint with buyer-level permissions, set `APPOINTMENTS_READ` for the OAuth scope.
 To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_READ` and `APPOINTMENTS_READ` for the OAuth scope.
 
-### Usage
+#### Usage (bookings list)
 
 ```typescript
 const response = await client.bookings.list();
@@ -360,15 +358,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (bookings list)
 
 **request:** `Square.ListBookingsRequest`
 
 **requestOptions:** `Bookings.RequestOptions`
 
-client.bookings.create({ ...params }) -> Square.CreateBookingResponse
+### client.bookings.create({ ...params }) -> Square.CreateBookingResponse
 
-### Description
+#### Description (bookings create)
 
 Creates a booking.
 
@@ -386,7 +384,7 @@ To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_WRITE
 For calls to this endpoint with seller-level permissions to succeed, the seller must have subscribed to _Appointments Plus_
 or _Appointments Premium_.
 
-### Usage
+#### Usage (bookings create)
 
 ```typescript
 await client.bookings.create({
@@ -394,22 +392,22 @@ await client.bookings.create({
 });
 ```
 
-### Parameters
+#### Parameters (bookings create)
 
 **request:** `Square.CreateBookingRequest`
 
 **requestOptions:** `Bookings.RequestOptions`
 
-client.bookings.searchAvailability({ ...params }) -> Square.SearchAvailabilityResponse
+### client.bookings.searchAvailability({ ...params }) -> Square.SearchAvailabilityResponse
 
-### Description
+#### Description (bookings search availability)
 
 Searches for availabilities for booking.
 
 To call this endpoint with buyer-level permissions, set `APPOINTMENTS_READ` for the OAuth scope.
 To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_READ` and `APPOINTMENTS_READ` for the OAuth scope.
 
-### Usage
+#### Usage (bookings search availability)
 
 ```typescript
 await client.bookings.searchAvailability({
@@ -421,22 +419,22 @@ await client.bookings.searchAvailability({
 });
 ```
 
-### Parameters
+#### Parameters (bookings search availability)
 
 **request:** `Square.SearchAvailabilityRequest`
 
 **requestOptions:** `Bookings.RequestOptions`
 
-client.bookings.bulkRetrieveBookings({ ...params }) -> Square.BulkRetrieveBookingsResponse
+### client.bookings.bulkRetrieveBookings({ ...params }) -> Square.BulkRetrieveBookingsResponse
 
-### Description
+#### Description (bookings bulk retrieve bookings)
 
 Bulk-Retrieves a list of bookings by booking IDs.
 
 To call this endpoint with buyer-level permissions, set `APPOINTMENTS_READ` for the OAuth scope.
 To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_READ` and `APPOINTMENTS_READ` for the OAuth scope.
 
-### Usage
+#### Usage (bookings bulk retrieve bookings)
 
 ```typescript
 await client.bookings.bulkRetrieveBookings({
@@ -444,35 +442,35 @@ await client.bookings.bulkRetrieveBookings({
 });
 ```
 
-### Parameters
+#### Parameters (bookings bulk retrieve bookings)
 
 **request:** `Square.BulkRetrieveBookingsRequest`
 
 **requestOptions:** `Bookings.RequestOptions`
 
-client.bookings.getBusinessProfile() -> Square.GetBusinessBookingProfileResponse
+### client.bookings.getBusinessProfile() -> Square.GetBusinessBookingProfileResponse
 
-### Description
+#### Description (bookings get business profile)
 
 Retrieves a seller's booking profile.
 
-### Usage
+#### Usage (bookings get business profile)
 
 ```typescript
 await client.bookings.getBusinessProfile();
 ```
 
-### Parameters
+#### Parameters (bookings get business profile)
 
 **requestOptions:** `Bookings.RequestOptions`
 
-client.bookings.retrieveLocationBookingProfile({ ...params }) -> Square.RetrieveLocationBookingProfileResponse
+### client.bookings.retrieveLocationBookingProfile({ ...params }) -> Square.RetrieveLocationBookingProfileResponse
 
-### Description
+#### Description (bookings retrieve location booking profile)
 
 Retrieves a seller's location booking profile.
 
-### Usage
+#### Usage (bookings retrieve location booking profile)
 
 ```typescript
 await client.bookings.retrieveLocationBookingProfile({
@@ -480,19 +478,19 @@ await client.bookings.retrieveLocationBookingProfile({
 });
 ```
 
-### Parameters
+#### Parameters (bookings retrieve location booking profile)
 
 **request:** `Square.RetrieveLocationBookingProfileRequest`
 
 **requestOptions:** `Bookings.RequestOptions`
 
-client.bookings.bulkRetrieveTeamMemberBookingProfiles({ ...params }) -> Square.BulkRetrieveTeamMemberBookingProfilesResponse
+### client.bookings.bulkRetrieveTeamMemberBookingProfiles({ ...params }) -> Square.BulkRetrieveTeamMemberBookingProfilesResponse
 
-### Description
+#### Description (bookings bulk retrieve team member booking profiles)
 
 Retrieves one or more team members' booking profiles.
 
-### Usage
+#### Usage (bookings bulk retrieve team member booking profiles)
 
 ```typescript
 await client.bookings.bulkRetrieveTeamMemberBookingProfiles({
@@ -500,22 +498,22 @@ await client.bookings.bulkRetrieveTeamMemberBookingProfiles({
 });
 ```
 
-### Parameters
+#### Parameters (bookings bulk retrieve team member booking profiles)
 
 **request:** `Square.BulkRetrieveTeamMemberBookingProfilesRequest`
 
 **requestOptions:** `Bookings.RequestOptions`
 
-client.bookings.get({ ...params }) -> Square.GetBookingResponse
+### client.bookings.get({ ...params }) -> Square.GetBookingResponse
 
-### Description
+#### Description (bookings get)
 
 Retrieves a booking.
 
 To call this endpoint with buyer-level permissions, set `APPOINTMENTS_READ` for the OAuth scope.
 To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_READ` and `APPOINTMENTS_READ` for the OAuth scope.
 
-### Usage
+#### Usage (bookings get)
 
 ```typescript
 await client.bookings.get({
@@ -523,15 +521,15 @@ await client.bookings.get({
 });
 ```
 
-### Parameters
+#### Parameters (bookings get)
 
 **request:** `Square.GetBookingsRequest`
 
 **requestOptions:** `Bookings.RequestOptions`
 
-client.bookings.update({ ...params }) -> Square.UpdateBookingResponse
+### client.bookings.update({ ...params }) -> Square.UpdateBookingResponse
 
-### Description
+#### Description (bookings update)
 
 Updates a booking.
 
@@ -541,7 +539,7 @@ To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_WRITE
 For calls to this endpoint with seller-level permissions to succeed, the seller must have subscribed to _Appointments Plus_
 or _Appointments Premium_.
 
-### Usage
+#### Usage (bookings update)
 
 ```typescript
 await client.bookings.update({
@@ -550,15 +548,15 @@ await client.bookings.update({
 });
 ```
 
-### Parameters
+#### Parameters (bookings update)
 
 **request:** `Square.UpdateBookingRequest`
 
 **requestOptions:** `Bookings.RequestOptions`
 
-client.bookings.cancel({ ...params }) -> Square.CancelBookingResponse
+### client.bookings.cancel({ ...params }) -> Square.CancelBookingResponse
 
-### Description
+#### Description (bookings cancel)
 
 Cancels an existing booking.
 
@@ -568,7 +566,7 @@ To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_WRITE
 For calls to this endpoint with seller-level permissions to succeed, the seller must have subscribed to _Appointments Plus_
 or _Appointments Premium_.
 
-### Usage
+#### Usage (bookings cancel)
 
 ```typescript
 await client.bookings.cancel({
@@ -576,7 +574,7 @@ await client.bookings.cancel({
 });
 ```
 
-### Parameters
+#### Parameters (bookings cancel)
 
 **request:** `Square.CancelBookingRequest`
 
@@ -584,14 +582,14 @@ await client.bookings.cancel({
 
 ## Cards
 
-client.cards.list({ ...params }) -> core.Page
+### client.cards.list({ ...params }) -> core.Page
 
-### Description
+#### Description (cards list)
 
 Retrieves a list of cards owned by the account making the request.
 A max of 25 cards will be returned.
 
-### Usage
+#### Usage (cards list)
 
 ```typescript
 const response = await client.cards.list();
@@ -606,19 +604,19 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (cards list)
 
 **request:** `Square.ListCardsRequest`
 
 **requestOptions:** `Cards.RequestOptions`
 
-client.cards.create({ ...params }) -> Square.CreateCardResponse
+### client.cards.create({ ...params }) -> Square.CreateCardResponse
 
-### Description
+#### Description (cards create)
 
 Adds a card on file to an existing merchant.
 
-### Usage
+#### Usage (cards create)
 
 ```typescript
 await client.cards.create({
@@ -640,19 +638,19 @@ await client.cards.create({
 });
 ```
 
-### Parameters
+#### Parameters (cards create)
 
 **request:** `Square.CreateCardRequest`
 
 **requestOptions:** `Cards.RequestOptions`
 
-client.cards.get({ ...params }) -> Square.GetCardResponse
+### client.cards.get({ ...params }) -> Square.GetCardResponse
 
-### Description
+#### Description (cards get)
 
 Retrieves details for a specific Card.
 
-### Usage
+#### Usage (cards get)
 
 ```typescript
 await client.cards.get({
@@ -660,20 +658,20 @@ await client.cards.get({
 });
 ```
 
-### Parameters
+#### Parameters (cards get)
 
 **request:** `Square.GetCardsRequest`
 
 **requestOptions:** `Cards.RequestOptions`
 
-client.cards.disable({ ...params }) -> Square.DisableCardResponse
+### client.cards.disable({ ...params }) -> Square.DisableCardResponse
 
-### Description
+#### Description (cards disable)
 
 Disables the card, preventing any further updates or charges.
 Disabling an already disabled card is allowed but has no effect.
 
-### Usage
+#### Usage (cards disable)
 
 ```typescript
 await client.cards.disable({
@@ -681,7 +679,7 @@ await client.cards.disable({
 });
 ```
 
-### Parameters
+#### Parameters (cards disable)
 
 **request:** `Square.DisableCardsRequest`
 
@@ -689,9 +687,9 @@ await client.cards.disable({
 
 ## Catalog
 
-client.catalog.batchDelete({ ...params }) -> Square.BatchDeleteCatalogObjectsResponse
+### client.catalog.batchDelete({ ...params }) -> Square.BatchDeleteCatalogObjectsResponse
 
-### Description
+#### Description (catalog batch delete)
 
 Deletes a set of [CatalogItem](entity:CatalogItem)s based on the
 provided list of target IDs and returns a set of successfully deleted IDs in
@@ -708,7 +706,7 @@ To ensure consistency, only one delete request is processed at a time per seller
 While one (batch or non-batch) delete request is being processed, other (batched and non-batched)
 delete requests are rejected with the `429` error code.
 
-### Usage
+#### Usage (catalog batch delete)
 
 ```typescript
 await client.catalog.batchDelete({
@@ -716,15 +714,15 @@ await client.catalog.batchDelete({
 });
 ```
 
-### Parameters
+#### Parameters (catalog batch delete)
 
 **request:** `Square.BatchDeleteCatalogObjectsRequest`
 
 **requestOptions:** `Catalog.RequestOptions`
 
-client.catalog.batchGet({ ...params }) -> Square.BatchGetCatalogObjectsResponse
+### client.catalog.batchGet({ ...params }) -> Square.BatchGetCatalogObjectsResponse
 
-### Description
+#### Description (catalog batch get)
 
 Returns a set of objects based on the provided ID.
 Each [CatalogItem](entity:CatalogItem) returned in the set includes all of its
@@ -733,7 +731,7 @@ child information including: all of its
 its [CatalogModifierList](entity:CatalogModifierList) objects, and the ids of
 any [CatalogTax](entity:CatalogTax) objects that apply to it.
 
-### Usage
+#### Usage (catalog batch get)
 
 ```typescript
 await client.catalog.batchGet({
@@ -742,15 +740,15 @@ await client.catalog.batchGet({
 });
 ```
 
-### Parameters
+#### Parameters (catalog batch get)
 
 **request:** `Square.BatchGetCatalogObjectsRequest`
 
 **requestOptions:** `Catalog.RequestOptions`
 
-client.catalog.batchUpsert({ ...params }) -> Square.BatchUpsertCatalogObjectsResponse
+### client.catalog.batchUpsert({ ...params }) -> Square.BatchUpsertCatalogObjectsResponse
 
-### Description
+#### Description (catalog batch upsert)
 
 Creates or updates up to 10,000 target objects based on the provided
 list of objects. The target objects are grouped into batches and each batch is
@@ -766,7 +764,7 @@ To ensure consistency, only one update request is processed at a time per seller
 While one (batch or non-batch) update request is being processed, other (batched and non-batched)
 update requests are rejected with the `429` error code.
 
-### Usage
+#### Usage (catalog batch upsert)
 
 ```typescript
 await client.catalog.batchUpsert({
@@ -796,32 +794,32 @@ await client.catalog.batchUpsert({
 });
 ```
 
-### Parameters
+#### Parameters (catalog batch upsert)
 
 **request:** `Square.BatchUpsertCatalogObjectsRequest`
 
 **requestOptions:** `Catalog.RequestOptions`
 
-client.catalog.info() -> Square.CatalogInfoResponse
+### client.catalog.info() -> Square.CatalogInfoResponse
 
-### Description
+#### Description (catalog info)
 
 Retrieves information about the Square Catalog API, such as batch size
 limits that can be used by the `BatchUpsertCatalogObjects` endpoint.
 
-### Usage
+#### Usage (catalog info)
 
 ```typescript
 await client.catalog.info();
 ```
 
-### Parameters
+#### Parameters (catalog info)
 
 **requestOptions:** `Catalog.RequestOptions`
 
-client.catalog.list({ ...params }) -> core.Page
+### client.catalog.list({ ...params }) -> core.Page
 
-### Description
+#### Description (catalog list)
 
 Returns a list of all [CatalogObject](entity:CatalogObject)s of the specified types in the catalog.
 
@@ -832,7 +830,7 @@ for example, "`ITEM`, `ITEM_VARIATION`, `MODIFIER`, `MODIFIER_LIST`, `CATEGORY`,
 deleted catalog items, use [SearchCatalogObjects](api-endpoint:Catalog-SearchCatalogObjects)
 and set the `include_deleted_objects` attribute value to `true`.
 
-### Usage
+#### Usage (catalog list)
 
 ```typescript
 const response = await client.catalog.list();
@@ -847,15 +845,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (catalog list)
 
 **request:** `Square.ListCatalogRequest`
 
 **requestOptions:** `Catalog.RequestOptions`
 
-client.catalog.search({ ...params }) -> Square.SearchCatalogObjectsResponse
+### client.catalog.search({ ...params }) -> Square.SearchCatalogObjectsResponse
 
-### Description
+#### Description (catalog search)
 
 Searches for [CatalogObject](entity:CatalogObject) of any type by matching supported search attribute values,
 excluding custom attribute values on items or item variations, against one or more of the specified query filters.
@@ -867,12 +865,8 @@ endpoint in the following aspects:
 - `SearchCatalogItems` supports the custom attribute query filters to return items or item variations that contain custom attribute values, where `SearchCatalogObjects` does not.
 - `SearchCatalogItems` does not support the `include_deleted_objects` filter to search for deleted items or item variations, whereas `SearchCatalogObjects` does.
 - The both endpoints have different call conventions, including the query filter formats.
-  
-  
-  
-  
 
-### Usage
+#### Usage (catalog search)
 
 ```typescript
 await client.catalog.search({
@@ -887,15 +881,15 @@ await client.catalog.search({
 });
 ```
 
-### Parameters
+#### Parameters (catalog search)
 
 **request:** `Square.SearchCatalogObjectsRequest`
 
 **requestOptions:** `Catalog.RequestOptions`
 
-client.catalog.searchItems({ ...params }) -> Square.SearchCatalogItemsResponse
+### client.catalog.searchItems({ ...params }) -> Square.SearchCatalogItemsResponse
 
-### Description
+#### Description (catalog search items)
 
 Searches for catalog items or item variations by matching supported search attribute values, including
 custom attribute values, against one or more of the specified query filters.
@@ -907,12 +901,8 @@ endpoint in the following aspects:
 - `SearchCatalogItems` supports the custom attribute query filters to return items or item variations that contain custom attribute values, where `SearchCatalogObjects` does not.
 - `SearchCatalogItems` does not support the `include_deleted_objects` filter to search for deleted items or item variations, whereas `SearchCatalogObjects` does.
 - The both endpoints use different call conventions, including the query filter formats.
-  
-  
-  
-  
 
-### Usage
+#### Usage (catalog search items)
 
 ```typescript
 await client.catalog.searchItems({
@@ -946,21 +936,21 @@ await client.catalog.searchItems({
 });
 ```
 
-### Parameters
+#### Parameters (catalog search items)
 
 **request:** `Square.SearchCatalogItemsRequest`
 
 **requestOptions:** `Catalog.RequestOptions`
 
-client.catalog.updateItemModifierLists({ ...params }) -> Square.UpdateItemModifierListsResponse
+### client.catalog.updateItemModifierLists({ ...params }) -> Square.UpdateItemModifierListsResponse
 
-### Description
+#### Description (catalog update item modifier lists)
 
 Updates the [CatalogModifierList](entity:CatalogModifierList) objects
 that apply to the targeted [CatalogItem](entity:CatalogItem) without having
 to perform an upsert on the entire item.
 
-### Usage
+#### Usage (catalog update item modifier lists)
 
 ```typescript
 await client.catalog.updateItemModifierLists({
@@ -970,21 +960,21 @@ await client.catalog.updateItemModifierLists({
 });
 ```
 
-### Parameters
+#### Parameters (catalog update item modifier lists)
 
 **request:** `Square.UpdateItemModifierListsRequest`
 
 **requestOptions:** `Catalog.RequestOptions`
 
-client.catalog.updateItemTaxes({ ...params }) -> Square.UpdateItemTaxesResponse
+### client.catalog.updateItemTaxes({ ...params }) -> Square.UpdateItemTaxesResponse
 
-### Description
+#### Description (catalog update item taxes)
 
 Updates the [CatalogTax](entity:CatalogTax) objects that apply to the
 targeted [CatalogItem](entity:CatalogItem) without having to perform an
 upsert on the entire item.
 
-### Usage
+#### Usage (catalog update item taxes)
 
 ```typescript
 await client.catalog.updateItemTaxes({
@@ -994,7 +984,7 @@ await client.catalog.updateItemTaxes({
 });
 ```
 
-### Parameters
+#### Parameters (catalog update item taxes)
 
 **request:** `Square.UpdateItemTaxesRequest`
 
@@ -1002,9 +992,9 @@ await client.catalog.updateItemTaxes({
 
 ## Customers
 
-client.customers.list({ ...params }) -> core.Page
+### client.customers.list({ ...params }) -> core.Page
 
-### Description
+#### Description (customers list)
 
 Lists customer profiles associated with a Square account.
 
@@ -1012,7 +1002,7 @@ Under normal operating conditions, newly created or updated customer profiles be
 for the listing operation in well under 30 seconds. Occasionally, propagation of the new or updated
 profiles can take closer to one minute or longer, especially during network incidents and outages.
 
-### Usage
+#### Usage (customers list)
 
 ```typescript
 const response = await client.customers.list();
@@ -1027,15 +1017,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (customers list)
 
 **request:** `Square.ListCustomersRequest`
 
 **requestOptions:** `Customers.RequestOptions`
 
-client.customers.create({ ...params }) -> Square.CreateCustomerResponse
+### client.customers.create({ ...params }) -> Square.CreateCustomerResponse
 
-### Description
+#### Description (customers create)
 
 Creates a new customer for a business.
 
@@ -1047,12 +1037,8 @@ endpoint:
 - `company_name`
 - `email_address`
 - `phone_number`
-  
-  
-  
-  
 
-### Usage
+#### Usage (customers create)
 
 ```typescript
 await client.customers.create({
@@ -1073,15 +1059,15 @@ await client.customers.create({
 });
 ```
 
-### Parameters
+#### Parameters (customers create)
 
 **request:** `Square.CreateCustomerRequest`
 
 **requestOptions:** `Customers.RequestOptions`
 
-client.customers.batchCreate({ ...params }) -> Square.BulkCreateCustomersResponse
+### client.customers.batchCreate({ ...params }) -> Square.BulkCreateCustomersResponse
 
-### Description
+#### Description (customers batch create)
 
 Creates multiple [customer profiles](entity:Customer) for a business.
 
@@ -1094,12 +1080,8 @@ You must provide at least one of the following values in each create request:
 - `company_name`
 - `email_address`
 - `phone_number`
-  
-  
-  
-  
 
-### Usage
+#### Usage (customers batch create)
 
 ```typescript
 await client.customers.batchCreate({
@@ -1140,21 +1122,21 @@ await client.customers.batchCreate({
 });
 ```
 
-### Parameters
+#### Parameters (customers batch create)
 
 **request:** `Square.BulkCreateCustomersRequest`
 
 **requestOptions:** `Customers.RequestOptions`
 
-client.customers.bulkDeleteCustomers({ ...params }) -> Square.BulkDeleteCustomersResponse
+### client.customers.bulkDeleteCustomers({ ...params }) -> Square.BulkDeleteCustomersResponse
 
-### Description
+#### Description (customers bulk delete customers)
 
 Deletes multiple customer profiles.
 
 The endpoint takes a list of customer IDs and returns a map of responses.
 
-### Usage
+#### Usage (customers bulk delete customers)
 
 ```typescript
 await client.customers.bulkDeleteCustomers({
@@ -1162,21 +1144,21 @@ await client.customers.bulkDeleteCustomers({
 });
 ```
 
-### Parameters
+#### Parameters (customers bulk delete customers)
 
 **request:** `Square.BulkDeleteCustomersRequest`
 
 **requestOptions:** `Customers.RequestOptions`
 
-client.customers.bulkRetrieveCustomers({ ...params }) -> Square.BulkRetrieveCustomersResponse
+### client.customers.bulkRetrieveCustomers({ ...params }) -> Square.BulkRetrieveCustomersResponse
 
-### Description
+#### Description (customers bulk retrieve customers)
 
 Retrieves multiple customer profiles.
 
 This endpoint takes a list of customer IDs and returns a map of responses.
 
-### Usage
+#### Usage (customers bulk retrieve customers)
 
 ```typescript
 await client.customers.bulkRetrieveCustomers({
@@ -1184,21 +1166,21 @@ await client.customers.bulkRetrieveCustomers({
 });
 ```
 
-### Parameters
+#### Parameters (customers bulk retrieve customers)
 
 **request:** `Square.BulkRetrieveCustomersRequest`
 
 **requestOptions:** `Customers.RequestOptions`
 
-client.customers.bulkUpdateCustomers({ ...params }) -> Square.BulkUpdateCustomersResponse
+### client.customers.bulkUpdateCustomers({ ...params }) -> Square.BulkUpdateCustomersResponse
 
-### Description
+#### Description (customers bulk update customers)
 
 Updates multiple customer profiles.
 
 This endpoint takes a map of individual update requests and returns a map of responses.
 
-### Usage
+#### Usage (customers bulk update customers)
 
 ```typescript
 await client.customers.bulkUpdateCustomers({
@@ -1217,15 +1199,15 @@ await client.customers.bulkUpdateCustomers({
 });
 ```
 
-### Parameters
+#### Parameters (customers bulk update customers)
 
 **request:** `Square.BulkUpdateCustomersRequest`
 
 **requestOptions:** `Customers.RequestOptions`
 
-client.customers.search({ ...params }) -> Square.SearchCustomersResponse
+### client.customers.search({ ...params }) -> Square.SearchCustomersResponse
 
-### Description
+#### Description (customers search)
 
 Searches the customer profiles associated with a Square account using one or more supported query filters.
 
@@ -1237,7 +1219,7 @@ Under normal operating conditions, newly created or updated customer profiles be
 for the search operation in well under 30 seconds. Occasionally, propagation of the new or updated
 profiles can take closer to one minute or longer, especially during network incidents and outages.
 
-### Usage
+#### Usage (customers search)
 
 ```typescript
 await client.customers.search({
@@ -1267,19 +1249,19 @@ await client.customers.search({
 });
 ```
 
-### Parameters
+#### Parameters (customers search)
 
 **request:** `Square.SearchCustomersRequest`
 
 **requestOptions:** `Customers.RequestOptions`
 
-client.customers.get({ ...params }) -> Square.GetCustomerResponse
+### client.customers.get({ ...params }) -> Square.GetCustomerResponse
 
-### Description
+#### Description (customers get)
 
 Returns details for a single customer.
 
-### Usage
+#### Usage (customers get)
 
 ```typescript
 await client.customers.get({
@@ -1287,22 +1269,22 @@ await client.customers.get({
 });
 ```
 
-### Parameters
+#### Parameters (customers get)
 
 **request:** `Square.GetCustomersRequest`
 
 **requestOptions:** `Customers.RequestOptions`
 
-client.customers.update({ ...params }) -> Square.UpdateCustomerResponse
+### client.customers.update({ ...params }) -> Square.UpdateCustomerResponse
 
-### Description
+#### Description (customers update)
 
 Updates a customer profile. This endpoint supports sparse updates, so only new or changed fields are required in the request.
 To add or update a field, specify the new value. To remove a field, specify `null`.
 
 To update a customer profile that was created by merging existing profiles, you must use the ID of the newly created profile.
 
-### Usage
+#### Usage (customers update)
 
 ```typescript
 await client.customers.update({
@@ -1313,21 +1295,21 @@ await client.customers.update({
 });
 ```
 
-### Parameters
+#### Parameters (customers update)
 
 **request:** `Square.UpdateCustomerRequest`
 
 **requestOptions:** `Customers.RequestOptions`
 
-client.customers.delete({ ...params }) -> Square.DeleteCustomerResponse
+### client.customers.delete({ ...params }) -> Square.DeleteCustomerResponse
 
-### Description
+#### Description (customers delete)
 
 Deletes a customer profile from a business.
 
 To delete a customer profile that was created by merging existing profiles, you must use the ID of the newly created profile.
 
-### Usage
+#### Usage (customers delete)
 
 ```typescript
 await client.customers.delete({
@@ -1335,7 +1317,7 @@ await client.customers.delete({
 });
 ```
 
-### Parameters
+#### Parameters (customers delete)
 
 **request:** `Square.DeleteCustomersRequest`
 
@@ -1343,14 +1325,14 @@ await client.customers.delete({
 
 ## Devices
 
-client.devices.list({ ...params }) -> core.Page
+### client.devices.list({ ...params }) -> core.Page
 
-### Description
+#### Description (devices list)
 
 List devices associated with the merchant. Currently, only Terminal API
 devices are supported.
 
-### Usage
+#### Usage (devices list)
 
 ```typescript
 const response = await client.devices.list();
@@ -1365,19 +1347,19 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (devices list)
 
 **request:** `Square.ListDevicesRequest`
 
 **requestOptions:** `Devices.RequestOptions`
 
-client.devices.get({ ...params }) -> Square.GetDeviceResponse
+### client.devices.get({ ...params }) -> Square.GetDeviceResponse
 
-### Description
+#### Description (devices get)
 
 Retrieves Device with the associated `device_id`.
 
-### Usage
+#### Usage (devices get)
 
 ```typescript
 await client.devices.get({
@@ -1385,7 +1367,7 @@ await client.devices.get({
 });
 ```
 
-### Parameters
+#### Parameters (devices get)
 
 **request:** `Square.GetDevicesRequest`
 
@@ -1393,13 +1375,13 @@ await client.devices.get({
 
 ## Disputes
 
-client.disputes.list({ ...params }) -> core.Page
+### client.disputes.list({ ...params }) -> core.Page
 
-### Description
+#### Description (disputes list)
 
 Returns a list of disputes associated with a particular account.
 
-### Usage
+#### Usage (disputes list)
 
 ```typescript
 const response = await client.disputes.list();
@@ -1414,19 +1396,19 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (disputes list)
 
 **request:** `Square.ListDisputesRequest`
 
 **requestOptions:** `Disputes.RequestOptions`
 
-client.disputes.get({ ...params }) -> Square.GetDisputeResponse
+### client.disputes.get({ ...params }) -> Square.GetDisputeResponse
 
-### Description
+#### Description (disputes get)
 
 Returns details about a specific dispute.
 
-### Usage
+#### Usage (disputes get)
 
 ```typescript
 await client.disputes.get({
@@ -1434,15 +1416,15 @@ await client.disputes.get({
 });
 ```
 
-### Parameters
+#### Parameters (disputes get)
 
 **request:** `Square.GetDisputesRequest`
 
 **requestOptions:** `Disputes.RequestOptions`
 
-client.disputes.accept({ ...params }) -> Square.AcceptDisputeResponse
+### client.disputes.accept({ ...params }) -> Square.AcceptDisputeResponse
 
-### Description
+#### Description (disputes accept)
 
 Accepts the loss on a dispute. Square returns the disputed amount to the cardholder and
 updates the dispute state to ACCEPTED.
@@ -1450,7 +1432,7 @@ updates the dispute state to ACCEPTED.
 Square debits the disputed amount from the seller’s Square account. If the Square account
 does not have sufficient funds, Square debits the associated bank account.
 
-### Usage
+#### Usage (disputes accept)
 
 ```typescript
 await client.disputes.accept({
@@ -1458,20 +1440,20 @@ await client.disputes.accept({
 });
 ```
 
-### Parameters
+#### Parameters (disputes accept)
 
 **request:** `Square.AcceptDisputesRequest`
 
 **requestOptions:** `Disputes.RequestOptions`
 
-client.disputes.createEvidenceFile({ ...params }) -> Square.CreateDisputeEvidenceFileResponse
+### client.disputes.createEvidenceFile({ ...params }) -> Square.CreateDisputeEvidenceFileResponse
 
-### Description
+#### Description (disputes create evidence file)
 
 Uploads a file to use as evidence in a dispute challenge. The endpoint accepts HTTP
 multipart/form-data file uploads in HEIC, HEIF, JPEG, PDF, PNG, and TIFF formats.
 
-### Usage
+#### Usage (disputes create evidence file)
 
 ```typescript
 await client.disputes.createEvidenceFile({
@@ -1479,19 +1461,19 @@ await client.disputes.createEvidenceFile({
 });
 ```
 
-### Parameters
+#### Parameters (disputes create evidence file)
 
 **request:** `Square.CreateEvidenceFileDisputesRequest`
 
 **requestOptions:** `Disputes.RequestOptions`
 
-client.disputes.createEvidenceText({ ...params }) -> Square.CreateDisputeEvidenceTextResponse
+### client.disputes.createEvidenceText({ ...params }) -> Square.CreateDisputeEvidenceTextResponse
 
-### Description
+#### Description (disputes create evidence text)
 
 Uploads text to use as evidence for a dispute challenge.
 
-### Usage
+#### Usage (disputes create evidence text)
 
 ```typescript
 await client.disputes.createEvidenceText({
@@ -1502,15 +1484,15 @@ await client.disputes.createEvidenceText({
 });
 ```
 
-### Parameters
+#### Parameters (disputes create evidence text)
 
 **request:** `Square.CreateDisputeEvidenceTextRequest`
 
 **requestOptions:** `Disputes.RequestOptions`
 
-client.disputes.submitEvidence({ ...params }) -> Square.SubmitEvidenceResponse
+### client.disputes.submitEvidence({ ...params }) -> Square.SubmitEvidenceResponse
 
-### Description
+#### Description (disputes submit evidence)
 
 Submits evidence to the cardholder's bank.
 
@@ -1520,7 +1502,7 @@ using the [CreateDisputeEvidenceFile](api-endpoint:Disputes-CreateDisputeEvidenc
 evidence automatically provided by Square, when available. Evidence cannot be removed from
 a dispute after submission.
 
-### Usage
+#### Usage (disputes submit evidence)
 
 ```typescript
 await client.disputes.submitEvidence({
@@ -1528,7 +1510,7 @@ await client.disputes.submitEvidence({
 });
 ```
 
-### Parameters
+#### Parameters (disputes submit evidence)
 
 **request:** `Square.SubmitEvidenceDisputesRequest`
 
@@ -1536,11 +1518,11 @@ await client.disputes.submitEvidence({
 
 ## Employees
 
-client.employees.list({ ...params }) -> core.Page
+### client.employees.list({ ...params }) -> core.Page
 
-### Description
+#### Description (employees list)
 
-### Usage
+#### Usage (employees list)
 
 ```typescript
 const response = await client.employees.list();
@@ -1555,15 +1537,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (employees list)
 
 **request:** `Square.ListEmployeesRequest`
 
 **requestOptions:** `Employees.RequestOptions`
 
-client.employees.get({ ...params }) -> Square.GetEmployeeResponse
+### client.employees.get({ ...params }) -> Square.GetEmployeeResponse
 
-### Description
+#### Description (employees get)
 
 ### Usage
 
@@ -1573,7 +1555,7 @@ await client.employees.get({
 });
 ```
 
-### Parameters
+#### Parameters (employees get)
 
 **request:** `Square.GetEmployeesRequest`
 
@@ -1581,71 +1563,71 @@ await client.employees.get({
 
 ## Events
 
-client.events.searchEvents({ ...params }) -> Square.SearchEventsResponse
+### client.events.searchEvents({ ...params }) -> Square.SearchEventsResponse
 
-### Description
+#### Description (events search events)
 
 Search for Square API events that occur within a 28-day timeframe.
 
-### Usage
+#### Usage (events search events)
 
 ```typescript
 await client.events.searchEvents();
 ```
 
-### Parameters
+#### Parameters (events search events)
 
 **request:** `Square.SearchEventsRequest`
 
 **requestOptions:** `Events.RequestOptions`
 
-client.events.disableEvents() -> Square.DisableEventsResponse
+### client.events.disableEvents() -> Square.DisableEventsResponse
 
-### Description
+#### Description (events disable events)
 
 Disables events to prevent them from being searchable.
 All events are disabled by default. You must enable events to make them searchable.
 Disabling events for a specific time period prevents them from being searchable, even if you re-enable them later.
 
-### Usage
+#### Usage (events disable events)
 
 ```typescript
 await client.events.disableEvents();
 ```
 
-### Parameters
+#### Parameters (events disable events)
 
 **requestOptions:** `Events.RequestOptions`
 
-client.events.enableEvents() -> Square.EnableEventsResponse
+### client.events.enableEvents() -> Square.EnableEventsResponse
 
-### Description
+#### Description (events enable events)
 
 Enables events to make them searchable. Only events that occur while in the enabled state are searchable.
 
-### Usage
+#### Usage (events enable events)
 
 ```typescript
 await client.events.enableEvents();
 ```
 
-### Parameters
+#### Parameters (events enable events)
 
 **requestOptions:** `Events.RequestOptions`
 
-client.events.listEventTypes({ ...params }) -> Square.ListEventTypesResponse
+### client.events.listEventTypes({ ...params }) -> Square.ListEventTypesResponse
 
-### Description
+#### Description (events list event types)
 
 Lists all event types that you can subscribe to as webhooks or query using the Events API.
 
-### Usage
+#### Usage (events list event types)
 
 ```typescript
 await client.events.listEventTypes();
 ```
 
-### Parameters
+#### Parameters (events list event types)
 
 **request:** `Square.ListEventTypesRequest`
 
@@ -1653,14 +1635,14 @@ await client.events.listEventTypes();
 
 ## GiftCards
 
-client.giftCards.list({ ...params }) -> core.Page
+### client.giftCards.list({ ...params }) -> core.Page
 
-### Description
+#### Description (gift cards list)
 
 Lists all gift cards. You can specify optional filters to retrieve
 a subset of the gift cards. Results are sorted by `created_at` in ascending order.
 
-### Usage
+#### Usage (gift cards list)
 
 ```typescript
 const response = await client.giftCards.list();
@@ -1675,15 +1657,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (gift cards list)
 
 **request:** `Square.ListGiftCardsRequest`
 
 **requestOptions:** `GiftCards.RequestOptions`
 
-client.giftCards.create({ ...params }) -> Square.CreateGiftCardResponse
+### client.giftCards.create({ ...params }) -> Square.CreateGiftCardResponse
 
-### Description
+#### Description (gift cards create)
 
 Creates a digital gift card or registers a physical (plastic) gift card. The resulting gift card
 has a `PENDING` state. To activate a gift card so that it can be redeemed for purchases, call
@@ -1691,7 +1673,7 @@ has a `PENDING` state. To activate a gift card so that it can be redeemed for pu
 activity with the initial balance. Alternatively, you can use [RefundPayment](api-endpoint:Refunds-RefundPayment)
 to refund a payment to the new gift card.
 
-### Usage
+#### Usage (gift cards create)
 
 ```typescript
 await client.giftCards.create({
@@ -1703,19 +1685,19 @@ await client.giftCards.create({
 });
 ```
 
-### Parameters
+#### Parameters (gift cards create)
 
 **request:** `Square.CreateGiftCardRequest`
 
 **requestOptions:** `GiftCards.RequestOptions`
 
-client.giftCards.getFromGan({ ...params }) -> Square.GetGiftCardFromGanResponse
+### client.giftCards.getFromGan({ ...params }) -> Square.GetGiftCardFromGanResponse
 
-### Description
+#### Description (gift cards get from gan)
 
 Retrieves a gift card using the gift card account number (GAN).
 
-### Usage
+#### Usage (gift cards get from gan)
 
 ```typescript
 await client.giftCards.getFromGan({
@@ -1723,19 +1705,19 @@ await client.giftCards.getFromGan({
 });
 ```
 
-### Parameters
+#### Parameters (gift cards get from gan)
 
 **request:** `Square.GetGiftCardFromGanRequest`
 
 **requestOptions:** `GiftCards.RequestOptions`
 
-client.giftCards.getFromNonce({ ...params }) -> Square.GetGiftCardFromNonceResponse
+### client.giftCards.getFromNonce({ ...params }) -> Square.GetGiftCardFromNonceResponse
 
-### Description
+#### Description (gift cards get from nonce)
 
 Retrieves a gift card using a secure payment token that represents the gift card.
 
-### Usage
+#### Usage (gift cards get from nonce)
 
 ```typescript
 await client.giftCards.getFromNonce({
@@ -1743,19 +1725,19 @@ await client.giftCards.getFromNonce({
 });
 ```
 
-### Parameters
+#### Parameters (gift cards get from nonce)
 
 **request:** `Square.GetGiftCardFromNonceRequest`
 
 **requestOptions:** `GiftCards.RequestOptions`
 
-client.giftCards.linkCustomer({ ...params }) -> Square.LinkCustomerToGiftCardResponse
+### client.giftCards.linkCustomer({ ...params }) -> Square.LinkCustomerToGiftCardResponse
 
-### Description
+#### Description (gift cards link customer)
 
 Links a customer to a gift card, which is also referred to as adding a card on file.
 
-### Usage
+#### Usage (gift cards link customer)
 
 ```typescript
 await client.giftCards.linkCustomer({
@@ -1764,19 +1746,19 @@ await client.giftCards.linkCustomer({
 });
 ```
 
-### Parameters
+#### Parameters (gift cards link customer)
 
 **request:** `Square.LinkCustomerToGiftCardRequest`
 
 **requestOptions:** `GiftCards.RequestOptions`
 
-client.giftCards.unlinkCustomer({ ...params }) -> Square.UnlinkCustomerFromGiftCardResponse
+### client.giftCards.unlinkCustomer({ ...params }) -> Square.UnlinkCustomerFromGiftCardResponse
 
-### Description
+#### Description (gift cards unlink customer)
 
 Unlinks a customer from a gift card, which is also referred to as removing a card on file.
 
-### Usage
+#### Usage (gift cards unlink customer)
 
 ```typescript
 await client.giftCards.unlinkCustomer({
@@ -1785,19 +1767,19 @@ await client.giftCards.unlinkCustomer({
 });
 ```
 
-### Parameters
+#### Parameters (gift cards unlink customer)
 
 **request:** `Square.UnlinkCustomerFromGiftCardRequest`
 
 **requestOptions:** `GiftCards.RequestOptions`
 
-client.giftCards.get({ ...params }) -> Square.GetGiftCardResponse
+### client.giftCards.get({ ...params }) -> Square.GetGiftCardResponse
 
-### Description
+#### Description (gift cards get)
 
 Retrieves a gift card using the gift card ID.
 
-### Usage
+#### Usage (gift cards get)
 
 ```typescript
 await client.giftCards.get({
@@ -1805,7 +1787,7 @@ await client.giftCards.get({
 });
 ```
 
-### Parameters
+#### Parameters (gift cards get)
 
 **request:** `Square.GetGiftCardsRequest`
 
@@ -1813,14 +1795,14 @@ await client.giftCards.get({
 
 ## Inventory
 
-client.inventory.deprecatedGetAdjustment({ ...params }) -> Square.GetInventoryAdjustmentResponse
+### client.inventory.deprecatedGetAdjustment({ ...params }) -> Square.GetInventoryAdjustmentResponse
 
-### Description
+#### Description (inventory deprecated get adjustment)
 
 Deprecated version of [RetrieveInventoryAdjustment](api-endpoint:Inventory-RetrieveInventoryAdjustment) after the endpoint URL
 is updated to conform to the standard convention.
 
-### Usage
+#### Usage (inventory deprecated get adjustment)
 
 ```typescript
 await client.inventory.deprecatedGetAdjustment({
@@ -1828,20 +1810,20 @@ await client.inventory.deprecatedGetAdjustment({
 });
 ```
 
-### Parameters
+#### Parameters (inventory deprecated get adjustment)
 
 **request:** `Square.DeprecatedGetAdjustmentInventoryRequest`
 
 **requestOptions:** `Inventory.RequestOptions`
 
-client.inventory.getAdjustment({ ...params }) -> Square.GetInventoryAdjustmentResponse
+### client.inventory.getAdjustment({ ...params }) -> Square.GetInventoryAdjustmentResponse
 
-### Description
+#### Description (inventory get adjustment)
 
 Returns the [InventoryAdjustment](entity:InventoryAdjustment) object
 with the provided `adjustment_id`.
 
-### Usage
+#### Usage (inventory get adjustment)
 
 ```typescript
 await client.inventory.getAdjustment({
@@ -1849,20 +1831,20 @@ await client.inventory.getAdjustment({
 });
 ```
 
-### Parameters
+#### Parameters (inventory get adjustment)
 
 **request:** `Square.GetAdjustmentInventoryRequest`
 
 **requestOptions:** `Inventory.RequestOptions`
 
-client.inventory.deprecatedBatchChange({ ...params }) -> Square.BatchChangeInventoryResponse
+### client.inventory.deprecatedBatchChange({ ...params }) -> Square.BatchChangeInventoryResponse
 
-### Description
+#### Description (inventory deprecated batch change)
 
 Deprecated version of [BatchChangeInventory](api-endpoint:Inventory-BatchChangeInventory) after the endpoint URL
 is updated to conform to the standard convention.
 
-### Usage
+#### Usage (inventory deprecated batch change)
 
 ```typescript
 await client.inventory.deprecatedBatchChange({
@@ -1885,20 +1867,20 @@ await client.inventory.deprecatedBatchChange({
 });
 ```
 
-### Parameters
+#### Parameters (inventory deprecated batch change)
 
 **request:** `Square.BatchChangeInventoryRequest`
 
 **requestOptions:** `Inventory.RequestOptions`
 
-client.inventory.deprecatedBatchGetChanges({ ...params }) -> Square.BatchGetInventoryChangesResponse
+### client.inventory.deprecatedBatchGetChanges({ ...params }) -> Square.BatchGetInventoryChangesResponse
 
-### Description
+#### Description (inventory deprecated batch get changes)
 
 Deprecated version of [BatchRetrieveInventoryChanges](api-endpoint:Inventory-BatchRetrieveInventoryChanges) after the endpoint URL
 is updated to conform to the standard convention.
 
-### Usage
+#### Usage (inventory deprecated batch get changes)
 
 ```typescript
 await client.inventory.deprecatedBatchGetChanges({
@@ -1911,20 +1893,20 @@ await client.inventory.deprecatedBatchGetChanges({
 });
 ```
 
-### Parameters
+#### Parameters (inventory deprecated batch get changes)
 
 **request:** `Square.BatchRetrieveInventoryChangesRequest`
 
 **requestOptions:** `Inventory.RequestOptions`
 
-client.inventory.deprecatedBatchGetCounts({ ...params }) -> Square.BatchGetInventoryCountsResponse
+### client.inventory.deprecatedBatchGetCounts({ ...params }) -> Square.BatchGetInventoryCountsResponse
 
-### Description
+#### Description (inventory deprecated batch get counts)
 
 Deprecated version of [BatchRetrieveInventoryCounts](api-endpoint:Inventory-BatchRetrieveInventoryCounts) after the endpoint URL
 is updated to conform to the standard convention.
 
-### Usage
+#### Usage (inventory deprecated batch get counts)
 
 ```typescript
 await client.inventory.deprecatedBatchGetCounts({
@@ -1934,15 +1916,15 @@ await client.inventory.deprecatedBatchGetCounts({
 });
 ```
 
-### Parameters
+#### Parameters (inventory deprecated batch get counts)
 
 **request:** `Square.BatchGetInventoryCountsRequest`
 
 **requestOptions:** `Inventory.RequestOptions`
 
-client.inventory.batchCreateChanges({ ...params }) -> Square.BatchChangeInventoryResponse
+### client.inventory.batchCreateChanges({ ...params }) -> Square.BatchChangeInventoryResponse
 
-### Description
+#### Description (inventory batch create changes)
 
 Applies adjustments and counts to the provided item quantities.
 
@@ -1950,7 +1932,7 @@ On success: returns the current calculated counts for all objects
 referenced in the request.
 On failure: returns a list of related errors.
 
-### Usage
+#### Usage (inventory batch create changes)
 
 ```typescript
 await client.inventory.batchCreateChanges({
@@ -1973,15 +1955,15 @@ await client.inventory.batchCreateChanges({
 });
 ```
 
-### Parameters
+#### Parameters (inventory batch create changes)
 
 **request:** `Square.BatchChangeInventoryRequest`
 
 **requestOptions:** `Inventory.RequestOptions`
 
-client.inventory.batchGetChanges({ ...params }) -> core.Page
+### client.inventory.batchGetChanges({ ...params }) -> core.Page
 
-### Description
+#### Description (inventory batch get changes)
 
 Returns historical physical counts and adjustments based on the
 provided filter criteria.
@@ -1992,7 +1974,7 @@ Results are paginated and sorted in ascending order according their
 BatchRetrieveInventoryChanges is a catch-all query endpoint for queries
 that cannot be handled by other, simpler endpoints.
 
-### Usage
+#### Usage (inventory batch get changes)
 
 ```typescript
 const response = await client.inventory.batchGetChanges({
@@ -2021,15 +2003,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (inventory batch get changes)
 
 **request:** `Square.BatchRetrieveInventoryChangesRequest`
 
 **requestOptions:** `Inventory.RequestOptions`
 
-client.inventory.batchGetCounts({ ...params }) -> core.Page
+### client.inventory.batchGetCounts({ ...params }) -> core.Page
 
-### Description
+#### Description (inventory batch get counts)
 
 Returns current counts for the provided
 [CatalogObject](entity:CatalogObject)s at the requested
@@ -2043,7 +2025,7 @@ time (based on the server timestamp for the most recent change) are
 returned. This allows clients to perform a "sync" operation, for example
 in response to receiving a Webhook notification.
 
-### Usage
+#### Usage (inventory batch get counts)
 
 ```typescript
 const response = await client.inventory.batchGetCounts({
@@ -2066,20 +2048,20 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (inventory batch get counts)
 
 **request:** `Square.BatchGetInventoryCountsRequest`
 
 **requestOptions:** `Inventory.RequestOptions`
 
-client.inventory.deprecatedGetPhysicalCount({ ...params }) -> Square.GetInventoryPhysicalCountResponse
+### client.inventory.deprecatedGetPhysicalCount({ ...params }) -> Square.GetInventoryPhysicalCountResponse
 
-### Description
+#### Description (inventory deprecated get physical count)
 
 Deprecated version of [RetrieveInventoryPhysicalCount](api-endpoint:Inventory-RetrieveInventoryPhysicalCount) after the endpoint URL
 is updated to conform to the standard convention.
 
-### Usage
+#### Usage (inventory deprecated get physical count)
 
 ```typescript
 await client.inventory.deprecatedGetPhysicalCount({
@@ -2087,20 +2069,20 @@ await client.inventory.deprecatedGetPhysicalCount({
 });
 ```
 
-### Parameters
+#### Parameters (inventory deprecated get physical count)
 
 **request:** `Square.DeprecatedGetPhysicalCountInventoryRequest`
 
 **requestOptions:** `Inventory.RequestOptions`
 
-client.inventory.getPhysicalCount({ ...params }) -> Square.GetInventoryPhysicalCountResponse
+### client.inventory.getPhysicalCount({ ...params }) -> Square.GetInventoryPhysicalCountResponse
 
-### Description
+#### Description (inventory get physical count)
 
 Returns the [InventoryPhysicalCount](entity:InventoryPhysicalCount)
 object with the provided `physical_count_id`.
 
-### Usage
+#### Usage (inventory get physical count)
 
 ```typescript
 await client.inventory.getPhysicalCount({
@@ -2108,20 +2090,20 @@ await client.inventory.getPhysicalCount({
 });
 ```
 
-### Parameters
+#### Parameters (inventory get physical count)
 
 **request:** `Square.GetPhysicalCountInventoryRequest`
 
 **requestOptions:** `Inventory.RequestOptions`
 
-client.inventory.getTransfer({ ...params }) -> Square.GetInventoryTransferResponse
+### client.inventory.getTransfer({ ...params }) -> Square.GetInventoryTransferResponse
 
-### Description
+#### Description (inventory get transfer)
 
 Returns the [InventoryTransfer](entity:InventoryTransfer) object
 with the provided `transfer_id`.
 
-### Usage
+#### Usage (inventory get transfer)
 
 ```typescript
 await client.inventory.getTransfer({
@@ -2129,22 +2111,22 @@ await client.inventory.getTransfer({
 });
 ```
 
-### Parameters
+#### Parameters (inventory get transfer)
 
 **request:** `Square.GetTransferInventoryRequest`
 
 **requestOptions:** `Inventory.RequestOptions`
 
-client.inventory.get({ ...params }) -> core.Page
+### client.inventory.get({ ...params }) -> core.Page
 
-### Description
+#### Description (inventory get)
 
 Retrieves the current calculated stock count for a given
 [CatalogObject](entity:CatalogObject) at a given set of
 [Location](entity:Location)s. Responses are paginated and unsorted.
 For more sophisticated queries, use a batch endpoint.
 
-### Usage
+#### Usage (inventory get)
 
 ```typescript
 const response = await client.inventory.get({
@@ -2163,15 +2145,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (inventory get)
 
 **request:** `Square.GetInventoryRequest`
 
 **requestOptions:** `Inventory.RequestOptions`
 
-client.inventory.changes({ ...params }) -> core.Page
+### client.inventory.changes({ ...params }) -> core.Page
 
-### Description
+#### Description (inventory changes)
 
 Returns a set of physical counts and inventory adjustments for the
 provided [CatalogObject](entity:CatalogObject) at the requested
@@ -2187,7 +2169,7 @@ There are no limits on how far back the caller can page. This endpoint can be
 used to display recent changes for a specific item. For more
 sophisticated queries, use a batch endpoint.
 
-### Usage
+#### Usage (inventory changes)
 
 ```typescript
 const response = await client.inventory.changes({
@@ -2206,7 +2188,7 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (inventory changes)
 
 **request:** `Square.ChangesInventoryRequest`
 
@@ -2214,15 +2196,15 @@ while (page.hasNextPage()) {
 
 ## Invoices
 
-client.invoices.list({ ...params }) -> core.Page
+### client.invoices.list({ ...params }) -> core.Page
 
-### Description
+#### Description (invoices list)
 
 Returns a list of invoices for a given location. The response
 is paginated. If truncated, the response includes a `cursor` that you  
 use in a subsequent request to retrieve the next set of invoices.
 
-### Usage
+#### Usage (invoices list)
 
 ```typescript
 const response = await client.invoices.list({
@@ -2241,15 +2223,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (invoices list)
 
 **request:** `Square.ListInvoicesRequest`
 
 **requestOptions:** `Invoices.RequestOptions`
 
-client.invoices.create({ ...params }) -> Square.CreateInvoiceResponse
+### client.invoices.create({ ...params }) -> Square.CreateInvoiceResponse
 
-### Description
+#### Description (invoices create)
 
 Creates a draft [invoice](entity:Invoice)
 for an order created using the Orders API.
@@ -2257,7 +2239,7 @@ for an order created using the Orders API.
 A draft invoice remains in your account and no action is taken.
 You must publish the invoice before Square can process it (send it to the customer's email address or charge the customer’s card on file).
 
-### Usage
+#### Usage (invoices create)
 
 ```typescript
 await client.invoices.create({
@@ -2312,15 +2294,15 @@ await client.invoices.create({
 });
 ```
 
-### Parameters
+#### Parameters (invoices create)
 
 **request:** `Square.CreateInvoiceRequest`
 
 **requestOptions:** `Invoices.RequestOptions`
 
-client.invoices.search({ ...params }) -> Square.SearchInvoicesResponse
+### client.invoices.search({ ...params }) -> Square.SearchInvoicesResponse
 
-### Description
+#### Description (invoices search)
 
 Searches for invoices from a location specified in
 the filter. You can optionally specify customers in the filter for whom to
@@ -2330,7 +2312,7 @@ optionally one customer.
 The response is paginated. If truncated, the response includes a `cursor`
 that you use in a subsequent request to retrieve the next set of invoices.
 
-### Usage
+#### Usage (invoices search)
 
 ```typescript
 await client.invoices.search({
@@ -2348,19 +2330,19 @@ await client.invoices.search({
 });
 ```
 
-### Parameters
+#### Parameters (invoices search)
 
 **request:** `Square.SearchInvoicesRequest`
 
 **requestOptions:** `Invoices.RequestOptions`
 
-client.invoices.get({ ...params }) -> Square.GetInvoiceResponse
+### client.invoices.get({ ...params }) -> Square.GetInvoiceResponse
 
-### Description
+#### Description (invoices get)
 
 Retrieves an invoice by invoice ID.
 
-### Usage
+#### Usage (invoices get)
 
 ```typescript
 await client.invoices.get({
@@ -2368,22 +2350,22 @@ await client.invoices.get({
 });
 ```
 
-### Parameters
+#### Parameters (invoices get)
 
 **request:** `Square.GetInvoicesRequest`
 
 **requestOptions:** `Invoices.RequestOptions`
 
-client.invoices.update({ ...params }) -> Square.UpdateInvoiceResponse
+### client.invoices.update({ ...params }) -> Square.UpdateInvoiceResponse
 
-### Description
+#### Description (invoices update)
 
 Updates an invoice. This endpoint supports sparse updates, so you only need
 to specify the fields you want to change along with the required `version` field.
 Some restrictions apply to updating invoices. For example, you cannot change the
 `order_id` or `location_id` field.
 
-### Usage
+#### Usage (invoices update)
 
 ```typescript
 await client.invoices.update({
@@ -2401,21 +2383,21 @@ await client.invoices.update({
 });
 ```
 
-### Parameters
+#### Parameters (invoices update)
 
 **request:** `Square.UpdateInvoiceRequest`
 
 **requestOptions:** `Invoices.RequestOptions`
 
-client.invoices.delete({ ...params }) -> Square.DeleteInvoiceResponse
+### client.invoices.delete({ ...params }) -> Square.DeleteInvoiceResponse
 
-### Description
+#### Description (invoices delete)
 
 Deletes the specified invoice. When an invoice is deleted, the
 associated order status changes to CANCELED. You can only delete a draft
 invoice (you cannot delete a published invoice, including one that is scheduled for processing).
 
-### Usage
+#### Usage (invoices delete)
 
 ```typescript
 await client.invoices.delete({
@@ -2423,15 +2405,15 @@ await client.invoices.delete({
 });
 ```
 
-### Parameters
+#### Parameters (invoices delete)
 
 **request:** `Square.DeleteInvoicesRequest`
 
 **requestOptions:** `Invoices.RequestOptions`
 
-client.invoices.createInvoiceAttachment({ ...params }) -> Square.CreateInvoiceAttachmentResponse
+### client.invoices.createInvoiceAttachment({ ...params }) -> Square.CreateInvoiceAttachmentResponse
 
-### Description
+#### Description (invoices create invoice attachment)
 
 Uploads a file and attaches it to an invoice. This endpoint accepts HTTP multipart/form-data file uploads
 with a JSON `request` part and a `file` part. The `file` part must be a `readable stream` that contains a file
@@ -2442,7 +2424,7 @@ in the `DRAFT`, `SCHEDULED`, `UNPAID`, or `PARTIALLY_PAID` state.
 
 **NOTE:** When testing in the Sandbox environment, the total file size is limited to 1 KB.
 
-### Usage
+#### Usage (invoices create invoice attachment)
 
 ```typescript
 await client.invoices.createInvoiceAttachment({
@@ -2450,20 +2432,20 @@ await client.invoices.createInvoiceAttachment({
 });
 ```
 
-### Parameters
+#### Parameters (invoices create invoice attachment)
 
 **request:** `Square.CreateInvoiceAttachmentRequest`
 
 **requestOptions:** `Invoices.RequestOptions`
 
-client.invoices.deleteInvoiceAttachment({ ...params }) -> Square.DeleteInvoiceAttachmentResponse
+### client.invoices.deleteInvoiceAttachment({ ...params }) -> Square.DeleteInvoiceAttachmentResponse
 
-### Description
+#### Description (invoices delete invoice attachment)
 
 Removes an attachment from an invoice and permanently deletes the file. Attachments can be removed only
 from invoices in the `DRAFT`, `SCHEDULED`, `UNPAID`, or `PARTIALLY_PAID` state.
 
-### Usage
+#### Usage (invoices delete invoice attachment)
 
 ```typescript
 await client.invoices.deleteInvoiceAttachment({
@@ -2472,22 +2454,22 @@ await client.invoices.deleteInvoiceAttachment({
 });
 ```
 
-### Parameters
+#### Parameters (invoices delete invoice attachment)
 
 **request:** `Square.DeleteInvoiceAttachmentRequest`
 
 **requestOptions:** `Invoices.RequestOptions`
 
-client.invoices.cancel({ ...params }) -> Square.CancelInvoiceResponse
+### client.invoices.cancel({ ...params }) -> Square.CancelInvoiceResponse
 
-### Description
+#### Description (invoices cancel)
 
 Cancels an invoice. The seller cannot collect payments for
 the canceled invoice.
 
 You cannot cancel an invoice in the `DRAFT` state or in a terminal state: `PAID`, `REFUNDED`, `CANCELED`, or `FAILED`.
 
-### Usage
+#### Usage (invoices cancel)
 
 ```typescript
 await client.invoices.cancel({
@@ -2496,15 +2478,15 @@ await client.invoices.cancel({
 });
 ```
 
-### Parameters
+#### Parameters (invoices cancel)
 
 **request:** `Square.CancelInvoiceRequest`
 
 **requestOptions:** `Invoices.RequestOptions`
 
-client.invoices.publish({ ...params }) -> Square.PublishInvoiceResponse
+### client.invoices.publish({ ...params }) -> Square.PublishInvoiceResponse
 
-### Description
+#### Description (invoices publish)
 
 Publishes the specified draft invoice.
 
@@ -2521,7 +2503,7 @@ invoice amount.
 In addition to the required `ORDERS_WRITE` and `INVOICES_WRITE` permissions, `CUSTOMERS_READ`
 and `PAYMENTS_WRITE` are required when publishing invoices configured for card-on-file payments.
 
-### Usage
+#### Usage (invoices publish)
 
 ```typescript
 await client.invoices.publish({
@@ -2531,7 +2513,7 @@ await client.invoices.publish({
 });
 ```
 
-### Parameters
+#### Parameters (invoices publish)
 
 **request:** `Square.PublishInvoiceRequest`
 
@@ -2539,26 +2521,26 @@ await client.invoices.publish({
 
 ## Locations
 
-client.locations.list() -> Square.ListLocationsResponse
+### client.locations.list() -> Square.ListLocationsResponse
 
-### Description
+#### Description (locations list)
 
 Provides details about all of the seller's [locations](https://developer.squareup.com/docs/locations-api),
 including those with an inactive status. Locations are listed alphabetically by `name`.
 
-### Usage
+#### Usage (locations list)
 
 ```typescript
 await client.locations.list();
 ```
 
-### Parameters
+#### Parameters (locations list)
 
 **requestOptions:** `Locations.RequestOptions`
 
-client.locations.create({ ...params }) -> Square.CreateLocationResponse
+### client.locations.create({ ...params }) -> Square.CreateLocationResponse
 
-### Description
+#### Description (locations create)
 
 Creates a [location](https://developer.squareup.com/docs/locations-api).
 Creating new locations allows for separate configuration of receipt layouts, item prices,
@@ -2568,7 +2550,7 @@ Locations created programmatically with the Locations API last forever and
 are visible to the seller for their own management. Therefore, ensure that
 each location has a sensible and unique name.
 
-### Usage
+#### Usage (locations create)
 
 ```typescript
 await client.locations.create({
@@ -2585,20 +2567,20 @@ await client.locations.create({
 });
 ```
 
-### Parameters
+#### Parameters (locations create)
 
 **request:** `Square.CreateLocationRequest`
 
 **requestOptions:** `Locations.RequestOptions`
 
-client.locations.get({ ...params }) -> Square.GetLocationResponse
+### client.locations.get({ ...params }) -> Square.GetLocationResponse
 
-### Description
+#### Description (locations get)
 
 Retrieves details of a single location. Specify "main"
 as the location ID to retrieve details of the [main location](https://developer.squareup.com/docs/locations-api#about-the-main-location).
 
-### Usage
+#### Usage (locations get)
 
 ```typescript
 await client.locations.get({
@@ -2606,19 +2588,19 @@ await client.locations.get({
 });
 ```
 
-### Parameters
+#### Parameters (locations get)
 
 **request:** `Square.GetLocationsRequest`
 
 **requestOptions:** `Locations.RequestOptions`
 
-client.locations.update({ ...params }) -> Square.UpdateLocationResponse
+### client.locations.update({ ...params }) -> Square.UpdateLocationResponse
 
-### Description
+#### Description (locations update)
 
 Updates a [location](https://developer.squareup.com/docs/locations-api).
 
-### Usage
+#### Usage (locations update)
 
 ```typescript
 await client.locations.update({
@@ -2648,15 +2630,15 @@ await client.locations.update({
 });
 ```
 
-### Parameters
+#### Parameters (locations update)
 
 **request:** `Square.UpdateLocationRequest`
 
 **requestOptions:** `Locations.RequestOptions`
 
-client.locations.checkouts({ ...params }) -> Square.CreateCheckoutResponse
+### client.locations.checkouts({ ...params }) -> Square.CreateCheckoutResponse
 
-### Description
+#### Description (locations checkouts)
 
 Links a `checkoutId` to a `checkout_page_url` that customers are
 directed to in order to provide their payment information using a
@@ -2665,7 +2647,7 @@ payment processing workflow hosted on connect.squareup.com.
 NOTE: The Checkout API has been updated with new features.
 For more information, see [Checkout API highlights](https://developer.squareup.com/docs/checkout-api#checkout-api-highlights).
 
-### Usage
+#### Usage (locations checkouts)
 
 ```typescript
 await client.locations.checkouts({
@@ -2761,7 +2743,7 @@ await client.locations.checkouts({
 });
 ```
 
-### Parameters
+#### Parameters (locations checkouts)
 
 **request:** `Square.CreateCheckoutRequest`
 
@@ -2769,9 +2751,9 @@ await client.locations.checkouts({
 
 ## Loyalty
 
-client.loyalty.searchEvents({ ...params }) -> Square.SearchLoyaltyEventsResponse
+### client.loyalty.searchEvents({ ...params }) -> Square.SearchLoyaltyEventsResponse
 
-### Description
+#### Description (loyalty search events)
 
 Searches for loyalty events.
 
@@ -2782,7 +2764,7 @@ recorded in the ledger. Using this endpoint, you can search the ledger for event
 
 Search results are sorted by `created_at` in descending order.
 
-### Usage
+#### Usage (loyalty search events)
 
 ```typescript
 await client.loyalty.searchEvents({
@@ -2797,7 +2779,7 @@ await client.loyalty.searchEvents({
 });
 ```
 
-### Parameters
+#### Parameters (loyalty search events)
 
 **request:** `Square.SearchLoyaltyEventsRequest`
 
@@ -2805,9 +2787,9 @@ await client.loyalty.searchEvents({
 
 ## Merchants
 
-client.merchants.list({ ...params }) -> core.Page
+### client.merchants.list({ ...params }) -> core.Page
 
-### Description
+#### Description (merchants list)
 
 Provides details about the merchant associated with a given access token.
 
@@ -2820,7 +2802,7 @@ information for the merchant that granted your application access.
 If you know the merchant ID, you can also use the [RetrieveMerchant](api-endpoint:Merchants-RetrieveMerchant)
 endpoint to retrieve the merchant information.
 
-### Usage
+#### Usage (merchants list)
 
 ```typescript
 const response = await client.merchants.list();
@@ -2835,19 +2817,19 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (merchants list)
 
 **request:** `Square.ListMerchantsRequest`
 
 **requestOptions:** `Merchants.RequestOptions`
 
-client.merchants.get({ ...params }) -> Square.GetMerchantResponse
+### client.merchants.get({ ...params }) -> Square.GetMerchantResponse
 
-### Description
+#### Description (merchants get)
 
 Retrieves the `Merchant` object for the given `merchant_id`.
 
-### Usage
+#### Usage (merchants get)
 
 ```typescript
 await client.merchants.get({
@@ -2855,7 +2837,7 @@ await client.merchants.get({
 });
 ```
 
-### Parameters
+#### Parameters (merchants get)
 
 **request:** `Square.GetMerchantsRequest`
 
@@ -2863,13 +2845,13 @@ await client.merchants.get({
 
 ## Checkout
 
-client.checkout.retrieveLocationSettings({ ...params }) -> Square.RetrieveLocationSettingsResponse
+### client.checkout.retrieveLocationSettings({ ...params }) -> Square.RetrieveLocationSettingsResponse
 
-### Description
+#### Description (checkout retrieve location settings)
 
 Retrieves the location-level settings for a Square-hosted checkout page.
 
-### Usage
+#### Usage (checkout retrieve location settings)
 
 ```typescript
 await client.checkout.retrieveLocationSettings({
@@ -2877,19 +2859,19 @@ await client.checkout.retrieveLocationSettings({
 });
 ```
 
-### Parameters
+#### Parameters (checkout retrieve location settings)
 
 **request:** `Square.RetrieveLocationSettingsRequest`
 
 **requestOptions:** `Checkout.RequestOptions`
 
-client.checkout.updateLocationSettings({ ...params }) -> Square.UpdateLocationSettingsResponse
+### client.checkout.updateLocationSettings({ ...params }) -> Square.UpdateLocationSettingsResponse
 
-### Description
+#### Description (checkout update location settings)
 
 Updates the location-level settings for a Square-hosted checkout page.
 
-### Usage
+#### Usage (checkout update location settings)
 
 ```typescript
 await client.checkout.updateLocationSettings({
@@ -2898,35 +2880,35 @@ await client.checkout.updateLocationSettings({
 });
 ```
 
-### Parameters
+#### Parameters (checkout update location settings)
 
 **request:** `Square.UpdateLocationSettingsRequest`
 
 **requestOptions:** `Checkout.RequestOptions`
 
-client.checkout.retrieveMerchantSettings() -> Square.RetrieveMerchantSettingsResponse
+### client.checkout.retrieveMerchantSettings() -> Square.RetrieveMerchantSettingsResponse
 
-### Description
+#### Description (checkout retrieve merchant settings)
 
 Retrieves the merchant-level settings for a Square-hosted checkout page.
 
-### Usage
+#### Usage (checkout retrieve merchant settings)
 
 ```typescript
 await client.checkout.retrieveMerchantSettings();
 ```
 
-### Parameters
+#### Parameters (checkout retrieve merchant settings)
 
 **requestOptions:** `Checkout.RequestOptions`
 
-client.checkout.updateMerchantSettings({ ...params }) -> Square.UpdateMerchantSettingsResponse
+### client.checkout.updateMerchantSettings({ ...params }) -> Square.UpdateMerchantSettingsResponse
 
-### Description
+#### Description (checkout update merchant settings)
 
 Updates the merchant-level settings for a Square-hosted checkout page.
 
-### Usage
+#### Usage (checkout update merchant settings)
 
 ```typescript
 await client.checkout.updateMerchantSettings({
@@ -2934,7 +2916,7 @@ await client.checkout.updateMerchantSettings({
 });
 ```
 
-### Parameters
+#### Parameters (checkout update merchant settings)
 
 **request:** `Square.UpdateMerchantSettingsRequest`
 
@@ -2942,9 +2924,9 @@ await client.checkout.updateMerchantSettings({
 
 ## Orders
 
-client.orders.create({ ...params }) -> Square.CreateOrderResponse
+### client.orders.create({ ...params }) -> Square.CreateOrderResponse
 
-### Description
+#### Description (orders create)
 
 Creates a new [order](entity:Order) that can include information about products for
 purchase and settings to apply to the purchase.
@@ -2954,7 +2936,7 @@ To pay for a created order, see
 
 You can modify open orders using the [UpdateOrder](api-endpoint:Orders-UpdateOrder) endpoint.
 
-### Usage
+#### Usage (orders create)
 
 ```typescript
 await client.orders.create({
@@ -3020,21 +3002,21 @@ await client.orders.create({
 });
 ```
 
-### Parameters
+#### Parameters (orders create)
 
 **request:** `Square.CreateOrderRequest`
 
 **requestOptions:** `Orders.RequestOptions`
 
-client.orders.batchGet({ ...params }) -> Square.BatchGetOrdersResponse
+### client.orders.batchGet({ ...params }) -> Square.BatchGetOrdersResponse
 
-### Description
+#### Description (orders batch get)
 
 Retrieves a set of [orders](entity:Order) by their IDs.
 
 If a given order ID does not exist, the ID is ignored instead of generating an error.
 
-### Usage
+#### Usage (orders batch get)
 
 ```typescript
 await client.orders.batchGet({
@@ -3043,19 +3025,19 @@ await client.orders.batchGet({
 });
 ```
 
-### Parameters
+#### Parameters (orders batch get)
 
 **request:** `Square.BatchGetOrdersRequest`
 
 **requestOptions:** `Orders.RequestOptions`
 
-client.orders.calculate({ ...params }) -> Square.CalculateOrderResponse
+### client.orders.calculate({ ...params }) -> Square.CalculateOrderResponse
 
-### Description
+#### Description (orders calculate)
 
 Enables applications to preview order pricing without creating an order.
 
-### Usage
+#### Usage (orders calculate)
 
 ```typescript
 await client.orders.calculate({
@@ -3090,20 +3072,20 @@ await client.orders.calculate({
 });
 ```
 
-### Parameters
+#### Parameters (orders calculate)
 
 **request:** `Square.CalculateOrderRequest`
 
 **requestOptions:** `Orders.RequestOptions`
 
-client.orders.clone({ ...params }) -> Square.CloneOrderResponse
+### client.orders.clone({ ...params }) -> Square.CloneOrderResponse
 
-### Description
+#### Description (orders clone)
 
 Creates a new order, in the `DRAFT` state, by duplicating an existing order. The newly created order has
 only the core fields (such as line items, taxes, and discounts) copied from the original order.
 
-### Usage
+#### Usage (orders clone)
 
 ```typescript
 await client.orders.clone({
@@ -3113,15 +3095,15 @@ await client.orders.clone({
 });
 ```
 
-### Parameters
+#### Parameters (orders clone)
 
 **request:** `Square.CloneOrderRequest`
 
 **requestOptions:** `Orders.RequestOptions`
 
-client.orders.search({ ...params }) -> Square.SearchOrdersResponse
+### client.orders.search({ ...params }) -> Square.SearchOrdersResponse
 
-### Description
+#### Description (orders search)
 
 Search all orders for one or more locations. Orders include all sales,
 returns, and exchanges regardless of how or when they entered the Square
@@ -3141,7 +3123,7 @@ offline mode might not be transmitted to Square for up to 72 hours. Offline
 orders have a `created_at` value that reflects the time the order was created,
 not the time it was subsequently transmitted to Square.
 
-### Usage
+#### Usage (orders search)
 
 ```typescript
 await client.orders.search({
@@ -3168,19 +3150,19 @@ await client.orders.search({
 });
 ```
 
-### Parameters
+#### Parameters (orders search)
 
 **request:** `Square.SearchOrdersRequest`
 
 **requestOptions:** `Orders.RequestOptions`
 
-client.orders.get({ ...params }) -> Square.GetOrderResponse
+### client.orders.get({ ...params }) -> Square.GetOrderResponse
 
-### Description
+#### Description (orders get)
 
 Retrieves an [Order](entity:Order) by ID.
 
-### Usage
+#### Usage (orders get)
 
 ```typescript
 await client.orders.get({
@@ -3188,15 +3170,15 @@ await client.orders.get({
 });
 ```
 
-### Parameters
+#### Parameters (orders get)
 
 **request:** `Square.GetOrdersRequest`
 
 **requestOptions:** `Orders.RequestOptions`
 
-client.orders.update({ ...params }) -> Square.UpdateOrderResponse
+### client.orders.update({ ...params }) -> Square.UpdateOrderResponse
 
-### Description
+#### Description (orders update)
 
 Updates an open [order](entity:Order) by adding, replacing, or deleting
 fields. Orders with a `COMPLETED` or `CANCELED` state cannot be updated.
@@ -3214,7 +3196,7 @@ An `UpdateOrder` request requires the following:
 To pay for an order, see
 [Pay for Orders](https://developer.squareup.com/docs/orders-api/pay-for-orders).
 
-### Usage
+#### Usage (orders update)
 
 ```typescript
 await client.orders.update({
@@ -3239,15 +3221,15 @@ await client.orders.update({
 });
 ```
 
-### Parameters
+#### Parameters (orders update)
 
 **request:** `Square.UpdateOrderRequest`
 
 **requestOptions:** `Orders.RequestOptions`
 
-client.orders.pay({ ...params }) -> Square.PayOrderResponse
+### client.orders.pay({ ...params }) -> Square.PayOrderResponse
 
-### Description
+#### Description (orders pay)
 
 Pay for an [order](entity:Order) using one or more approved [payments](entity:Payment)
 or settle an order with a total of `0`.
@@ -3263,12 +3245,8 @@ To be used with `PayOrder`, a payment must:
   `payment_ids` is canceled.
 - Be approved with [delayed capture](https://developer.squareup.com/docs/payments-api/take-payments/card-payments/delayed-capture).
 Using a delayed capture payment with `PayOrder` completes the approved payment.
-  
-  
-  
-  
 
-### Usage
+#### Usage (orders pay)
 
 ```typescript
 await client.orders.pay({
@@ -3278,7 +3256,7 @@ await client.orders.pay({
 });
 ```
 
-### Parameters
+#### Parameters (orders pay)
 
 **request:** `Square.PayOrderRequest`
 
@@ -3286,9 +3264,9 @@ await client.orders.pay({
 
 ## Payments
 
-client.payments.list({ ...params }) -> core.Page
+### client.payments.list({ ...params }) -> core.Page
 
-### Description
+#### Description (payments list)
 
 Retrieves a list of payments taken by the account making the request.
 
@@ -3297,7 +3275,7 @@ seconds to appear.
 
 The maximum results per page is 100.
 
-### Usage
+#### Usage (payments list)
 
 ```typescript
 const response = await client.payments.list();
@@ -3312,15 +3290,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (payments list)
 
 **request:** `Square.ListPaymentsRequest`
 
 **requestOptions:** `Payments.RequestOptions`
 
-client.payments.create({ ...params }) -> Square.CreatePaymentResponse
+### client.payments.create({ ...params }) -> Square.CreatePaymentResponse
 
-### Description
+#### Description (payments create)
 
 Creates a payment using the provided source. You can use this endpoint
 to charge a card (credit/debit card or  
@@ -3331,7 +3309,7 @@ processed on behalf of the seller).
 The endpoint creates a
 `Payment` object and returns it in the response.
 
-### Usage
+#### Usage (payments create)
 
 ```typescript
 await client.payments.create({
@@ -3353,15 +3331,15 @@ await client.payments.create({
 });
 ```
 
-### Parameters
+#### Parameters (payments create)
 
 **request:** `Square.CreatePaymentRequest`
 
 **requestOptions:** `Payments.RequestOptions`
 
-client.payments.cancelByIdempotencyKey({ ...params }) -> Square.CancelPaymentByIdempotencyKeyResponse
+### client.payments.cancelByIdempotencyKey({ ...params }) -> Square.CancelPaymentByIdempotencyKeyResponse
 
-### Description
+#### Description (payments cancel by idempotency key)
 
 Cancels (voids) a payment identified by the idempotency key that is specified in the
 request.
@@ -3375,7 +3353,7 @@ canceling the payment, you can submit your `CreatePayment` request again.
 Note that if no payment with the specified idempotency key is found, no action is taken and the endpoint
 returns successfully.
 
-### Usage
+#### Usage (payments cancel by idempotency key)
 
 ```typescript
 await client.payments.cancelByIdempotencyKey({
@@ -3383,19 +3361,19 @@ await client.payments.cancelByIdempotencyKey({
 });
 ```
 
-### Parameters
+#### Parameters (payments cancel by idempotency key)
 
 **request:** `Square.CancelPaymentByIdempotencyKeyRequest`
 
 **requestOptions:** `Payments.RequestOptions`
 
-client.payments.get({ ...params }) -> Square.GetPaymentResponse
+### client.payments.get({ ...params }) -> Square.GetPaymentResponse
 
-### Description
+#### Description (payments get)
 
 Retrieves details for a specific payment.
 
-### Usage
+#### Usage (payments get)
 
 ```typescript
 await client.payments.get({
@@ -3403,20 +3381,20 @@ await client.payments.get({
 });
 ```
 
-### Parameters
+#### Parameters (payments get)
 
 **request:** `Square.GetPaymentsRequest`
 
 **requestOptions:** `Payments.RequestOptions`
 
-client.payments.update({ ...params }) -> Square.UpdatePaymentResponse
+### client.payments.update({ ...params }) -> Square.UpdatePaymentResponse
 
-### Description
+#### Description (payments update)
 
 Updates a payment with the APPROVED status.
 You can update the `amount_money` and `tip_money` using this endpoint.
 
-### Usage
+#### Usage (payments update)
 
 ```typescript
 await client.payments.update({
@@ -3436,20 +3414,20 @@ await client.payments.update({
 });
 ```
 
-### Parameters
+#### Parameters (payments update)
 
 **request:** `Square.UpdatePaymentRequest`
 
 **requestOptions:** `Payments.RequestOptions`
 
-client.payments.cancel({ ...params }) -> Square.CancelPaymentResponse
+### client.payments.cancel({ ...params }) -> Square.CancelPaymentResponse
 
-### Description
+#### Description (payments cancel)
 
 Cancels (voids) a payment. You can use this endpoint to cancel a payment with
 the APPROVED `status`.
 
-### Usage
+#### Usage (payments cancel)
 
 ```typescript
 await client.payments.cancel({
@@ -3457,22 +3435,22 @@ await client.payments.cancel({
 });
 ```
 
-### Parameters
+#### Parameters (payments cancel)
 
 **request:** `Square.CancelPaymentsRequest`
 
 **requestOptions:** `Payments.RequestOptions`
 
-client.payments.complete({ ...params }) -> Square.CompletePaymentResponse
+### client.payments.complete({ ...params }) -> Square.CompletePaymentResponse
 
-### Description
+#### Description (payments complete)
 
 Completes (captures) a payment.
 By default, payments are set to complete immediately after they are created.
 
 You can use this endpoint to complete a payment with the APPROVED `status`.
 
-### Usage
+#### Usage (payments complete)
 
 ```typescript
 await client.payments.complete({
@@ -3480,7 +3458,7 @@ await client.payments.complete({
 });
 ```
 
-### Parameters
+#### Parameters (payments complete)
 
 **request:** `Square.CompletePaymentRequest`
 
@@ -3488,15 +3466,15 @@ await client.payments.complete({
 
 ## Payouts
 
-client.payouts.list({ ...params }) -> core.Page
+### client.payouts.list({ ...params }) -> core.Page
 
-### Description
+#### Description (payouts list)
 
 Retrieves a list of all payouts for the default location.
 You can filter payouts by location ID, status, time range, and order them in ascending or descending order.
 To call this endpoint, set `PAYOUTS_READ` for the OAuth scope.
 
-### Usage
+#### Usage (payouts list)
 
 ```typescript
 const response = await client.payouts.list();
@@ -3511,20 +3489,20 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (payouts list)
 
 **request:** `Square.ListPayoutsRequest`
 
 **requestOptions:** `Payouts.RequestOptions`
 
-client.payouts.get({ ...params }) -> Square.GetPayoutResponse
+### client.payouts.get({ ...params }) -> Square.GetPayoutResponse
 
-### Description
+#### Description (payouts get)
 
 Retrieves details of a specific payout identified by a payout ID.
 To call this endpoint, set `PAYOUTS_READ` for the OAuth scope.
 
-### Usage
+#### Usage (payouts get)
 
 ```typescript
 await client.payouts.get({
@@ -3532,20 +3510,20 @@ await client.payouts.get({
 });
 ```
 
-### Parameters
+#### Parameters (payouts get)
 
 **request:** `Square.GetPayoutsRequest`
 
 **requestOptions:** `Payouts.RequestOptions`
 
-client.payouts.listEntries({ ...params }) -> core.Page
+### client.payouts.listEntries({ ...params }) -> core.Page
 
-### Description
+#### Description (payouts list entries)
 
 Retrieves a list of all payout entries for a specific payout.
 To call this endpoint, set `PAYOUTS_READ` for the OAuth scope.
 
-### Usage
+#### Usage (payouts list entries)
 
 ```typescript
 const response = await client.payouts.listEntries({
@@ -3564,7 +3542,7 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (payouts list entries)
 
 **request:** `Square.ListEntriesPayoutsRequest`
 
@@ -3572,9 +3550,9 @@ while (page.hasNextPage()) {
 
 ## Refunds
 
-client.refunds.list({ ...params }) -> core.Page
+### client.refunds.list({ ...params }) -> core.Page
 
-### Description
+#### Description (refunds list)
 
 Retrieves a list of refunds for the account making the request.
 
@@ -3583,7 +3561,7 @@ seconds to appear.
 
 The maximum results per page is 100.
 
-### Usage
+#### Usage (refunds list)
 
 ```typescript
 const response = await client.refunds.list();
@@ -3598,22 +3576,22 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (refunds list)
 
 **request:** `Square.ListRefundsRequest`
 
 **requestOptions:** `Refunds.RequestOptions`
 
-client.refunds.refundPayment({ ...params }) -> Square.RefundPaymentResponse
+### client.refunds.refundPayment({ ...params }) -> Square.RefundPaymentResponse
 
-### Description
+#### Description (refunds refund payment)
 
 Refunds a payment. You can refund the entire payment amount or a
 portion of it. You can use this endpoint to refund a card payment or record a
 refund of a cash or external payment. For more information, see
 [Refund Payment](https://developer.squareup.com/docs/payments-api/refund-payments).
 
-### Usage
+#### Usage (refunds refund payment)
 
 ```typescript
 await client.refunds.refundPayment({
@@ -3631,19 +3609,19 @@ await client.refunds.refundPayment({
 });
 ```
 
-### Parameters
+#### Parameters (refunds refund payment)
 
 **request:** `Square.RefundPaymentRequest`
 
 **requestOptions:** `Refunds.RequestOptions`
 
-client.refunds.get({ ...params }) -> Square.GetPaymentRefundResponse
+### client.refunds.get({ ...params }) -> Square.GetPaymentRefundResponse
 
-### Description
+#### Description (refunds get)
 
 Retrieves a specific refund using the `refund_id`.
 
-### Usage
+#### Usage (refunds get)
 
 ```typescript
 await client.refunds.get({
@@ -3651,7 +3629,7 @@ await client.refunds.get({
 });
 ```
 
-### Parameters
+#### Parameters (refunds get)
 
 **request:** `Square.GetRefundsRequest`
 
@@ -3659,29 +3637,29 @@ await client.refunds.get({
 
 ## Sites
 
-client.sites.list() -> Square.ListSitesResponse
+### client.sites.list() -> Square.ListSitesResponse
 
-### Description
+#### Description (sites list)
 
 Lists the Square Online sites that belong to a seller. Sites are listed in descending order by the `created_at` date.
 
 **Note:** Square Online APIs are publicly available as part of an early access program. For more information, see [Early access program for Square Online APIs](https://developer.squareup.com/docs/online-api#early-access-program-for-square-online-apis).
 
-### Usage
+#### Usage (sites list)
 
 ```typescript
 await client.sites.list();
 ```
 
-### Parameters
+#### Parameters (sites list)
 
 **requestOptions:** `Sites.RequestOptions`
 
 ## Snippets
 
-client.snippets.get({ ...params }) -> Square.GetSnippetResponse
+### client.snippets.get({ ...params }) -> Square.GetSnippetResponse
 
-### Description
+#### Description (snippets get)
 
 Retrieves your snippet from a Square Online site. A site can contain snippets from multiple snippet applications, but you can retrieve only the snippet that was added by your application.
 
@@ -3689,7 +3667,7 @@ You can call [ListSites](api-endpoint:Sites-ListSites) to get the IDs of the sit
 
 **Note:** Square Online APIs are publicly available as part of an early access program. For more information, see [Early access program for Square Online APIs](https://developer.squareup.com/docs/online-api#early-access-program-for-square-online-apis).
 
-### Usage
+#### Usage (snippets get)
 
 ```typescript
 await client.snippets.get({
@@ -3697,15 +3675,15 @@ await client.snippets.get({
 });
 ```
 
-### Parameters
+#### Parameters (snippets get)
 
 **request:** `Square.GetSnippetsRequest`
 
 **requestOptions:** `Snippets.RequestOptions`
 
-client.snippets.upsert({ ...params }) -> Square.UpsertSnippetResponse
+### client.snippets.upsert({ ...params }) -> Square.UpsertSnippetResponse
 
-### Description
+#### Description (snippets upsert)
 
 Adds a snippet to a Square Online site or updates the existing snippet on the site.
 The snippet code is appended to the end of the `head` element on every page of the site, except checkout pages. A snippet application can add one snippet to a given site.
@@ -3714,7 +3692,7 @@ You can call [ListSites](api-endpoint:Sites-ListSites) to get the IDs of the sit
 
 **Note:** Square Online APIs are publicly available as part of an early access program. For more information, see [Early access program for Square Online APIs](https://developer.squareup.com/docs/online-api#early-access-program-for-square-online-apis).
 
-### Usage
+#### Usage (snippets upsert)
 
 ```typescript
 await client.snippets.upsert({
@@ -3725,15 +3703,15 @@ await client.snippets.upsert({
 });
 ```
 
-### Parameters
+#### Parameters (snippets upsert)
 
 **request:** `Square.UpsertSnippetRequest`
 
 **requestOptions:** `Snippets.RequestOptions`
 
-client.snippets.delete({ ...params }) -> Square.DeleteSnippetResponse
+### client.snippets.delete({ ...params }) -> Square.DeleteSnippetResponse
 
-### Description
+#### Description (snippets delete)
 
 Removes your snippet from a Square Online site.
 
@@ -3741,7 +3719,7 @@ You can call [ListSites](api-endpoint:Sites-ListSites) to get the IDs of the sit
 
 **Note:** Square Online APIs are publicly available as part of an early access program. For more information, see [Early access program for Square Online APIs](https://developer.squareup.com/docs/online-api#early-access-program-for-square-online-apis).
 
-### Usage
+#### Usage (snippets delete)
 
 ```typescript
 await client.snippets.delete({
@@ -3749,7 +3727,7 @@ await client.snippets.delete({
 });
 ```
 
-### Parameters
+#### Parameters (snippets delete)
 
 **request:** `Square.DeleteSnippetsRequest`
 
@@ -3757,9 +3735,9 @@ await client.snippets.delete({
 
 ## Subscriptions
 
-client.subscriptions.create({ ...params }) -> Square.CreateSubscriptionResponse
+### client.subscriptions.create({ ...params }) -> Square.CreateSubscriptionResponse
 
-### Description
+#### Description (subscriptions create)
 
 Enrolls a customer in a subscription.
 
@@ -3770,7 +3748,7 @@ the optional `start_date`. Each individual subscription is associated with a par
 
 For more information, see [Create a subscription](https://developer.squareup.com/docs/subscriptions-api/manage-subscriptions#create-a-subscription).
 
-### Usage
+#### Usage (subscriptions create)
 
 ```typescript
 await client.subscriptions.create({
@@ -3793,20 +3771,20 @@ await client.subscriptions.create({
 });
 ```
 
-### Parameters
+#### Parameters (subscriptions create)
 
 **request:** `Square.CreateSubscriptionRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.subscriptions.bulkSwapPlan({ ...params }) -> Square.BulkSwapPlanResponse
+### client.subscriptions.bulkSwapPlan({ ...params }) -> Square.BulkSwapPlanResponse
 
-### Description
+#### Description (subscriptions bulk swap plan)
 
 Schedules a plan variation change for all active subscriptions under a given plan
 variation. For more information, see [Swap Subscription Plan Variations](https://developer.squareup.com/docs/subscriptions-api/swap-plan-variations).
 
-### Usage
+#### Usage (subscriptions bulk swap plan)
 
 ```typescript
 await client.subscriptions.bulkSwapPlan({
@@ -3816,15 +3794,15 @@ await client.subscriptions.bulkSwapPlan({
 });
 ```
 
-### Parameters
+#### Parameters (subscriptions bulk swap plan)
 
 **request:** `Square.BulkSwapPlanRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.subscriptions.search({ ...params }) -> Square.SearchSubscriptionsResponse
+### client.subscriptions.search({ ...params }) -> Square.SearchSubscriptionsResponse
 
-### Description
+#### Description (subscriptions search)
 
 Searches for subscriptions.
 
@@ -3841,7 +3819,7 @@ If the request specifies customer IDs, the endpoint orders results
 first by location, within location by customer ID, and within
 customer by subscription creation date.
 
-### Usage
+#### Usage (subscriptions search)
 
 ```typescript
 await client.subscriptions.search({
@@ -3855,19 +3833,19 @@ await client.subscriptions.search({
 });
 ```
 
-### Parameters
+#### Parameters (subscriptions search)
 
 **request:** `Square.SearchSubscriptionsRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.subscriptions.get({ ...params }) -> Square.GetSubscriptionResponse
+### client.subscriptions.get({ ...params }) -> Square.GetSubscriptionResponse
 
-### Description
+#### Description (subscriptions get)
 
 Retrieves a specific subscription.
 
-### Usage
+#### Usage (subscriptions get)
 
 ```typescript
 await client.subscriptions.get({
@@ -3875,20 +3853,20 @@ await client.subscriptions.get({
 });
 ```
 
-### Parameters
+#### Parameters (subscriptions get)
 
 **request:** `Square.GetSubscriptionsRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.subscriptions.update({ ...params }) -> Square.UpdateSubscriptionResponse
+### client.subscriptions.update({ ...params }) -> Square.UpdateSubscriptionResponse
 
-### Description
+#### Description (subscriptions update)
 
 Updates a subscription by modifying or clearing `subscription` field values.
 To clear a field, set its value to `null`.
 
-### Usage
+#### Usage (subscriptions update)
 
 ```typescript
 await client.subscriptions.update({
@@ -3899,19 +3877,19 @@ await client.subscriptions.update({
 });
 ```
 
-### Parameters
+#### Parameters (subscriptions update)
 
 **request:** `Square.UpdateSubscriptionRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.subscriptions.deleteAction({ ...params }) -> Square.DeleteSubscriptionActionResponse
+### client.subscriptions.deleteAction({ ...params }) -> Square.DeleteSubscriptionActionResponse
 
-### Description
+#### Description (subscriptions delete action)
 
 Deletes a scheduled action for a subscription.
 
-### Usage
+#### Usage (subscriptions delete action)
 
 ```typescript
 await client.subscriptions.deleteAction({
@@ -3920,20 +3898,20 @@ await client.subscriptions.deleteAction({
 });
 ```
 
-### Parameters
+#### Parameters (subscriptions delete action)
 
 **request:** `Square.DeleteActionSubscriptionsRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.subscriptions.changeBillingAnchorDate({ ...params }) -> Square.ChangeBillingAnchorDateResponse
+### client.subscriptions.changeBillingAnchorDate({ ...params }) -> Square.ChangeBillingAnchorDateResponse
 
-### Description
+#### Description (subscriptions change billing anchor date)
 
 Changes the [billing anchor date](https://developer.squareup.com/docs/subscriptions-api/subscription-billing#billing-dates)
 for a subscription.
 
-### Usage
+#### Usage (subscriptions change billing anchor date)
 
 ```typescript
 await client.subscriptions.changeBillingAnchorDate({
@@ -3942,21 +3920,21 @@ await client.subscriptions.changeBillingAnchorDate({
 });
 ```
 
-### Parameters
+#### Parameters (subscriptions change billing anchor date)
 
 **request:** `Square.ChangeBillingAnchorDateRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.subscriptions.cancel({ ...params }) -> Square.CancelSubscriptionResponse
+### client.subscriptions.cancel({ ...params }) -> Square.CancelSubscriptionResponse
 
-### Description
+#### Description (subscriptions cancel)
 
 Schedules a `CANCEL` action to cancel an active subscription. This
 sets the `canceled_date` field to the end of the active billing period. After this date,
 the subscription status changes from ACTIVE to CANCELED.
 
-### Usage
+#### Usage (subscriptions cancel)
 
 ```typescript
 await client.subscriptions.cancel({
@@ -3964,19 +3942,19 @@ await client.subscriptions.cancel({
 });
 ```
 
-### Parameters
+#### Parameters (subscriptions cancel)
 
 **request:** `Square.CancelSubscriptionsRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.subscriptions.listEvents({ ...params }) -> core.Page
+### client.subscriptions.listEvents({ ...params }) -> core.Page
 
-### Description
+#### Description (subscriptions list events)
 
 Lists all [events](https://developer.squareup.com/docs/subscriptions-api/actions-events) for a specific subscription.
 
-### Usage
+#### Usage (subscriptions list events)
 
 ```typescript
 const response = await client.subscriptions.listEvents({
@@ -3995,19 +3973,19 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (subscriptions list events)
 
 **request:** `Square.ListEventsSubscriptionsRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.subscriptions.pause({ ...params }) -> Square.PauseSubscriptionResponse
+### client.subscriptions.pause({ ...params }) -> Square.PauseSubscriptionResponse
 
-### Description
+#### Description (subscriptions pause)
 
 Schedules a `PAUSE` action to pause an active subscription.
 
-### Usage
+#### Usage (subscriptions pause)
 
 ```typescript
 await client.subscriptions.pause({
@@ -4015,19 +3993,19 @@ await client.subscriptions.pause({
 });
 ```
 
-### Parameters
+#### Parameters (subscriptions pause)
 
 **request:** `Square.PauseSubscriptionRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.subscriptions.resume({ ...params }) -> Square.ResumeSubscriptionResponse
+### client.subscriptions.resume({ ...params }) -> Square.ResumeSubscriptionResponse
 
-### Description
+#### Description (subscriptions resume)
 
 Schedules a `RESUME` action to resume a paused or a deactivated subscription.
 
-### Usage
+#### Usage (subscriptions resume)
 
 ```typescript
 await client.subscriptions.resume({
@@ -4035,20 +4013,20 @@ await client.subscriptions.resume({
 });
 ```
 
-### Parameters
+#### Parameters (subscriptions resume)
 
 **request:** `Square.ResumeSubscriptionRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.subscriptions.swapPlan({ ...params }) -> Square.SwapPlanResponse
+### client.subscriptions.swapPlan({ ...params }) -> Square.SwapPlanResponse
 
-### Description
+#### Description (subscriptions swap plan)
 
 Schedules a `SWAP_PLAN` action to swap a subscription plan variation in an existing subscription.
 For more information, see [Swap Subscription Plan Variations](https://developer.squareup.com/docs/subscriptions-api/swap-plan-variations).
 
-### Usage
+#### Usage (subscriptions swap plan)
 
 ```typescript
 await client.subscriptions.swapPlan({
@@ -4063,7 +4041,7 @@ await client.subscriptions.swapPlan({
 });
 ```
 
-### Parameters
+#### Parameters (subscriptions swap plan)
 
 **request:** `Square.SwapPlanRequest`
 
@@ -4071,9 +4049,9 @@ await client.subscriptions.swapPlan({
 
 ## TeamMembers
 
-client.teamMembers.create({ ...params }) -> Square.CreateTeamMemberResponse
+### client.teamMembers.create({ ...params }) -> Square.CreateTeamMemberResponse
 
-### Description
+#### Description (team members create)
 
 Creates a single `TeamMember` object. The `TeamMember` object is returned on successful creates.
 You must provide the following values in your request to this endpoint:
@@ -4083,7 +4061,7 @@ You must provide the following values in your request to this endpoint:
 
 Learn about [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#createteammember).
 
-### Usage
+#### Usage (team members create)
 
 ```typescript
 await client.teamMembers.create({
@@ -4125,15 +4103,15 @@ await client.teamMembers.create({
 });
 ```
 
-### Parameters
+#### Parameters (team members create)
 
 **request:** `Square.CreateTeamMemberRequest`
 
 **requestOptions:** `TeamMembers.RequestOptions`
 
-client.teamMembers.batchCreate({ ...params }) -> Square.BatchCreateTeamMembersResponse
+### client.teamMembers.batchCreate({ ...params }) -> Square.BatchCreateTeamMembersResponse
 
-### Description
+#### Description (team members batch create)
 
 Creates multiple `TeamMember` objects. The created `TeamMember` objects are returned on successful creates.
 This process is non-transactional and processes as much of the request as possible. If one of the creates in
@@ -4142,7 +4120,7 @@ contains explicit error information for the failed create.
 
 Learn about [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#bulk-create-team-members).
 
-### Usage
+#### Usage (team members batch create)
 
 ```typescript
 await client.teamMembers.batchCreate({
@@ -4176,15 +4154,15 @@ await client.teamMembers.batchCreate({
 });
 ```
 
-### Parameters
+#### Parameters (team members batch create)
 
 **request:** `Square.BatchCreateTeamMembersRequest`
 
 **requestOptions:** `TeamMembers.RequestOptions`
 
-client.teamMembers.batchUpdate({ ...params }) -> Square.BatchUpdateTeamMembersResponse
+### client.teamMembers.batchUpdate({ ...params }) -> Square.BatchUpdateTeamMembersResponse
 
-### Description
+#### Description (team members batch update)
 
 Updates multiple `TeamMember` objects. The updated `TeamMember` objects are returned on successful updates.
 This process is non-transactional and processes as much of the request as possible. If one of the updates in
@@ -4192,7 +4170,7 @@ the request cannot be successfully processed, the request is not marked as faile
 contains explicit error information for the failed update.
 Learn about [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#bulk-update-team-members).
 
-### Usage
+#### Usage (team members batch update)
 
 ```typescript
 await client.teamMembers.batchUpdate({
@@ -4230,21 +4208,21 @@ await client.teamMembers.batchUpdate({
 });
 ```
 
-### Parameters
+#### Parameters (team members batch update)
 
 **request:** `Square.BatchUpdateTeamMembersRequest`
 
 **requestOptions:** `TeamMembers.RequestOptions`
 
-client.teamMembers.search({ ...params }) -> Square.SearchTeamMembersResponse
+### client.teamMembers.search({ ...params }) -> Square.SearchTeamMembersResponse
 
-### Description
+#### Description (team members search)
 
 Returns a paginated list of `TeamMember` objects for a business.
 The list can be filtered by location IDs, `ACTIVE` or `INACTIVE` status, or whether
 the team member is the Square account owner.
 
-### Usage
+#### Usage (team members search)
 
 ```typescript
 await client.teamMembers.search({
@@ -4258,20 +4236,20 @@ await client.teamMembers.search({
 });
 ```
 
-### Parameters
+#### Parameters (team members search)
 
 **request:** `Square.SearchTeamMembersRequest`
 
 **requestOptions:** `TeamMembers.RequestOptions`
 
-client.teamMembers.get({ ...params }) -> Square.GetTeamMemberResponse
+### client.teamMembers.get({ ...params }) -> Square.GetTeamMemberResponse
 
-### Description
+#### Description (team members get)
 
 Retrieves a `TeamMember` object for the given `TeamMember.id`.
 Learn about [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#retrieve-a-team-member).
 
-### Usage
+#### Usage (team members get)
 
 ```typescript
 await client.teamMembers.get({
@@ -4279,20 +4257,20 @@ await client.teamMembers.get({
 });
 ```
 
-### Parameters
+#### Parameters (team members get)
 
 **request:** `Square.GetTeamMembersRequest`
 
 **requestOptions:** `TeamMembers.RequestOptions`
 
-client.teamMembers.update({ ...params }) -> Square.UpdateTeamMemberResponse
+### client.teamMembers.update({ ...params }) -> Square.UpdateTeamMemberResponse
 
-### Description
+#### Description (team members update)
 
 Updates a single `TeamMember` object. The `TeamMember` object is returned on successful updates.
 Learn about [Troubleshooting the Team API](https://developer.squareup.com/docs/team/troubleshooting#update-a-team-member).
 
-### Usage
+#### Usage (team members update)
 
 ```typescript
 await client.teamMembers.update({
@@ -4336,7 +4314,7 @@ await client.teamMembers.update({
 });
 ```
 
-### Parameters
+#### Parameters (team members update)
 
 **request:** `Square.UpdateTeamMembersRequest`
 
@@ -4344,32 +4322,32 @@ await client.teamMembers.update({
 
 ## Team
 
-client.team.listJobs({ ...params }) -> Square.ListJobsResponse
+### client.team.listJobs({ ...params }) -> Square.ListJobsResponse
 
-### Description
+#### Description (team list jobs)
 
 Lists jobs in a seller account. Results are sorted by title in ascending order.
 
-### Usage
+#### Usage (team list jobs)
 
 ```typescript
 await client.team.listJobs();
 ```
 
-### Parameters
+#### Parameters (team list jobs)
 
 **request:** `Square.ListJobsRequest`
 
 **requestOptions:** `Team.RequestOptions`
 
-client.team.createJob({ ...params }) -> Square.CreateJobResponse
+### client.team.createJob({ ...params }) -> Square.CreateJobResponse
 
-### Description
+#### Description (team create job)
 
 Creates a job in a seller account. A job defines a title and tip eligibility. Note that
 compensation is defined in a [job assignment](entity:JobAssignment) in a team member's wage setting.
 
-### Usage
+#### Usage (team create job)
 
 ```typescript
 await client.team.createJob({
@@ -4381,19 +4359,19 @@ await client.team.createJob({
 });
 ```
 
-### Parameters
+#### Parameters (team create job)
 
 **request:** `Square.CreateJobRequest`
 
 **requestOptions:** `Team.RequestOptions`
 
-client.team.retrieveJob({ ...params }) -> Square.RetrieveJobResponse
+### client.team.retrieveJob({ ...params }) -> Square.RetrieveJobResponse
 
-### Description
+#### Description (team retrieve job)
 
 Retrieves a specified job.
 
-### Usage
+#### Usage (team retrieve job)
 
 ```typescript
 await client.team.retrieveJob({
@@ -4401,21 +4379,21 @@ await client.team.retrieveJob({
 });
 ```
 
-### Parameters
+#### Parameters (team retrieve job)
 
 **request:** `Square.RetrieveJobRequest`
 
 **requestOptions:** `Team.RequestOptions`
 
-client.team.updateJob({ ...params }) -> Square.UpdateJobResponse
+### client.team.updateJob({ ...params }) -> Square.UpdateJobResponse
 
-### Description
+#### Description (team update job)
 
 Updates the title or tip eligibility of a job. Changes to the title propagate to all
 `JobAssignment`, `Shift`, and `TeamMemberWage` objects that reference the job ID. Changes to
 tip eligibility propagate to all `TeamMemberWage` objects that reference the job ID.
 
-### Usage
+#### Usage (team update job)
 
 ```typescript
 await client.team.updateJob({
@@ -4427,7 +4405,7 @@ await client.team.updateJob({
 });
 ```
 
-### Parameters
+#### Parameters (team update job)
 
 **request:** `Square.UpdateJobRequest`
 
@@ -4435,15 +4413,15 @@ await client.team.updateJob({
 
 ## Terminal
 
-client.terminal.dismissTerminalAction({ ...params }) -> Square.DismissTerminalActionResponse
+### client.terminal.dismissTerminalAction({ ...params }) -> Square.DismissTerminalActionResponse
 
-### Description
+#### Description (terminal dismiss terminal action)
 
 Dismisses a Terminal action request if the status and type of the request permits it.
 
 See [Link and Dismiss Actions](https://developer.squareup.com/docs/terminal-api/advanced-features/custom-workflows/link-and-dismiss-actions) for more details.
 
-### Usage
+#### Usage (terminal dismiss terminal action)
 
 ```typescript
 await client.terminal.dismissTerminalAction({
@@ -4451,19 +4429,19 @@ await client.terminal.dismissTerminalAction({
 });
 ```
 
-### Parameters
+#### Parameters (terminal dismiss terminal action)
 
 **request:** `Square.DismissTerminalActionRequest`
 
 **requestOptions:** `Terminal.RequestOptions`
 
-client.terminal.dismissTerminalCheckout({ ...params }) -> Square.DismissTerminalCheckoutResponse
+### client.terminal.dismissTerminalCheckout({ ...params }) -> Square.DismissTerminalCheckoutResponse
 
-### Description
+#### Description (terminal dismiss terminal checkout)
 
 Dismisses a Terminal checkout request if the status and type of the request permits it.
 
-### Usage
+#### Usage (terminal dismiss terminal checkout)
 
 ```typescript
 await client.terminal.dismissTerminalCheckout({
@@ -4471,19 +4449,19 @@ await client.terminal.dismissTerminalCheckout({
 });
 ```
 
-### Parameters
+#### Parameters (terminal dismiss terminal checkout)
 
 **request:** `Square.DismissTerminalCheckoutRequest`
 
 **requestOptions:** `Terminal.RequestOptions`
 
-client.terminal.dismissTerminalRefund({ ...params }) -> Square.DismissTerminalRefundResponse
+### client.terminal.dismissTerminalRefund({ ...params }) -> Square.DismissTerminalRefundResponse
 
-### Description
+#### Description (terminal dismiss terminal refund)
 
 Dismisses a Terminal refund request if the status and type of the request permits it.
 
-### Usage
+#### Usage (terminal dismiss terminal refund)
 
 ```typescript
 await client.terminal.dismissTerminalRefund({
@@ -4491,7 +4469,7 @@ await client.terminal.dismissTerminalRefund({
 });
 ```
 
-### Parameters
+#### Parameters (terminal dismiss terminal refund)
 
 **request:** `Square.DismissTerminalRefundRequest`
 
@@ -4499,13 +4477,13 @@ await client.terminal.dismissTerminalRefund({
 
 ## Vendors
 
-client.vendors.batchCreate({ ...params }) -> Square.BatchCreateVendorsResponse
+### client.vendors.batchCreate({ ...params }) -> Square.BatchCreateVendorsResponse
 
-### Description
+#### Description (vendors batch create)
 
 Creates one or more [Vendor](entity:Vendor) objects to represent suppliers to a seller.
 
-### Usage
+#### Usage (vendors batch create)
 
 ```typescript
 await client.vendors.batchCreate({
@@ -4535,19 +4513,19 @@ await client.vendors.batchCreate({
 });
 ```
 
-### Parameters
+#### Parameters (vendors batch create)
 
 **request:** `Square.BatchCreateVendorsRequest`
 
 **requestOptions:** `Vendors.RequestOptions`
 
-client.vendors.batchGet({ ...params }) -> Square.BatchGetVendorsResponse
+### client.vendors.batchGet({ ...params }) -> Square.BatchGetVendorsResponse
 
-### Description
+#### Description (vendors batch get)
 
 Retrieves one or more vendors of specified [Vendor](entity:Vendor) IDs.
 
-### Usage
+#### Usage (vendors batch get)
 
 ```typescript
 await client.vendors.batchGet({
@@ -4555,19 +4533,19 @@ await client.vendors.batchGet({
 });
 ```
 
-### Parameters
+#### Parameters (vendors batch get)
 
 **request:** `Square.BatchGetVendorsRequest`
 
 **requestOptions:** `Vendors.RequestOptions`
 
-client.vendors.batchUpdate({ ...params }) -> Square.BatchUpdateVendorsResponse
+### client.vendors.batchUpdate({ ...params }) -> Square.BatchUpdateVendorsResponse
 
-### Description
+#### Description (vendors batch update)
 
 Updates one or more of existing [Vendor](entity:Vendor) objects as suppliers to a seller.
 
-### Usage
+#### Usage (vendors batch update)
 
 ```typescript
 await client.vendors.batchUpdate({
@@ -4582,19 +4560,19 @@ await client.vendors.batchUpdate({
 });
 ```
 
-### Parameters
+#### Parameters (vendors batch update)
 
 **request:** `Square.BatchUpdateVendorsRequest`
 
 **requestOptions:** `Vendors.RequestOptions`
 
-client.vendors.create({ ...params }) -> Square.CreateVendorResponse
+### client.vendors.create({ ...params }) -> Square.CreateVendorResponse
 
-### Description
+#### Description (vendors create)
 
 Creates a single [Vendor](entity:Vendor) object to represent a supplier to a seller.
 
-### Usage
+#### Usage (vendors create)
 
 ```typescript
 await client.vendors.create({
@@ -4623,37 +4601,37 @@ await client.vendors.create({
 });
 ```
 
-### Parameters
+#### Parameters (vendors create)
 
 **request:** `Square.CreateVendorRequest`
 
 **requestOptions:** `Vendors.RequestOptions`
 
-client.vendors.search({ ...params }) -> Square.SearchVendorsResponse
+### client.vendors.search({ ...params }) -> Square.SearchVendorsResponse
 
-### Description
+#### Description (vendors search)
 
 Searches for vendors using a filter against supported [Vendor](entity:Vendor) properties and a supported sorter.
 
-### Usage
+#### Usage (vendors search)
 
 ```typescript
 await client.vendors.search();
 ```
 
-### Parameters
+#### Parameters (vendors search)
 
 **request:** `Square.SearchVendorsRequest`
 
 **requestOptions:** `Vendors.RequestOptions`
 
-client.vendors.get({ ...params }) -> Square.GetVendorResponse
+### client.vendors.get({ ...params }) -> Square.GetVendorResponse
 
-### Description
+#### Description (vendors get)
 
 Retrieves the vendor of a specified [Vendor](entity:Vendor) ID.
 
-### Usage
+#### Usage (vendors get)
 
 ```typescript
 await client.vendors.get({
@@ -4661,19 +4639,19 @@ await client.vendors.get({
 });
 ```
 
-### Parameters
+#### Parameters (vendors get)
 
 **request:** `Square.GetVendorsRequest`
 
 **requestOptions:** `Vendors.RequestOptions`
 
-client.vendors.update({ ...params }) -> Square.UpdateVendorResponse
+### client.vendors.update({ ...params }) -> Square.UpdateVendorResponse
 
-### Description
+#### Description (vendors update)
 
 Updates an existing [Vendor](entity:Vendor) object as a supplier to a seller.
 
-### Usage
+#### Usage (vendors update)
 
 ```typescript
 await client.vendors.update({
@@ -4690,7 +4668,7 @@ await client.vendors.update({
 });
 ```
 
-### Parameters
+#### Parameters (vendors update)
 
 **request:** `Square.UpdateVendorsRequest`
 
@@ -4698,16 +4676,16 @@ await client.vendors.update({
 
 ## Bookings CustomAttributeDefinitions
 
-client.bookings.customAttributeDefinitions.list({ ...params }) -> core.Page
+### client.bookings.customAttributeDefinitions.list({ ...params }) -> core.Page
 
-### Description
+#### Description (bookings custom attribute definitions list)
 
 Get all bookings custom attribute definitions.
 
 To call this endpoint with buyer-level permissions, set `APPOINTMENTS_READ` for the OAuth scope.
 To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_READ` and `APPOINTMENTS_READ` for the OAuth scope.
 
-### Usage
+#### Usage (bookings custom attribute definitions list)
 
 ```typescript
 const response = await client.bookings.customAttributeDefinitions.list();
@@ -4722,15 +4700,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (bookings custom attribute definitions list)
 
 **request:** `Square.bookings.ListCustomAttributeDefinitionsRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.bookings.customAttributeDefinitions.create({ ...params }) -> Square.CreateBookingCustomAttributeDefinitionResponse
+### client.bookings.customAttributeDefinitions.create({ ...params }) -> Square.CreateBookingCustomAttributeDefinitionResponse
 
-### Description
+#### Description (bookings custom attribute definitions create)
 
 Creates a bookings custom attribute definition.
 
@@ -4740,7 +4718,7 @@ To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_WRITE
 For calls to this endpoint with seller-level permissions to succeed, the seller must have subscribed to _Appointments Plus_
 or _Appointments Premium_.
 
-### Usage
+#### Usage (bookings custom attribute definitions create)
 
 ```typescript
 await client.bookings.customAttributeDefinitions.create({
@@ -4748,22 +4726,22 @@ await client.bookings.customAttributeDefinitions.create({
 });
 ```
 
-### Parameters
+#### Parameters (bookings custom attribute definitions create)
 
 **request:** `Square.bookings.CreateBookingCustomAttributeDefinitionRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.bookings.customAttributeDefinitions.get({ ...params }) -> Square.RetrieveBookingCustomAttributeDefinitionResponse
+### client.bookings.customAttributeDefinitions.get({ ...params }) -> Square.RetrieveBookingCustomAttributeDefinitionResponse
 
-### Description
+#### Description (bookings custom attribute definitions get)
 
 Retrieves a bookings custom attribute definition.
 
 To call this endpoint with buyer-level permissions, set `APPOINTMENTS_READ` for the OAuth scope.
 To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_READ` and `APPOINTMENTS_READ` for the OAuth scope.
 
-### Usage
+#### Usage (bookings custom attribute definitions get)
 
 ```typescript
 await client.bookings.customAttributeDefinitions.get({
@@ -4771,15 +4749,15 @@ await client.bookings.customAttributeDefinitions.get({
 });
 ```
 
-### Parameters
+#### Parameters (bookings custom attribute definitions get)
 
 **request:** `Square.bookings.GetCustomAttributeDefinitionsRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.bookings.customAttributeDefinitions.update({ ...params }) -> Square.UpdateBookingCustomAttributeDefinitionResponse
+### client.bookings.customAttributeDefinitions.update({ ...params }) -> Square.UpdateBookingCustomAttributeDefinitionResponse
 
-### Description
+#### Description (bookings custom attribute definitions update)
 
 Updates a bookings custom attribute definition.
 
@@ -4789,7 +4767,7 @@ To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_WRITE
 For calls to this endpoint with seller-level permissions to succeed, the seller must have subscribed to _Appointments Plus_
 or _Appointments Premium_.
 
-### Usage
+#### Usage (bookings custom attribute definitions update)
 
 ```typescript
 await client.bookings.customAttributeDefinitions.update({
@@ -4798,15 +4776,15 @@ await client.bookings.customAttributeDefinitions.update({
 });
 ```
 
-### Parameters
+#### Parameters (bookings custom attribute definitions update)
 
 **request:** `Square.bookings.UpdateBookingCustomAttributeDefinitionRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.bookings.customAttributeDefinitions.delete({ ...params }) -> Square.DeleteBookingCustomAttributeDefinitionResponse
+### client.bookings.customAttributeDefinitions.delete({ ...params }) -> Square.DeleteBookingCustomAttributeDefinitionResponse
 
-### Description
+#### Description (bookings custom attribute definitions delete)
 
 Deletes a bookings custom attribute definition.
 
@@ -4816,7 +4794,7 @@ To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_WRITE
 For calls to this endpoint with seller-level permissions to succeed, the seller must have subscribed to _Appointments Plus_
 or _Appointments Premium_.
 
-### Usage
+#### Usage (bookings custom attribute definitions delete)
 
 ```typescript
 await client.bookings.customAttributeDefinitions.delete({
@@ -4824,7 +4802,7 @@ await client.bookings.customAttributeDefinitions.delete({
 });
 ```
 
-### Parameters
+#### Parameters (bookings custom attribute definitions delete)
 
 **request:** `Square.bookings.DeleteCustomAttributeDefinitionsRequest`
 
@@ -4832,9 +4810,9 @@ await client.bookings.customAttributeDefinitions.delete({
 
 ## Bookings CustomAttributes
 
-client.bookings.customAttributes.batchDelete({ ...params }) -> Square.BulkDeleteBookingCustomAttributesResponse
+### client.bookings.customAttributes.batchDelete({ ...params }) -> Square.BulkDeleteBookingCustomAttributesResponse
 
-### Description
+#### Description (bookings custom attributes batch delete)
 
 Bulk deletes bookings custom attributes.
 
@@ -4844,7 +4822,7 @@ To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_WRITE
 For calls to this endpoint with seller-level permissions to succeed, the seller must have subscribed to _Appointments Plus_
 or _Appointments Premium_.
 
-### Usage
+#### Usage (bookings custom attributes batch delete)
 
 ```typescript
 await client.bookings.customAttributes.batchDelete({
@@ -4857,15 +4835,15 @@ await client.bookings.customAttributes.batchDelete({
 });
 ```
 
-### Parameters
+#### Parameters (bookings custom attributes batch delete)
 
 **request:** `Square.bookings.BulkDeleteBookingCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.bookings.customAttributes.batchUpsert({ ...params }) -> Square.BulkUpsertBookingCustomAttributesResponse
+### client.bookings.customAttributes.batchUpsert({ ...params }) -> Square.BulkUpsertBookingCustomAttributesResponse
 
-### Description
+#### Description (bookings custom attributes batch upsert)
 
 Bulk upserts bookings custom attributes.
 
@@ -4875,7 +4853,7 @@ To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_WRITE
 For calls to this endpoint with seller-level permissions to succeed, the seller must have subscribed to _Appointments Plus_
 or _Appointments Premium_.
 
-### Usage
+#### Usage (bookings custom attributes batch upsert)
 
 ```typescript
 await client.bookings.customAttributes.batchUpsert({
@@ -4888,22 +4866,22 @@ await client.bookings.customAttributes.batchUpsert({
 });
 ```
 
-### Parameters
+#### Parameters (bookings custom attributes batch upsert)
 
 **request:** `Square.bookings.BulkUpsertBookingCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.bookings.customAttributes.list({ ...params }) -> core.Page
+### client.bookings.customAttributes.list({ ...params }) -> core.Page
 
-### Description
+#### Description (bookings custom attributes list)
 
 Lists a booking's custom attributes.
 
 To call this endpoint with buyer-level permissions, set `APPOINTMENTS_READ` for the OAuth scope.
 To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_READ` and `APPOINTMENTS_READ` for the OAuth scope.
 
-### Usage
+#### Usage (bookings custom attributes list)
 
 ```typescript
 const response = await client.bookings.customAttributes.list({
@@ -4922,22 +4900,22 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (bookings custom attributes list)
 
 **request:** `Square.bookings.ListCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.bookings.customAttributes.get({ ...params }) -> Square.RetrieveBookingCustomAttributeResponse
+### client.bookings.customAttributes.get({ ...params }) -> Square.RetrieveBookingCustomAttributeResponse
 
-### Description
+#### Description (bookings custom attributes get)
 
 Retrieves a bookings custom attribute.
 
 To call this endpoint with buyer-level permissions, set `APPOINTMENTS_READ` for the OAuth scope.
 To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_READ` and `APPOINTMENTS_READ` for the OAuth scope.
 
-### Usage
+#### Usage (bookings custom attributes get)
 
 ```typescript
 await client.bookings.customAttributes.get({
@@ -4946,15 +4924,15 @@ await client.bookings.customAttributes.get({
 });
 ```
 
-### Parameters
+#### Parameters (bookings custom attributes get)
 
 **request:** `Square.bookings.GetCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.bookings.customAttributes.upsert({ ...params }) -> Square.UpsertBookingCustomAttributeResponse
+### client.bookings.customAttributes.upsert({ ...params }) -> Square.UpsertBookingCustomAttributeResponse
 
-### Description
+#### Description (bookings custom attributes upsert)
 
 Upserts a bookings custom attribute.
 
@@ -4964,7 +4942,7 @@ To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_WRITE
 For calls to this endpoint with seller-level permissions to succeed, the seller must have subscribed to _Appointments Plus_
 or _Appointments Premium_.
 
-### Usage
+#### Usage (bookings custom attributes upsert)
 
 ```typescript
 await client.bookings.customAttributes.upsert({
@@ -4974,15 +4952,15 @@ await client.bookings.customAttributes.upsert({
 });
 ```
 
-### Parameters
+#### Parameters (bookings custom attributes upsert)
 
 **request:** `Square.bookings.UpsertBookingCustomAttributeRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.bookings.customAttributes.delete({ ...params }) -> Square.DeleteBookingCustomAttributeResponse
+### client.bookings.customAttributes.delete({ ...params }) -> Square.DeleteBookingCustomAttributeResponse
 
-### Description
+#### Description (bookings custom attributes delete)
 
 Deletes a bookings custom attribute.
 
@@ -4992,7 +4970,7 @@ To call this endpoint with seller-level permissions, set `APPOINTMENTS_ALL_WRITE
 For calls to this endpoint with seller-level permissions to succeed, the seller must have subscribed to _Appointments Plus_
 or _Appointments Premium_.
 
-### Usage
+#### Usage (bookings custom attributes delete)
 
 ```typescript
 await client.bookings.customAttributes.delete({
@@ -5001,7 +4979,7 @@ await client.bookings.customAttributes.delete({
 });
 ```
 
-### Parameters
+#### Parameters (bookings custom attributes delete)
 
 **request:** `Square.bookings.DeleteCustomAttributesRequest`
 
@@ -5009,13 +4987,13 @@ await client.bookings.customAttributes.delete({
 
 ## Bookings LocationProfiles
 
-client.bookings.locationProfiles.list({ ...params }) -> core.Page
+### client.bookings.locationProfiles.list({ ...params }) -> core.Page
 
-### Description
+#### Description (bookings location profiles list)
 
 Lists location booking profiles of a seller.
 
-### Usage
+#### Usage (bookings location profiles list)
 
 ```typescript
 const response = await client.bookings.locationProfiles.list();
@@ -5030,7 +5008,7 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (bookings location profiles list)
 
 **request:** `Square.bookings.ListLocationProfilesRequest`
 
@@ -5038,13 +5016,13 @@ while (page.hasNextPage()) {
 
 ## Bookings TeamMemberProfiles
 
-client.bookings.teamMemberProfiles.list({ ...params }) -> core.Page
+### client.bookings.teamMemberProfiles.list({ ...params }) -> core.Page
 
-### Description
+#### Description (bookings team member profiles list)
 
 Lists booking profiles for team members.
 
-### Usage
+#### Usage (bookings team member profiles list)
 
 ```typescript
 const response = await client.bookings.teamMemberProfiles.list();
@@ -5059,19 +5037,19 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (bookings team member profiles list)
 
 **request:** `Square.bookings.ListTeamMemberProfilesRequest`
 
 **requestOptions:** `TeamMemberProfiles.RequestOptions`
 
-client.bookings.teamMemberProfiles.get({ ...params }) -> Square.GetTeamMemberBookingProfileResponse
+### client.bookings.teamMemberProfiles.get({ ...params }) -> Square.GetTeamMemberBookingProfileResponse
 
-### Description
+#### Description (bookings team member profiles get)
 
 Retrieves a team member's booking profile.
 
-### Usage
+#### Usage (bookings team member profiles get)
 
 ```typescript
 await client.bookings.teamMemberProfiles.get({
@@ -5079,7 +5057,7 @@ await client.bookings.teamMemberProfiles.get({
 });
 ```
 
-### Parameters
+#### Parameters (bookings team member profiles get)
 
 **request:** `Square.bookings.GetTeamMemberProfilesRequest`
 
@@ -5087,14 +5065,14 @@ await client.bookings.teamMemberProfiles.get({
 
 ## CashDrawers Shifts
 
-client.cashDrawers.shifts.list({ ...params }) -> core.Page
+### client.cashDrawers.shifts.list({ ...params }) -> core.Page
 
-### Description
+#### Description (cash drawers shifts list)
 
 Provides the details for all of the cash drawer shifts for a location
 in a date range.
 
-### Usage
+#### Usage (cash drawers shifts list)
 
 ```typescript
 const response = await client.cashDrawers.shifts.list({
@@ -5113,20 +5091,20 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (cash drawers shifts list)
 
 **request:** `Square.cashDrawers.ListShiftsRequest`
 
 **requestOptions:** `Shifts.RequestOptions`
 
-client.cashDrawers.shifts.get({ ...params }) -> Square.GetCashDrawerShiftResponse
+### client.cashDrawers.shifts.get({ ...params }) -> Square.GetCashDrawerShiftResponse
 
-### Description
+#### Description (cash drawers shifts get)
 
 Provides the summary details for a single cash drawer shift. See
 [ListCashDrawerShiftEvents](api-endpoint:CashDrawers-ListCashDrawerShiftEvents) for a list of cash drawer shift events.
 
-### Usage
+#### Usage (cash drawers shifts get)
 
 ```typescript
 await client.cashDrawers.shifts.get({
@@ -5135,19 +5113,19 @@ await client.cashDrawers.shifts.get({
 });
 ```
 
-### Parameters
+#### Parameters (cash drawers shifts get)
 
 **request:** `Square.cashDrawers.GetShiftsRequest`
 
 **requestOptions:** `Shifts.RequestOptions`
 
-client.cashDrawers.shifts.listEvents({ ...params }) -> core.Page
+### client.cashDrawers.shifts.listEvents({ ...params }) -> core.Page
 
-### Description
+#### Description (cash drawers shifts list events)
 
 Provides a paginated list of events for a single cash drawer shift.
 
-### Usage
+#### Usage (cash drawers shifts list events)
 
 ```typescript
 const response = await client.cashDrawers.shifts.listEvents({
@@ -5168,7 +5146,7 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (cash drawers shifts list events)
 
 **request:** `Square.cashDrawers.ListEventsShiftsRequest`
 
@@ -5176,9 +5154,9 @@ while (page.hasNextPage()) {
 
 ## Catalog Images
 
-client.catalog.images.create({ ...params }) -> Square.CreateCatalogImageResponse
+### client.catalog.images.create({ ...params }) -> Square.CreateCatalogImageResponse
 
-### Description
+#### Description (catalog images create)
 
 Uploads an image file to be represented by a [CatalogImage](entity:CatalogImage) object that can be linked to an existing
 [CatalogObject](entity:CatalogObject) instance. The resulting `CatalogImage` is unattached to any `CatalogObject` if the `object_id`
@@ -5187,28 +5165,28 @@ is not specified.
 This `CreateCatalogImage` endpoint accepts HTTP multipart/form-data requests with a JSON part and an image file part in
 JPEG, PJPEG, PNG, or GIF format. The maximum file size is 15MB.
 
-### Usage
+#### Usage (catalog images create)
 
 ```typescript
 await client.catalog.images.create({});
 ```
 
-### Parameters
+#### Parameters (catalog images create)
 
 **request:** `Square.catalog.CreateImagesRequest`
 
 **requestOptions:** `Images.RequestOptions`
 
-client.catalog.images.update({ ...params }) -> Square.UpdateCatalogImageResponse
+### client.catalog.images.update({ ...params }) -> Square.UpdateCatalogImageResponse
 
-### Description
+#### Description (catalog images update)
 
 Uploads a new image file to replace the existing one in the specified [CatalogImage](entity:CatalogImage) object.
 
 This `UpdateCatalogImage` endpoint accepts HTTP multipart/form-data requests with a JSON part and an image file part in
 JPEG, PJPEG, PNG, or GIF format. The maximum file size is 15MB.
 
-### Usage
+#### Usage (catalog images update)
 
 ```typescript
 await client.catalog.images.update({
@@ -5216,7 +5194,7 @@ await client.catalog.images.update({
 });
 ```
 
-### Parameters
+#### Parameters (catalog images update)
 
 **request:** `Square.catalog.UpdateImagesRequest`
 
@@ -5224,9 +5202,9 @@ await client.catalog.images.update({
 
 ## Catalog Object
 
-client.catalog.object.upsert({ ...params }) -> Square.UpsertCatalogObjectResponse
+### client.catalog.object.upsert({ ...params }) -> Square.UpsertCatalogObjectResponse
 
-### Description
+#### Description (catalog object upsert)
 
 Creates a new or updates the specified [CatalogObject](entity:CatalogObject).
 
@@ -5234,7 +5212,7 @@ To ensure consistency, only one update request is processed at a time per seller
 While one (batch or non-batch) update request is being processed, other (batched and non-batched)
 update requests are rejected with the `429` error code.
 
-### Usage
+#### Usage (catalog object upsert)
 
 ```typescript
 await client.catalog.object.upsert({
@@ -5246,15 +5224,15 @@ await client.catalog.object.upsert({
 });
 ```
 
-### Parameters
+#### Parameters (catalog object upsert)
 
 **request:** `Square.catalog.UpsertCatalogObjectRequest`
 
 **requestOptions:** `Object_.RequestOptions`
 
-client.catalog.object.get({ ...params }) -> Square.GetCatalogObjectResponse
+### client.catalog.object.get({ ...params }) -> Square.GetCatalogObjectResponse
 
-### Description
+#### Description (catalog object get)
 
 Returns a single [CatalogItem](entity:CatalogItem) as a
 [CatalogObject](entity:CatalogObject) based on the provided ID. The returned
@@ -5264,7 +5242,7 @@ children, references to its
 [CatalogModifierList](entity:CatalogModifierList) objects, and the ids of
 any [CatalogTax](entity:CatalogTax) objects that apply to it.
 
-### Usage
+#### Usage (catalog object get)
 
 ```typescript
 await client.catalog.object.get({
@@ -5272,15 +5250,15 @@ await client.catalog.object.get({
 });
 ```
 
-### Parameters
+#### Parameters (catalog object get)
 
 **request:** `Square.catalog.GetObjectRequest`
 
 **requestOptions:** `Object_.RequestOptions`
 
-client.catalog.object.delete({ ...params }) -> Square.DeleteCatalogObjectResponse
+### client.catalog.object.delete({ ...params }) -> Square.DeleteCatalogObjectResponse
 
-### Description
+#### Description (catalog object delete)
 
 Deletes a single [CatalogObject](entity:CatalogObject) based on the
 provided ID and returns the set of successfully deleted IDs in the response.
@@ -5293,7 +5271,7 @@ To ensure consistency, only one delete request is processed at a time per seller
 While one (batch or non-batch) delete request is being processed, other (batched and non-batched)
 delete requests are rejected with the `429` error code.
 
-### Usage
+#### Usage (catalog object delete)
 
 ```typescript
 await client.catalog.object.delete({
@@ -5301,7 +5279,7 @@ await client.catalog.object.delete({
 });
 ```
 
-### Parameters
+#### Parameters (catalog object delete)
 
 **request:** `Square.catalog.DeleteObjectRequest`
 
@@ -5309,13 +5287,13 @@ await client.catalog.object.delete({
 
 ## Checkout PaymentLinks
 
-client.checkout.paymentLinks.list({ ...params }) -> core.Page
+### client.checkout.paymentLinks.list({ ...params }) -> core.Page
 
-### Description
+#### Description (checkout payment links list)
 
 Lists all payment links.
 
-### Usage
+#### Usage (checkout payment links list)
 
 ```typescript
 const response = await client.checkout.paymentLinks.list();
@@ -5330,19 +5308,19 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (checkout payment links list)
 
 **request:** `Square.checkout.ListPaymentLinksRequest`
 
 **requestOptions:** `PaymentLinks.RequestOptions`
 
-client.checkout.paymentLinks.create({ ...params }) -> Square.CreatePaymentLinkResponse
+### client.checkout.paymentLinks.create({ ...params }) -> Square.CreatePaymentLinkResponse
 
-### Description
+#### Description (checkout payment links create)
 
 Creates a Square-hosted checkout page. Applications can share the resulting payment link with their buyer to pay for goods and services.
 
-### Usage
+#### Usage (checkout payment links create)
 
 ```typescript
 await client.checkout.paymentLinks.create({
@@ -5358,19 +5336,19 @@ await client.checkout.paymentLinks.create({
 });
 ```
 
-### Parameters
+#### Parameters (checkout payment links create)
 
 **request:** `Square.checkout.CreatePaymentLinkRequest`
 
 **requestOptions:** `PaymentLinks.RequestOptions`
 
-client.checkout.paymentLinks.get({ ...params }) -> Square.GetPaymentLinkResponse
+### client.checkout.paymentLinks.get({ ...params }) -> Square.GetPaymentLinkResponse
 
-### Description
+#### Description (checkout payment links get)
 
 Retrieves a payment link.
 
-### Usage
+#### Usage (checkout payment links get)
 
 ```typescript
 await client.checkout.paymentLinks.get({
@@ -5378,21 +5356,21 @@ await client.checkout.paymentLinks.get({
 });
 ```
 
-### Parameters
+#### Parameters (checkout payment links get)
 
 **request:** `Square.checkout.GetPaymentLinksRequest`
 
 **requestOptions:** `PaymentLinks.RequestOptions`
 
-client.checkout.paymentLinks.update({ ...params }) -> Square.UpdatePaymentLinkResponse
+### client.checkout.paymentLinks.update({ ...params }) -> Square.UpdatePaymentLinkResponse
 
-### Description
+#### Description (checkout payment links update)
 
 Updates a payment link. You can update the `payment_link` fields such as
 `description`, `checkout_options`, and `pre_populated_data`.
 You cannot update other fields such as the `order_id`, `version`, `URL`, or `timestamp` field.
 
-### Usage
+#### Usage (checkout payment links update)
 
 ```typescript
 await client.checkout.paymentLinks.update({
@@ -5406,19 +5384,19 @@ await client.checkout.paymentLinks.update({
 });
 ```
 
-### Parameters
+#### Parameters (checkout payment links update)
 
 **request:** `Square.checkout.UpdatePaymentLinkRequest`
 
 **requestOptions:** `PaymentLinks.RequestOptions`
 
-client.checkout.paymentLinks.delete({ ...params }) -> Square.DeletePaymentLinkResponse
+### client.checkout.paymentLinks.delete({ ...params }) -> Square.DeletePaymentLinkResponse
 
-### Description
+#### Description (checkout payment links delete)
 
 Deletes a payment link.
 
-### Usage
+#### Usage (checkout payment links delete)
 
 ```typescript
 await client.checkout.paymentLinks.delete({
@@ -5426,7 +5404,7 @@ await client.checkout.paymentLinks.delete({
 });
 ```
 
-### Parameters
+#### Parameters (checkout payment links delete)
 
 **request:** `Square.checkout.DeletePaymentLinksRequest`
 
@@ -5434,9 +5412,9 @@ await client.checkout.paymentLinks.delete({
 
 ## Customers CustomAttributeDefinitions
 
-client.customers.customAttributeDefinitions.list({ ...params }) -> core.Page
+### client.customers.customAttributeDefinitions.list({ ...params }) -> core.Page
 
-### Description
+#### Description (customers custom attribute definitions list)
 
 Lists the customer-related [custom attribute definitions](entity:CustomAttributeDefinition) that belong to a Square seller account.
 
@@ -5445,7 +5423,7 @@ that are visible to the requesting application, including those that are created
 applications and set to `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`. Note that
 seller-defined custom attributes (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (customers custom attribute definitions list)
 
 ```typescript
 const response = await client.customers.customAttributeDefinitions.list();
@@ -5460,15 +5438,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (customers custom attribute definitions list)
 
 **request:** `Square.customers.ListCustomAttributeDefinitionsRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.customers.customAttributeDefinitions.create({ ...params }) -> Square.CreateCustomerCustomAttributeDefinitionResponse
+### client.customers.customAttributeDefinitions.create({ ...params }) -> Square.CreateCustomerCustomAttributeDefinitionResponse
 
-### Description
+#### Description (customers custom attribute definitions create)
 
 Creates a customer-related [custom attribute definition](entity:CustomAttributeDefinition) for a Square seller account.
 Use this endpoint to define a custom attribute that can be associated with customer profiles.
@@ -5482,7 +5460,7 @@ to set the custom attribute for customer profiles in the seller's Customer Direc
 Sellers can view all custom attributes in exported customer data, including those set to
 `VISIBILITY_HIDDEN`.
 
-### Usage
+#### Usage (customers custom attribute definitions create)
 
 ```typescript
 await client.customers.customAttributeDefinitions.create({
@@ -5498,15 +5476,15 @@ await client.customers.customAttributeDefinitions.create({
 });
 ```
 
-### Parameters
+#### Parameters (customers custom attribute definitions create)
 
 **request:** `Square.customers.CreateCustomerCustomAttributeDefinitionRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.customers.customAttributeDefinitions.get({ ...params }) -> Square.GetCustomerCustomAttributeDefinitionResponse
+### client.customers.customAttributeDefinitions.get({ ...params }) -> Square.GetCustomerCustomAttributeDefinitionResponse
 
-### Description
+#### Description (customers custom attribute definitions get)
 
 Retrieves a customer-related [custom attribute definition](entity:CustomAttributeDefinition) from a Square seller account.
 
@@ -5514,7 +5492,7 @@ To retrieve a custom attribute definition created by another application, the `v
 setting must be `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`. Note that seller-defined custom attributes
 (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (customers custom attribute definitions get)
 
 ```typescript
 await client.customers.customAttributeDefinitions.get({
@@ -5522,15 +5500,15 @@ await client.customers.customAttributeDefinitions.get({
 });
 ```
 
-### Parameters
+#### Parameters (customers custom attribute definitions get)
 
 **request:** `Square.customers.GetCustomAttributeDefinitionsRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.customers.customAttributeDefinitions.update({ ...params }) -> Square.UpdateCustomerCustomAttributeDefinitionResponse
+### client.customers.customAttributeDefinitions.update({ ...params }) -> Square.UpdateCustomerCustomAttributeDefinitionResponse
 
-### Description
+#### Description (customers custom attribute definitions update)
 
 Updates a customer-related [custom attribute definition](entity:CustomAttributeDefinition) for a Square seller account.
 
@@ -5540,7 +5518,7 @@ Use this endpoint to update the following fields: `name`, `description`, `visibi
 Only the definition owner can update a custom attribute definition. Note that sellers can view
 all custom attributes in exported customer data, including those set to `VISIBILITY_HIDDEN`.
 
-### Usage
+#### Usage (customers custom attribute definitions update)
 
 ```typescript
 await client.customers.customAttributeDefinitions.update({
@@ -5552,15 +5530,15 @@ await client.customers.customAttributeDefinitions.update({
 });
 ```
 
-### Parameters
+#### Parameters (customers custom attribute definitions update)
 
 **request:** `Square.customers.UpdateCustomerCustomAttributeDefinitionRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.customers.customAttributeDefinitions.delete({ ...params }) -> Square.DeleteCustomerCustomAttributeDefinitionResponse
+### client.customers.customAttributeDefinitions.delete({ ...params }) -> Square.DeleteCustomerCustomAttributeDefinitionResponse
 
-### Description
+#### Description (customers custom attribute definitions delete)
 
 Deletes a customer-related [custom attribute definition](entity:CustomAttributeDefinition) from a Square seller account.
 
@@ -5569,7 +5547,7 @@ all customer profiles in the seller's Customer Directory.
 
 Only the definition owner can delete a custom attribute definition.
 
-### Usage
+#### Usage (customers custom attribute definitions delete)
 
 ```typescript
 await client.customers.customAttributeDefinitions.delete({
@@ -5577,15 +5555,15 @@ await client.customers.customAttributeDefinitions.delete({
 });
 ```
 
-### Parameters
+#### Parameters (customers custom attribute definitions delete)
 
 **request:** `Square.customers.DeleteCustomAttributeDefinitionsRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.customers.customAttributeDefinitions.batchUpsert({ ...params }) -> Square.BatchUpsertCustomerCustomAttributesResponse
+### client.customers.customAttributeDefinitions.batchUpsert({ ...params }) -> Square.BatchUpsertCustomerCustomAttributesResponse
 
-### Description
+#### Description (customers custom attribute definitions batch upsert)
 
 Creates or updates [custom attributes](entity:CustomAttribute) for customer profiles as a bulk operation.
 
@@ -5602,7 +5580,7 @@ To create or update a custom attribute owned by another application, the `visibi
 must be `VISIBILITY_READ_WRITE_VALUES`. Note that seller-defined custom attributes
 (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (customers custom attribute definitions batch upsert)
 
 ```typescript
 await client.customers.customAttributeDefinitions.batchUpsert({
@@ -5646,7 +5624,7 @@ await client.customers.customAttributeDefinitions.batchUpsert({
 });
 ```
 
-### Parameters
+#### Parameters (customers custom attribute definitions batch upsert)
 
 **request:** `Square.customers.BatchUpsertCustomerCustomAttributesRequest`
 
@@ -5654,13 +5632,13 @@ await client.customers.customAttributeDefinitions.batchUpsert({
 
 ## Customers Groups
 
-client.customers.groups.list({ ...params }) -> core.Page
+### client.customers.groups.list({ ...params }) -> core.Page
 
-### Description
+#### Description (customers groups list)
 
 Retrieves the list of customer groups of a business.
 
-### Usage
+#### Usage (customers groups list)
 
 ```typescript
 const response = await client.customers.groups.list();
@@ -5675,21 +5653,21 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (customers groups list)
 
 **request:** `Square.customers.ListGroupsRequest`
 
 **requestOptions:** `Groups.RequestOptions`
 
-client.customers.groups.create({ ...params }) -> Square.CreateCustomerGroupResponse
+### client.customers.groups.create({ ...params }) -> Square.CreateCustomerGroupResponse
 
-### Description
+#### Description (customers groups create)
 
 Creates a new customer group for a business.
 
 The request must include the `name` value of the group.
 
-### Usage
+#### Usage (customers groups create)
 
 ```typescript
 await client.customers.groups.create({
@@ -5699,19 +5677,19 @@ await client.customers.groups.create({
 });
 ```
 
-### Parameters
+#### Parameters (customers groups create)
 
 **request:** `Square.customers.CreateCustomerGroupRequest`
 
 **requestOptions:** `Groups.RequestOptions`
 
-client.customers.groups.get({ ...params }) -> Square.GetCustomerGroupResponse
+### client.customers.groups.get({ ...params }) -> Square.GetCustomerGroupResponse
 
-### Description
+#### Description (customers groups get)
 
 Retrieves a specific customer group as identified by the `group_id` value.
 
-### Usage
+#### Usage (customers groups get)
 
 ```typescript
 await client.customers.groups.get({
@@ -5719,19 +5697,19 @@ await client.customers.groups.get({
 });
 ```
 
-### Parameters
+#### Parameters (customers groups get)
 
 **request:** `Square.customers.GetGroupsRequest`
 
 **requestOptions:** `Groups.RequestOptions`
 
-client.customers.groups.update({ ...params }) -> Square.UpdateCustomerGroupResponse
+### client.customers.groups.update({ ...params }) -> Square.UpdateCustomerGroupResponse
 
-### Description
+#### Description (customers groups update)
 
 Updates a customer group as identified by the `group_id` value.
 
-### Usage
+#### Usage (customers groups update)
 
 ```typescript
 await client.customers.groups.update({
@@ -5742,19 +5720,19 @@ await client.customers.groups.update({
 });
 ```
 
-### Parameters
+#### Parameters (customers groups update)
 
 **request:** `Square.customers.UpdateCustomerGroupRequest`
 
 **requestOptions:** `Groups.RequestOptions`
 
-client.customers.groups.delete({ ...params }) -> Square.DeleteCustomerGroupResponse
+### client.customers.groups.delete({ ...params }) -> Square.DeleteCustomerGroupResponse
 
-### Description
+#### Description (customers groups delete)
 
 Deletes a customer group as identified by the `group_id` value.
 
-### Usage
+#### Usage (customers groups delete)
 
 ```typescript
 await client.customers.groups.delete({
@@ -5762,22 +5740,22 @@ await client.customers.groups.delete({
 });
 ```
 
-### Parameters
+#### Parameters (customers groups delete)
 
 **request:** `Square.customers.DeleteGroupsRequest`
 
 **requestOptions:** `Groups.RequestOptions`
 
-client.customers.groups.add({ ...params }) -> Square.AddGroupToCustomerResponse
+### client.customers.groups.add({ ...params }) -> Square.AddGroupToCustomerResponse
 
-### Description
+#### Description (customers groups add)
 
 Adds a group membership to a customer.
 
 The customer is identified by the `customer_id` value
 and the customer group is identified by the `group_id` value.
 
-### Usage
+#### Usage (customers groups add)
 
 ```typescript
 await client.customers.groups.add({
@@ -5786,22 +5764,22 @@ await client.customers.groups.add({
 });
 ```
 
-### Parameters
+#### Parameters (customers groups add)
 
 **request:** `Square.customers.AddGroupsRequest`
 
 **requestOptions:** `Groups.RequestOptions`
 
-client.customers.groups.remove({ ...params }) -> Square.RemoveGroupFromCustomerResponse
+### client.customers.groups.remove({ ...params }) -> Square.RemoveGroupFromCustomerResponse
 
-### Description
+#### Description (customers groups remove)
 
 Removes a group membership from a customer.
 
 The customer is identified by the `customer_id` value
 and the customer group is identified by the `group_id` value.
 
-### Usage
+#### Usage (customers groups remove)
 
 ```typescript
 await client.customers.groups.remove({
@@ -5810,7 +5788,7 @@ await client.customers.groups.remove({
 });
 ```
 
-### Parameters
+#### Parameters (customers groups remove)
 
 **request:** `Square.customers.RemoveGroupsRequest`
 
@@ -5818,13 +5796,13 @@ await client.customers.groups.remove({
 
 ## Customers Segments
 
-client.customers.segments.list({ ...params }) -> core.Page
+### client.customers.segments.list({ ...params }) -> core.Page
 
-### Description
+#### Description (customers segments list)
 
 Retrieves the list of customer segments of a business.
 
-### Usage
+#### Usage (customers segments list)
 
 ```typescript
 const response = await client.customers.segments.list();
@@ -5839,19 +5817,19 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (customers segments list)
 
 **request:** `Square.customers.ListSegmentsRequest`
 
 **requestOptions:** `Segments.RequestOptions`
 
-client.customers.segments.get({ ...params }) -> Square.GetCustomerSegmentResponse
+### client.customers.segments.get({ ...params }) -> Square.GetCustomerSegmentResponse
 
-### Description
+#### Description (customers segments get)
 
 Retrieves a specific customer segment as identified by the `segment_id` value.
 
-### Usage
+#### Usage (customers segments get)
 
 ```typescript
 await client.customers.segments.get({
@@ -5859,7 +5837,7 @@ await client.customers.segments.get({
 });
 ```
 
-### Parameters
+#### Parameters (customers segments get)
 
 **request:** `Square.customers.GetSegmentsRequest`
 
@@ -5867,9 +5845,9 @@ await client.customers.segments.get({
 
 ## Customers Cards
 
-client.customers.cards.create({ ...params }) -> Square.CreateCustomerCardResponse
+### client.customers.cards.create({ ...params }) -> Square.CreateCustomerCardResponse
 
-### Description
+#### Description (customers cards create)
 
 Adds a card on file to an existing customer.
 
@@ -5877,7 +5855,7 @@ As with charges, calls to `CreateCustomerCard` are idempotent. Multiple
 calls with the same card nonce return the same card record that was created
 with the provided nonce during the _first_ call.
 
-### Usage
+#### Usage (customers cards create)
 
 ```typescript
 await client.customers.cards.create({
@@ -5895,19 +5873,19 @@ await client.customers.cards.create({
 });
 ```
 
-### Parameters
+#### Parameters (customers cards create)
 
 **request:** `Square.customers.CreateCustomerCardRequest`
 
 **requestOptions:** `Cards.RequestOptions`
 
-client.customers.cards.delete({ ...params }) -> Square.DeleteCustomerCardResponse
+### client.customers.cards.delete({ ...params }) -> Square.DeleteCustomerCardResponse
 
-### Description
+#### Description (customers cards delete)
 
 Removes a card on file from a customer.
 
-### Usage
+#### Usage (customers cards delete)
 
 ```typescript
 await client.customers.cards.delete({
@@ -5916,7 +5894,7 @@ await client.customers.cards.delete({
 });
 ```
 
-### Parameters
+#### Parameters (customers cards delete)
 
 **request:** `Square.customers.DeleteCardsRequest`
 
@@ -5924,9 +5902,9 @@ await client.customers.cards.delete({
 
 ## Customers CustomAttributes
 
-client.customers.customAttributes.list({ ...params }) -> core.Page
+### client.customers.customAttributes.list({ ...params }) -> core.Page
 
-### Description
+#### Description (customers custom attributes list)
 
 Lists the [custom attributes](entity:CustomAttribute) associated with a customer profile.
 
@@ -5937,7 +5915,7 @@ When all response pages are retrieved, the results include all custom attributes
 visible to the requesting application, including those that are owned by other applications
 and set to `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (customers custom attributes list)
 
 ```typescript
 const response = await client.customers.customAttributes.list({
@@ -5956,15 +5934,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (customers custom attributes list)
 
 **request:** `Square.customers.ListCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.customers.customAttributes.get({ ...params }) -> Square.GetCustomerCustomAttributeResponse
+### client.customers.customAttributes.get({ ...params }) -> Square.GetCustomerCustomAttributeResponse
 
-### Description
+#### Description (customers custom attributes get)
 
 Retrieves a [custom attribute](entity:CustomAttribute) associated with a customer profile.
 
@@ -5975,7 +5953,7 @@ To retrieve a custom attribute owned by another application, the `visibility` se
 `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`. Note that seller-defined custom attributes
 (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (customers custom attributes get)
 
 ```typescript
 await client.customers.customAttributes.get({
@@ -5984,15 +5962,15 @@ await client.customers.customAttributes.get({
 });
 ```
 
-### Parameters
+#### Parameters (customers custom attributes get)
 
 **request:** `Square.customers.GetCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.customers.customAttributes.upsert({ ...params }) -> Square.UpsertCustomerCustomAttributeResponse
+### client.customers.customAttributes.upsert({ ...params }) -> Square.UpsertCustomerCustomAttributeResponse
 
-### Description
+#### Description (customers custom attributes upsert)
 
 Creates or updates a [custom attribute](entity:CustomAttribute) for a customer profile.
 
@@ -6004,7 +5982,7 @@ To create or update a custom attribute owned by another application, the `visibi
 must be `VISIBILITY_READ_WRITE_VALUES`. Note that seller-defined custom attributes
 (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (customers custom attributes upsert)
 
 ```typescript
 await client.customers.customAttributes.upsert({
@@ -6016,15 +5994,15 @@ await client.customers.customAttributes.upsert({
 });
 ```
 
-### Parameters
+#### Parameters (customers custom attributes upsert)
 
 **request:** `Square.customers.UpsertCustomerCustomAttributeRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.customers.customAttributes.delete({ ...params }) -> Square.DeleteCustomerCustomAttributeResponse
+### client.customers.customAttributes.delete({ ...params }) -> Square.DeleteCustomerCustomAttributeResponse
 
-### Description
+#### Description (customers custom attributes delete)
 
 Deletes a [custom attribute](entity:CustomAttribute) associated with a customer profile.
 
@@ -6032,7 +6010,7 @@ To delete a custom attribute owned by another application, the `visibility` sett
 `VISIBILITY_READ_WRITE_VALUES`. Note that seller-defined custom attributes
 (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (customers custom attributes delete)
 
 ```typescript
 await client.customers.customAttributes.delete({
@@ -6041,7 +6019,7 @@ await client.customers.customAttributes.delete({
 });
 ```
 
-### Parameters
+#### Parameters (customers custom attributes delete)
 
 **request:** `Square.customers.DeleteCustomAttributesRequest`
 
@@ -6049,13 +6027,13 @@ await client.customers.customAttributes.delete({
 
 ## Devices Codes
 
-client.devices.codes.list({ ...params }) -> core.Page
+### client.devices.codes.list({ ...params }) -> core.Page
 
-### Description
+#### Description (devices codes list)
 
 Lists all DeviceCodes associated with the merchant.
 
-### Usage
+#### Usage (devices codes list)
 
 ```typescript
 const response = await client.devices.codes.list();
@@ -6070,20 +6048,20 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (devices codes list)
 
 **request:** `Square.devices.ListCodesRequest`
 
 **requestOptions:** `Codes.RequestOptions`
 
-client.devices.codes.create({ ...params }) -> Square.CreateDeviceCodeResponse
+### client.devices.codes.create({ ...params }) -> Square.CreateDeviceCodeResponse
 
-### Description
+#### Description (devices codes create)
 
 Creates a DeviceCode that can be used to login to a Square Terminal device to enter the connected
 terminal mode.
 
-### Usage
+#### Usage (devices codes create)
 
 ```typescript
 await client.devices.codes.create({
@@ -6096,19 +6074,19 @@ await client.devices.codes.create({
 });
 ```
 
-### Parameters
+#### Parameters (devices codes create)
 
 **request:** `Square.devices.CreateDeviceCodeRequest`
 
 **requestOptions:** `Codes.RequestOptions`
 
-client.devices.codes.get({ ...params }) -> Square.GetDeviceCodeResponse
+### client.devices.codes.get({ ...params }) -> Square.GetDeviceCodeResponse
 
-### Description
+#### Description (devices codes get)
 
 Retrieves DeviceCode with the associated ID.
 
-### Usage
+#### Usage (devices codes get)
 
 ```typescript
 await client.devices.codes.get({
@@ -6116,7 +6094,7 @@ await client.devices.codes.get({
 });
 ```
 
-### Parameters
+#### Parameters (devices codes get)
 
 **request:** `Square.devices.GetCodesRequest`
 
@@ -6124,13 +6102,13 @@ await client.devices.codes.get({
 
 ## Disputes Evidence
 
-client.disputes.evidence.list({ ...params }) -> core.Page
+### client.disputes.evidence.list({ ...params }) -> core.Page
 
-### Description
+#### Description (disputes evidence list)
 
 Returns a list of evidence associated with a dispute.
 
-### Usage
+#### Usage (disputes evidence list)
 
 ```typescript
 const response = await client.disputes.evidence.list({
@@ -6149,21 +6127,21 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (disputes evidence list)
 
 **request:** `Square.disputes.ListEvidenceRequest`
 
 **requestOptions:** `Evidence.RequestOptions`
 
-client.disputes.evidence.get({ ...params }) -> Square.GetDisputeEvidenceResponse
+### client.disputes.evidence.get({ ...params }) -> Square.GetDisputeEvidenceResponse
 
-### Description
+#### Description (disputes evidence get)
 
 Returns the metadata for the evidence specified in the request URL path.
 
 You must maintain a copy of any evidence uploaded if you want to reference it later. Evidence cannot be downloaded after you upload it.
 
-### Usage
+#### Usage (disputes evidence get)
 
 ```typescript
 await client.disputes.evidence.get({
@@ -6172,20 +6150,20 @@ await client.disputes.evidence.get({
 });
 ```
 
-### Parameters
+#### Parameters (disputes evidence get)
 
 **request:** `Square.disputes.GetEvidenceRequest`
 
 **requestOptions:** `Evidence.RequestOptions`
 
-client.disputes.evidence.delete({ ...params }) -> Square.DeleteDisputeEvidenceResponse
+### client.disputes.evidence.delete({ ...params }) -> Square.DeleteDisputeEvidenceResponse
 
-### Description
+#### Description (disputes evidence delete)
 
 Removes specified evidence from a dispute.
 Square does not send the bank any evidence that is removed.
 
-### Usage
+#### Usage (disputes evidence delete)
 
 ```typescript
 await client.disputes.evidence.delete({
@@ -6194,7 +6172,7 @@ await client.disputes.evidence.delete({
 });
 ```
 
-### Parameters
+#### Parameters (disputes evidence delete)
 
 **request:** `Square.disputes.DeleteEvidenceRequest`
 
@@ -6202,16 +6180,16 @@ await client.disputes.evidence.delete({
 
 ## GiftCards Activities
 
-client.giftCards.activities.list({ ...params }) -> core.Page
+### client.giftCards.activities.list({ ...params }) -> core.Page
 
-### Description
+#### Description (gift cards activities list)
 
 Lists gift card activities. By default, you get gift card activities for all
 gift cards in the seller's account. You can optionally specify query parameters to
 filter the list. For example, you can get a list of gift card activities for a gift card,
 for all gift cards in a specific region, or for activities within a time window.
 
-### Usage
+#### Usage (gift cards activities list)
 
 ```typescript
 const response = await client.giftCards.activities.list();
@@ -6226,20 +6204,20 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (gift cards activities list)
 
 **request:** `Square.giftCards.ListActivitiesRequest`
 
 **requestOptions:** `Activities.RequestOptions`
 
-client.giftCards.activities.create({ ...params }) -> Square.CreateGiftCardActivityResponse
+### client.giftCards.activities.create({ ...params }) -> Square.CreateGiftCardActivityResponse
 
-### Description
+#### Description (gift cards activities create)
 
 Creates a gift card activity to manage the balance or state of a [gift card](entity:GiftCard).
 For example, create an `ACTIVATE` activity to activate a gift card with an initial balance before first use.
 
-### Usage
+#### Usage (gift cards activities create)
 
 ```typescript
 await client.giftCards.activities.create({
@@ -6256,7 +6234,7 @@ await client.giftCards.activities.create({
 });
 ```
 
-### Parameters
+#### Parameters (gift cards activities create)
 
 **request:** `Square.giftCards.CreateGiftCardActivityRequest`
 
@@ -6264,13 +6242,13 @@ await client.giftCards.activities.create({
 
 ## Labor BreakTypes
 
-client.labor.breakTypes.list({ ...params }) -> core.Page
+### client.labor.breakTypes.list({ ...params }) -> core.Page
 
-### Description
+#### Description (labor break types list)
 
 Returns a paginated list of `BreakType` instances for a business.
 
-### Usage
+#### Usage (labor break types list)
 
 ```typescript
 const response = await client.labor.breakTypes.list();
@@ -6285,15 +6263,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (labor break types list)
 
 **request:** `Square.labor.ListBreakTypesRequest`
 
 **requestOptions:** `BreakTypes.RequestOptions`
 
-client.labor.breakTypes.create({ ...params }) -> Square.CreateBreakTypeResponse
+### client.labor.breakTypes.create({ ...params }) -> Square.CreateBreakTypeResponse
 
-### Description
+#### Description (labor break types create)
 
 Creates a new `BreakType`.
 
@@ -6310,7 +6288,7 @@ You can only have three `BreakType` instances per location. If you attempt to ad
 `BreakType` for a location, an `INVALID_REQUEST_ERROR` "Exceeded limit of 3 breaks per location."
 is returned.
 
-### Usage
+#### Usage (labor break types create)
 
 ```typescript
 await client.labor.breakTypes.create({
@@ -6324,19 +6302,19 @@ await client.labor.breakTypes.create({
 });
 ```
 
-### Parameters
+#### Parameters (labor break types create)
 
 **request:** `Square.labor.CreateBreakTypeRequest`
 
 **requestOptions:** `BreakTypes.RequestOptions`
 
-client.labor.breakTypes.get({ ...params }) -> Square.GetBreakTypeResponse
+### client.labor.breakTypes.get({ ...params }) -> Square.GetBreakTypeResponse
 
-### Description
+#### Description (labor break types get)
 
 Returns a single `BreakType` specified by `id`.
 
-### Usage
+#### Usage (labor break types get)
 
 ```typescript
 await client.labor.breakTypes.get({
@@ -6344,19 +6322,19 @@ await client.labor.breakTypes.get({
 });
 ```
 
-### Parameters
+#### Parameters (labor break types get)
 
 **request:** `Square.labor.GetBreakTypesRequest`
 
 **requestOptions:** `BreakTypes.RequestOptions`
 
-client.labor.breakTypes.update({ ...params }) -> Square.UpdateBreakTypeResponse
+### client.labor.breakTypes.update({ ...params }) -> Square.UpdateBreakTypeResponse
 
-### Description
+#### Description (labor break types update)
 
 Updates an existing `BreakType`.
 
-### Usage
+#### Usage (labor break types update)
 
 ```typescript
 await client.labor.breakTypes.update({
@@ -6371,21 +6349,21 @@ await client.labor.breakTypes.update({
 });
 ```
 
-### Parameters
+#### Parameters (labor break types update)
 
 **request:** `Square.labor.UpdateBreakTypeRequest`
 
 **requestOptions:** `BreakTypes.RequestOptions`
 
-client.labor.breakTypes.delete({ ...params }) -> Square.DeleteBreakTypeResponse
+### client.labor.breakTypes.delete({ ...params }) -> Square.DeleteBreakTypeResponse
 
-### Description
+#### Description (labor break types delete)
 
 Deletes an existing `BreakType`.
 
 A `BreakType` can be deleted even if it is referenced from a `Shift`.
 
-### Usage
+#### Usage (labor break types delete)
 
 ```typescript
 await client.labor.breakTypes.delete({
@@ -6393,7 +6371,7 @@ await client.labor.breakTypes.delete({
 });
 ```
 
-### Parameters
+#### Parameters (labor break types delete)
 
 **request:** `Square.labor.DeleteBreakTypesRequest`
 
@@ -6401,13 +6379,13 @@ await client.labor.breakTypes.delete({
 
 ## Labor EmployeeWages
 
-client.labor.employeeWages.list({ ...params }) -> core.Page
+### client.labor.employeeWages.list({ ...params }) -> core.Page
 
-### Description
+#### Description (labor employee wages list)
 
 Returns a paginated list of `EmployeeWage` instances for a business.
 
-### Usage
+#### Usage (labor employee wages list)
 
 ```typescript
 const response = await client.labor.employeeWages.list();
@@ -6422,19 +6400,19 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (labor employee wages list)
 
 **request:** `Square.labor.ListEmployeeWagesRequest`
 
 **requestOptions:** `EmployeeWages.RequestOptions`
 
-client.labor.employeeWages.get({ ...params }) -> Square.GetEmployeeWageResponse
+### client.labor.employeeWages.get({ ...params }) -> Square.GetEmployeeWageResponse
 
-### Description
+#### Description (labor employee wages get)
 
 Returns a single `EmployeeWage` specified by `id`.
 
-### Usage
+#### Usage (labor employee wages get)
 
 ```typescript
 await client.labor.employeeWages.get({
@@ -6442,7 +6420,7 @@ await client.labor.employeeWages.get({
 });
 ```
 
-### Parameters
+#### Parameters (labor employee wages get)
 
 **request:** `Square.labor.GetEmployeeWagesRequest`
 
@@ -6450,9 +6428,9 @@ await client.labor.employeeWages.get({
 
 ## Labor Shifts
 
-client.labor.shifts.create({ ...params }) -> Square.CreateShiftResponse
+### client.labor.shifts.create({ ...params }) -> Square.CreateShiftResponse
 
-### Description
+#### Description (labor shifts create)
 
 Creates a new `Shift`.
 
@@ -6473,12 +6451,8 @@ An attempt to create a new `Shift` can result in a `BAD_REQUEST` error when:
 - The `Break` instances are set in the request and a break `start_at`
 is before the `Shift.start_at`, a break `end_at` is after
 the `Shift.end_at`, or both.
-  
-  
-  
-  
 
-### Usage
+#### Usage (labor shifts create)
 
 ```typescript
 await client.labor.shifts.create({
@@ -6514,15 +6488,15 @@ await client.labor.shifts.create({
 });
 ```
 
-### Parameters
+#### Parameters (labor shifts create)
 
 **request:** `Square.labor.CreateShiftRequest`
 
 **requestOptions:** `Shifts.RequestOptions`
 
-client.labor.shifts.search({ ...params }) -> Square.SearchShiftsResponse
+### client.labor.shifts.search({ ...params }) -> Square.SearchShiftsResponse
 
-### Description
+#### Description (labor shifts search)
 
 Returns a paginated list of `Shift` records for a business.
 The list to be returned can be filtered by:
@@ -6540,12 +6514,8 @@ The list can be sorted by:
 - `END_AT`
 - `CREATED_AT`
 - `UPDATED_AT`
-  
-  
-  
-  
 
-### Usage
+#### Usage (labor shifts search)
 
 ```typescript
 await client.labor.shifts.search({
@@ -6565,19 +6535,19 @@ await client.labor.shifts.search({
 });
 ```
 
-### Parameters
+#### Parameters (labor shifts search)
 
 **request:** `Square.labor.SearchShiftsRequest`
 
 **requestOptions:** `Shifts.RequestOptions`
 
-client.labor.shifts.get({ ...params }) -> Square.GetShiftResponse
+### client.labor.shifts.get({ ...params }) -> Square.GetShiftResponse
 
-### Description
+#### Description (labor shifts get)
 
 Returns a single `Shift` specified by `id`.
 
-### Usage
+#### Usage (labor shifts get)
 
 ```typescript
 await client.labor.shifts.get({
@@ -6585,15 +6555,15 @@ await client.labor.shifts.get({
 });
 ```
 
-### Parameters
+#### Parameters (labor shifts get)
 
 **request:** `Square.labor.GetShiftsRequest`
 
 **requestOptions:** `Shifts.RequestOptions`
 
-client.labor.shifts.update({ ...params }) -> Square.UpdateShiftResponse
+### client.labor.shifts.update({ ...params }) -> Square.UpdateShiftResponse
 
-### Description
+#### Description (labor shifts update)
 
 Updates an existing `Shift`.
 
@@ -6603,7 +6573,7 @@ the `end_at` property set to a valid RFC-3339 datetime string.
 When closing a `Shift`, all `Break` instances in the `Shift` must be complete with `end_at`
 set on each `Break`.
 
-### Usage
+#### Usage (labor shifts update)
 
 ```typescript
 await client.labor.shifts.update({
@@ -6641,19 +6611,19 @@ await client.labor.shifts.update({
 });
 ```
 
-### Parameters
+#### Parameters (labor shifts update)
 
 **request:** `Square.labor.UpdateShiftRequest`
 
 **requestOptions:** `Shifts.RequestOptions`
 
-client.labor.shifts.delete({ ...params }) -> Square.DeleteShiftResponse
+### client.labor.shifts.delete({ ...params }) -> Square.DeleteShiftResponse
 
-### Description
+#### Description (labor shifts delete)
 
 Deletes a `Shift`.
 
-### Usage
+#### Usage (labor shifts delete)
 
 ```typescript
 await client.labor.shifts.delete({
@@ -6661,7 +6631,7 @@ await client.labor.shifts.delete({
 });
 ```
 
-### Parameters
+#### Parameters (labor shifts delete)
 
 **request:** `Square.labor.DeleteShiftsRequest`
 
@@ -6669,13 +6639,13 @@ await client.labor.shifts.delete({
 
 ## Labor TeamMemberWages
 
-client.labor.teamMemberWages.list({ ...params }) -> core.Page
+### client.labor.teamMemberWages.list({ ...params }) -> core.Page
 
-### Description
+#### Description (labor team member wages list)
 
 Returns a paginated list of `TeamMemberWage` instances for a business.
 
-### Usage
+#### Usage (labor team member wages list)
 
 ```typescript
 const response = await client.labor.teamMemberWages.list();
@@ -6690,19 +6660,19 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (labor team member wages list)
 
 **request:** `Square.labor.ListTeamMemberWagesRequest`
 
 **requestOptions:** `TeamMemberWages.RequestOptions`
 
-client.labor.teamMemberWages.get({ ...params }) -> Square.GetTeamMemberWageResponse
+### client.labor.teamMemberWages.get({ ...params }) -> Square.GetTeamMemberWageResponse
 
-### Description
+#### Description (labor team member wages get)
 
 Returns a single `TeamMemberWage` specified by `id`.
 
-### Usage
+#### Usage (labor team member wages get)
 
 ```typescript
 await client.labor.teamMemberWages.get({
@@ -6710,7 +6680,7 @@ await client.labor.teamMemberWages.get({
 });
 ```
 
-### Parameters
+#### Parameters (labor team member wages get)
 
 **request:** `Square.labor.GetTeamMemberWagesRequest`
 
@@ -6718,13 +6688,13 @@ await client.labor.teamMemberWages.get({
 
 ## Labor WorkweekConfigs
 
-client.labor.workweekConfigs.list({ ...params }) -> core.Page
+### client.labor.workweekConfigs.list({ ...params }) -> core.Page
 
-### Description
+#### Description (labor workweek configs list)
 
 Returns a list of `WorkweekConfig` instances for a business.
 
-### Usage
+#### Usage (labor workweek configs list)
 
 ```typescript
 const response = await client.labor.workweekConfigs.list();
@@ -6739,19 +6709,19 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (labor workweek configs list)
 
 **request:** `Square.labor.ListWorkweekConfigsRequest`
 
 **requestOptions:** `WorkweekConfigs.RequestOptions`
 
-client.labor.workweekConfigs.get({ ...params }) -> Square.UpdateWorkweekConfigResponse
+### client.labor.workweekConfigs.get({ ...params }) -> Square.UpdateWorkweekConfigResponse
 
-### Description
+#### Description (labor workweek configs get)
 
 Updates a `WorkweekConfig`.
 
-### Usage
+#### Usage (labor workweek configs get)
 
 ```typescript
 await client.labor.workweekConfigs.get({
@@ -6764,7 +6734,7 @@ await client.labor.workweekConfigs.get({
 });
 ```
 
-### Parameters
+#### Parameters (labor workweek configs get)
 
 **request:** `Square.labor.UpdateWorkweekConfigRequest`
 
@@ -6772,16 +6742,16 @@ await client.labor.workweekConfigs.get({
 
 ## Locations CustomAttributeDefinitions
 
-client.locations.customAttributeDefinitions.list({ ...params }) -> core.Page
+### client.locations.customAttributeDefinitions.list({ ...params }) -> core.Page
 
-### Description
+#### Description (locations custom attribute definitions list)
 
 Lists the location-related [custom attribute definitions](entity:CustomAttributeDefinition) that belong to a Square seller account.
 When all response pages are retrieved, the results include all custom attribute definitions
 that are visible to the requesting application, including those that are created by other
 applications and set to `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (locations custom attribute definitions list)
 
 ```typescript
 const response = await client.locations.customAttributeDefinitions.list();
@@ -6796,15 +6766,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (locations custom attribute definitions list)
 
 **request:** `Square.locations.ListCustomAttributeDefinitionsRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.locations.customAttributeDefinitions.create({ ...params }) -> Square.CreateLocationCustomAttributeDefinitionResponse
+### client.locations.customAttributeDefinitions.create({ ...params }) -> Square.CreateLocationCustomAttributeDefinitionResponse
 
-### Description
+#### Description (locations custom attribute definitions create)
 
 Creates a location-related [custom attribute definition](entity:CustomAttributeDefinition) for a Square seller account.
 Use this endpoint to define a custom attribute that can be associated with locations.
@@ -6814,7 +6784,7 @@ for a custom attribute. After the definition is created, you can call
 [BulkUpsertLocationCustomAttributes](api-endpoint:LocationCustomAttributes-BulkUpsertLocationCustomAttributes)
 to set the custom attribute for locations.
 
-### Usage
+#### Usage (locations custom attribute definitions create)
 
 ```typescript
 await client.locations.customAttributeDefinitions.create({
@@ -6830,21 +6800,21 @@ await client.locations.customAttributeDefinitions.create({
 });
 ```
 
-### Parameters
+#### Parameters (locations custom attribute definitions create)
 
 **request:** `Square.locations.CreateLocationCustomAttributeDefinitionRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.locations.customAttributeDefinitions.get({ ...params }) -> Square.RetrieveLocationCustomAttributeDefinitionResponse
+### client.locations.customAttributeDefinitions.get({ ...params }) -> Square.RetrieveLocationCustomAttributeDefinitionResponse
 
-### Description
+#### Description (locations custom attribute definitions get)
 
 Retrieves a location-related [custom attribute definition](entity:CustomAttributeDefinition) from a Square seller account.
 To retrieve a custom attribute definition created by another application, the `visibility`
 setting must be `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (locations custom attribute definitions get)
 
 ```typescript
 await client.locations.customAttributeDefinitions.get({
@@ -6852,22 +6822,22 @@ await client.locations.customAttributeDefinitions.get({
 });
 ```
 
-### Parameters
+#### Parameters (locations custom attribute definitions get)
 
 **request:** `Square.locations.GetCustomAttributeDefinitionsRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.locations.customAttributeDefinitions.update({ ...params }) -> Square.UpdateLocationCustomAttributeDefinitionResponse
+### client.locations.customAttributeDefinitions.update({ ...params }) -> Square.UpdateLocationCustomAttributeDefinitionResponse
 
-### Description
+#### Description (locations custom attribute definitions update)
 
 Updates a location-related [custom attribute definition](entity:CustomAttributeDefinition) for a Square seller account.
 Use this endpoint to update the following fields: `name`, `description`, `visibility`, or the
 `schema` for a `Selection` data type.
 Only the definition owner can update a custom attribute definition.
 
-### Usage
+#### Usage (locations custom attribute definitions update)
 
 ```typescript
 await client.locations.customAttributeDefinitions.update({
@@ -6879,22 +6849,22 @@ await client.locations.customAttributeDefinitions.update({
 });
 ```
 
-### Parameters
+#### Parameters (locations custom attribute definitions update)
 
 **request:** `Square.locations.UpdateLocationCustomAttributeDefinitionRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.locations.customAttributeDefinitions.delete({ ...params }) -> Square.DeleteLocationCustomAttributeDefinitionResponse
+### client.locations.customAttributeDefinitions.delete({ ...params }) -> Square.DeleteLocationCustomAttributeDefinitionResponse
 
-### Description
+#### Description (locations custom attribute definitions delete)
 
 Deletes a location-related [custom attribute definition](entity:CustomAttributeDefinition) from a Square seller account.
 Deleting a custom attribute definition also deletes the corresponding custom attribute from
 all locations.
 Only the definition owner can delete a custom attribute definition.
 
-### Usage
+#### Usage (locations custom attribute definitions delete)
 
 ```typescript
 await client.locations.customAttributeDefinitions.delete({
@@ -6902,7 +6872,7 @@ await client.locations.customAttributeDefinitions.delete({
 });
 ```
 
-### Parameters
+#### Parameters (locations custom attribute definitions delete)
 
 **request:** `Square.locations.DeleteCustomAttributeDefinitionsRequest`
 
@@ -6910,15 +6880,15 @@ await client.locations.customAttributeDefinitions.delete({
 
 ## Locations CustomAttributes
 
-client.locations.customAttributes.batchDelete({ ...params }) -> Square.BulkDeleteLocationCustomAttributesResponse
+### client.locations.customAttributes.batchDelete({ ...params }) -> Square.BulkDeleteLocationCustomAttributesResponse
 
-### Description
+#### Description (locations custom attributes batch delete)
 
 Deletes [custom attributes](entity:CustomAttribute) for locations as a bulk operation.
 To delete a custom attribute owned by another application, the `visibility` setting must be
 `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (locations custom attributes batch delete)
 
 ```typescript
 await client.locations.customAttributes.batchDelete({
@@ -6936,15 +6906,15 @@ await client.locations.customAttributes.batchDelete({
 });
 ```
 
-### Parameters
+#### Parameters (locations custom attributes batch delete)
 
 **request:** `Square.locations.BulkDeleteLocationCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.locations.customAttributes.batchUpsert({ ...params }) -> Square.BulkUpsertLocationCustomAttributesResponse
+### client.locations.customAttributes.batchUpsert({ ...params }) -> Square.BulkUpsertLocationCustomAttributesResponse
 
-### Description
+#### Description (locations custom attributes batch upsert)
 
 Creates or updates [custom attributes](entity:CustomAttribute) for locations as a bulk operation.
 Use this endpoint to set the value of one or more custom attributes for one or more locations.
@@ -6957,7 +6927,7 @@ of the corresponding request.
 To create or update a custom attribute owned by another application, the `visibility` setting
 must be `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (locations custom attributes batch upsert)
 
 ```typescript
 await client.locations.customAttributes.batchUpsert({
@@ -6987,15 +6957,15 @@ await client.locations.customAttributes.batchUpsert({
 });
 ```
 
-### Parameters
+#### Parameters (locations custom attributes batch upsert)
 
 **request:** `Square.locations.BulkUpsertLocationCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.locations.customAttributes.list({ ...params }) -> core.Page
+### client.locations.customAttributes.list({ ...params }) -> core.Page
 
-### Description
+#### Description (locations custom attributes list)
 
 Lists the [custom attributes](entity:CustomAttribute) associated with a location.
 You can use the `with_definitions` query parameter to also retrieve custom attribute definitions
@@ -7004,7 +6974,7 @@ When all response pages are retrieved, the results include all custom attributes
 visible to the requesting application, including those that are owned by other applications
 and set to `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (locations custom attributes list)
 
 ```typescript
 const response = await client.locations.customAttributes.list({
@@ -7023,15 +6993,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (locations custom attributes list)
 
 **request:** `Square.locations.ListCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.locations.customAttributes.get({ ...params }) -> Square.RetrieveLocationCustomAttributeResponse
+### client.locations.customAttributes.get({ ...params }) -> Square.RetrieveLocationCustomAttributeResponse
 
-### Description
+#### Description (locations custom attributes get)
 
 Retrieves a [custom attribute](entity:CustomAttribute) associated with a location.
 You can use the `with_definition` query parameter to also retrieve the custom attribute definition
@@ -7039,7 +7009,7 @@ in the same call.
 To retrieve a custom attribute owned by another application, the `visibility` setting must be
 `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (locations custom attributes get)
 
 ```typescript
 await client.locations.customAttributes.get({
@@ -7048,15 +7018,15 @@ await client.locations.customAttributes.get({
 });
 ```
 
-### Parameters
+#### Parameters (locations custom attributes get)
 
 **request:** `Square.locations.GetCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.locations.customAttributes.upsert({ ...params }) -> Square.UpsertLocationCustomAttributeResponse
+### client.locations.customAttributes.upsert({ ...params }) -> Square.UpsertLocationCustomAttributeResponse
 
-### Description
+#### Description (locations custom attributes upsert)
 
 Creates or updates a [custom attribute](entity:CustomAttribute) for a location.
 Use this endpoint to set the value of a custom attribute for a specified location.
@@ -7065,7 +7035,7 @@ is created using the [CreateLocationCustomAttributeDefinition](api-endpoint:Loca
 To create or update a custom attribute owned by another application, the `visibility` setting
 must be `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (locations custom attributes upsert)
 
 ```typescript
 await client.locations.customAttributes.upsert({
@@ -7077,21 +7047,21 @@ await client.locations.customAttributes.upsert({
 });
 ```
 
-### Parameters
+#### Parameters (locations custom attributes upsert)
 
 **request:** `Square.locations.UpsertLocationCustomAttributeRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.locations.customAttributes.delete({ ...params }) -> Square.DeleteLocationCustomAttributeResponse
+### client.locations.customAttributes.delete({ ...params }) -> Square.DeleteLocationCustomAttributeResponse
 
-### Description
+#### Description (locations custom attributes delete)
 
 Deletes a [custom attribute](entity:CustomAttribute) associated with a location.
 To delete a custom attribute owned by another application, the `visibility` setting must be
 `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (locations custom attributes delete)
 
 ```typescript
 await client.locations.customAttributes.delete({
@@ -7100,7 +7070,7 @@ await client.locations.customAttributes.delete({
 });
 ```
 
-### Parameters
+#### Parameters (locations custom attributes delete)
 
 **request:** `Square.locations.DeleteCustomAttributesRequest`
 
@@ -7108,9 +7078,9 @@ await client.locations.customAttributes.delete({
 
 ## Locations Transactions
 
-client.locations.transactions.list({ ...params }) -> Square.ListTransactionsResponse
+### client.locations.transactions.list({ ...params }) -> Square.ListTransactionsResponse
 
-### Description
+#### Description (locations transactions list)
 
 Lists transactions for a particular location.
 
@@ -7119,7 +7089,7 @@ information from returns and exchanges.
 
 Max results per [page](https://developer.squareup.com/docs/working-with-apis/pagination): 50
 
-### Usage
+#### Usage (locations transactions list)
 
 ```typescript
 await client.locations.transactions.list({
@@ -7127,19 +7097,19 @@ await client.locations.transactions.list({
 });
 ```
 
-### Parameters
+#### Parameters (locations transactions list)
 
 **request:** `Square.locations.ListTransactionsRequest`
 
 **requestOptions:** `Transactions.RequestOptions`
 
-client.locations.transactions.get({ ...params }) -> Square.GetTransactionResponse
+### client.locations.transactions.get({ ...params }) -> Square.GetTransactionResponse
 
-### Description
+#### Description (locations transactions get)
 
 Retrieves details for a single transaction.
 
-### Usage
+#### Usage (locations transactions get)
 
 ```typescript
 await client.locations.transactions.get({
@@ -7148,15 +7118,15 @@ await client.locations.transactions.get({
 });
 ```
 
-### Parameters
+#### Parameters (locations transactions get)
 
 **request:** `Square.locations.GetTransactionsRequest`
 
 **requestOptions:** `Transactions.RequestOptions`
 
-client.locations.transactions.capture({ ...params }) -> Square.CaptureTransactionResponse
+### client.locations.transactions.capture({ ...params }) -> Square.CaptureTransactionResponse
 
-### Description
+#### Description (locations transactions capture)
 
 Captures a transaction that was created with the [Charge](api-endpoint:Transactions-Charge)
 endpoint with a `delay_capture` value of `true`.
@@ -7164,7 +7134,7 @@ endpoint with a `delay_capture` value of `true`.
 See [Delayed capture transactions](https://developer.squareup.com/docs/payments/transactions/overview#delayed-capture)
 for more information.
 
-### Usage
+#### Usage (locations transactions capture)
 
 ```typescript
 await client.locations.transactions.capture({
@@ -7173,15 +7143,15 @@ await client.locations.transactions.capture({
 });
 ```
 
-### Parameters
+#### Parameters (locations transactions capture)
 
 **request:** `Square.locations.CaptureTransactionsRequest`
 
 **requestOptions:** `Transactions.RequestOptions`
 
-client.locations.transactions.void({ ...params }) -> Square.VoidTransactionResponse
+### client.locations.transactions.void({ ...params }) -> Square.VoidTransactionResponse
 
-### Description
+#### Description (locations transactions void)
 
 Cancels a transaction that was created with the [Charge](api-endpoint:Transactions-Charge)
 endpoint with a `delay_capture` value of `true`.
@@ -7189,7 +7159,7 @@ endpoint with a `delay_capture` value of `true`.
 See [Delayed capture transactions](https://developer.squareup.com/docs/payments/transactions/overview#delayed-capture)
 for more information.
 
-### Usage
+#### Usage (locations transactions void)
 
 ```typescript
 await client.locations.transactions.void({
@@ -7198,7 +7168,7 @@ await client.locations.transactions.void({
 });
 ```
 
-### Parameters
+#### Parameters (locations transactions void)
 
 **request:** `Square.locations.VoidTransactionsRequest`
 
@@ -7206,13 +7176,13 @@ await client.locations.transactions.void({
 
 ## Loyalty Accounts
 
-client.loyalty.accounts.create({ ...params }) -> Square.CreateLoyaltyAccountResponse
+### client.loyalty.accounts.create({ ...params }) -> Square.CreateLoyaltyAccountResponse
 
-### Description
+#### Description (loyalty accounts create)
 
 Creates a loyalty account. To create a loyalty account, you must provide the `program_id` and a `mapping` with the `phone_number` of the buyer.
 
-### Usage
+#### Usage (loyalty accounts create)
 
 ```typescript
 await client.loyalty.accounts.create({
@@ -7226,15 +7196,15 @@ await client.loyalty.accounts.create({
 });
 ```
 
-### Parameters
+#### Parameters (loyalty accounts create)
 
 **request:** `Square.loyalty.CreateLoyaltyAccountRequest`
 
 **requestOptions:** `Accounts.RequestOptions`
 
-client.loyalty.accounts.search({ ...params }) -> Square.SearchLoyaltyAccountsResponse
+### client.loyalty.accounts.search({ ...params }) -> Square.SearchLoyaltyAccountsResponse
 
-### Description
+#### Description (loyalty accounts search)
 
 Searches for loyalty accounts in a loyalty program.
 
@@ -7242,7 +7212,7 @@ You can search for a loyalty account using the phone number or customer ID assoc
 
 Search results are sorted by `created_at` in ascending order.
 
-### Usage
+#### Usage (loyalty accounts search)
 
 ```typescript
 await client.loyalty.accounts.search({
@@ -7257,19 +7227,19 @@ await client.loyalty.accounts.search({
 });
 ```
 
-### Parameters
+#### Parameters (loyalty accounts search)
 
 **request:** `Square.loyalty.SearchLoyaltyAccountsRequest`
 
 **requestOptions:** `Accounts.RequestOptions`
 
-client.loyalty.accounts.get({ ...params }) -> Square.GetLoyaltyAccountResponse
+### client.loyalty.accounts.get({ ...params }) -> Square.GetLoyaltyAccountResponse
 
-### Description
+#### Description (loyalty accounts get)
 
 Retrieves a loyalty account.
 
-### Usage
+#### Usage (loyalty accounts get)
 
 ```typescript
 await client.loyalty.accounts.get({
@@ -7277,15 +7247,15 @@ await client.loyalty.accounts.get({
 });
 ```
 
-### Parameters
+#### Parameters (loyalty accounts get)
 
 **request:** `Square.loyalty.GetAccountsRequest`
 
 **requestOptions:** `Accounts.RequestOptions`
 
-client.loyalty.accounts.accumulatePoints({ ...params }) -> Square.AccumulateLoyaltyPointsResponse
+### client.loyalty.accounts.accumulatePoints({ ...params }) -> Square.AccumulateLoyaltyPointsResponse
 
-### Description
+#### Description (loyalty accounts accumulate points)
 
 Adds points earned from a purchase to a [loyalty account](entity:LoyaltyAccount).
 
@@ -7301,12 +7271,8 @@ You must first perform a client-side computation of the points earned from the l
 loyalty promotion. For spend-based and visit-based programs, you can call [CalculateLoyaltyPoints](api-endpoint:Loyalty-CalculateLoyaltyPoints)
 to compute the points earned from the base loyalty program. For information about computing points earned from a loyalty promotion, see
 [Calculating promotion points](https://developer.squareup.com/docs/loyalty-api/loyalty-promotions#calculate-promotion-points).
-  
-  
-  
-  
 
-### Usage
+#### Usage (loyalty accounts accumulate points)
 
 ```typescript
 await client.loyalty.accounts.accumulatePoints({
@@ -7319,15 +7285,15 @@ await client.loyalty.accounts.accumulatePoints({
 });
 ```
 
-### Parameters
+#### Parameters (loyalty accounts accumulate points)
 
 **request:** `Square.loyalty.AccumulateLoyaltyPointsRequest`
 
 **requestOptions:** `Accounts.RequestOptions`
 
-client.loyalty.accounts.adjust({ ...params }) -> Square.AdjustLoyaltyPointsResponse
+### client.loyalty.accounts.adjust({ ...params }) -> Square.AdjustLoyaltyPointsResponse
 
-### Description
+#### Description (loyalty accounts adjust)
 
 Adds points to or subtracts points from a buyer's account.
 
@@ -7335,7 +7301,7 @@ Use this endpoint only when you need to manually adjust points. Otherwise, in yo
 [AccumulateLoyaltyPoints](api-endpoint:Loyalty-AccumulateLoyaltyPoints)
 to add points when a buyer pays for the purchase.
 
-### Usage
+#### Usage (loyalty accounts adjust)
 
 ```typescript
 await client.loyalty.accounts.adjust({
@@ -7348,7 +7314,7 @@ await client.loyalty.accounts.adjust({
 });
 ```
 
-### Parameters
+#### Parameters (loyalty accounts adjust)
 
 **request:** `Square.loyalty.AdjustLoyaltyPointsRequest`
 
@@ -7356,34 +7322,34 @@ await client.loyalty.accounts.adjust({
 
 ## Loyalty Programs
 
-client.loyalty.programs.list() -> Square.ListLoyaltyProgramsResponse
+### client.loyalty.programs.list() -> Square.ListLoyaltyProgramsResponse
 
-### Description
+#### Description (loyalty programs list)
 
 Returns a list of loyalty programs in the seller's account.
 Loyalty programs define how buyers can earn points and redeem points for rewards. Square sellers can have only one loyalty program, which is created and managed from the Seller Dashboard. For more information, see [Loyalty Program Overview](https://developer.squareup.com/docs/loyalty/overview).
 
 Replaced with [RetrieveLoyaltyProgram](api-endpoint:Loyalty-RetrieveLoyaltyProgram) when used with the keyword `main`.
 
-### Usage
+#### Usage (loyalty programs list)
 
 ```typescript
 await client.loyalty.programs.list();
 ```
 
-### Parameters
+#### Parameters (loyalty programs list)
 
 **requestOptions:** `Programs.RequestOptions`
 
-client.loyalty.programs.get({ ...params }) -> Square.GetLoyaltyProgramResponse
+### client.loyalty.programs.get({ ...params }) -> Square.GetLoyaltyProgramResponse
 
-### Description
+#### Description (loyalty programs get)
 
 Retrieves the loyalty program in a seller's account, specified by the program ID or the keyword `main`.
 
 Loyalty programs define how buyers can earn points and redeem points for rewards. Square sellers can have only one loyalty program, which is created and managed from the Seller Dashboard. For more information, see [Loyalty Program Overview](https://developer.squareup.com/docs/loyalty/overview).
 
-### Usage
+#### Usage (loyalty programs get)
 
 ```typescript
 await client.loyalty.programs.get({
@@ -7391,15 +7357,15 @@ await client.loyalty.programs.get({
 });
 ```
 
-### Parameters
+#### Parameters (loyalty programs get)
 
 **request:** `Square.loyalty.GetProgramsRequest`
 
 **requestOptions:** `Programs.RequestOptions`
 
-client.loyalty.programs.calculate({ ...params }) -> Square.CalculateLoyaltyPointsResponse
+### client.loyalty.programs.calculate({ ...params }) -> Square.CalculateLoyaltyPointsResponse
 
-### Description
+#### Description (loyalty programs calculate)
 
 Calculates the number of points a buyer can earn from a purchase. Applications might call this endpoint
 to display the points to the buyer.
@@ -7416,12 +7382,8 @@ If the purchase qualifies for program points, call
 [ListLoyaltyPromotions](api-endpoint:Loyalty-ListLoyaltyPromotions) and perform a client-side computation
 to calculate whether the purchase also qualifies for promotion points. For more information, see
 [Calculating promotion points](https://developer.squareup.com/docs/loyalty-api/loyalty-promotions#calculate-promotion-points).
-  
-  
-  
-  
 
-### Usage
+#### Usage (loyalty programs calculate)
 
 ```typescript
 await client.loyalty.programs.calculate({
@@ -7431,7 +7393,7 @@ await client.loyalty.programs.calculate({
 });
 ```
 
-### Parameters
+#### Parameters (loyalty programs calculate)
 
 **request:** `Square.loyalty.CalculateLoyaltyPointsRequest`
 
@@ -7439,9 +7401,9 @@ await client.loyalty.programs.calculate({
 
 ## Loyalty Rewards
 
-client.loyalty.rewards.create({ ...params }) -> Square.CreateLoyaltyRewardResponse
+### client.loyalty.rewards.create({ ...params }) -> Square.CreateLoyaltyRewardResponse
 
-### Description
+#### Description (loyalty rewards create)
 
 Creates a loyalty reward. In the process, the endpoint does following:
 
@@ -7452,7 +7414,7 @@ Creates a loyalty reward. In the process, the endpoint does following:
 After a reward is created, the points are locked and
 not available for the buyer to redeem another reward.
 
-### Usage
+#### Usage (loyalty rewards create)
 
 ```typescript
 await client.loyalty.rewards.create({
@@ -7465,15 +7427,15 @@ await client.loyalty.rewards.create({
 });
 ```
 
-### Parameters
+#### Parameters (loyalty rewards create)
 
 **request:** `Square.loyalty.CreateLoyaltyRewardRequest`
 
 **requestOptions:** `Rewards.RequestOptions`
 
-client.loyalty.rewards.search({ ...params }) -> Square.SearchLoyaltyRewardsResponse
+### client.loyalty.rewards.search({ ...params }) -> Square.SearchLoyaltyRewardsResponse
 
-### Description
+#### Description (loyalty rewards search)
 
 Searches for loyalty rewards. This endpoint accepts a request with no query filters and returns results for all loyalty accounts.
 If you include a `query` object, `loyalty_account_id` is required and `status` is optional.
@@ -7483,7 +7445,7 @@ If you know a reward ID, use the
 
 Search results are sorted by `updated_at` in descending order.
 
-### Usage
+#### Usage (loyalty rewards search)
 
 ```typescript
 await client.loyalty.rewards.search({
@@ -7494,19 +7456,19 @@ await client.loyalty.rewards.search({
 });
 ```
 
-### Parameters
+#### Parameters (loyalty rewards search)
 
 **request:** `Square.loyalty.SearchLoyaltyRewardsRequest`
 
 **requestOptions:** `Rewards.RequestOptions`
 
-client.loyalty.rewards.get({ ...params }) -> Square.GetLoyaltyRewardResponse
+### client.loyalty.rewards.get({ ...params }) -> Square.GetLoyaltyRewardResponse
 
-### Description
+#### Description (loyalty rewards get)
 
 Retrieves a loyalty reward.
 
-### Usage
+#### Usage (loyalty rewards get)
 
 ```typescript
 await client.loyalty.rewards.get({
@@ -7514,15 +7476,15 @@ await client.loyalty.rewards.get({
 });
 ```
 
-### Parameters
+#### Parameters (loyalty rewards get)
 
 **request:** `Square.loyalty.GetRewardsRequest`
 
 **requestOptions:** `Rewards.RequestOptions`
 
-client.loyalty.rewards.delete({ ...params }) -> Square.DeleteLoyaltyRewardResponse
+### client.loyalty.rewards.delete({ ...params }) -> Square.DeleteLoyaltyRewardResponse
 
-### Description
+#### Description (loyalty rewards delete)
 
 Deletes a loyalty reward by doing the following:
 
@@ -7534,7 +7496,7 @@ Deletes a loyalty reward by doing the following:
 
 You cannot delete a reward that has reached the terminal state (REDEEMED).
 
-### Usage
+#### Usage (loyalty rewards delete)
 
 ```typescript
 await client.loyalty.rewards.delete({
@@ -7542,15 +7504,15 @@ await client.loyalty.rewards.delete({
 });
 ```
 
-### Parameters
+#### Parameters (loyalty rewards delete)
 
 **request:** `Square.loyalty.DeleteRewardsRequest`
 
 **requestOptions:** `Rewards.RequestOptions`
 
-client.loyalty.rewards.redeem({ ...params }) -> Square.RedeemLoyaltyRewardResponse
+### client.loyalty.rewards.redeem({ ...params }) -> Square.RedeemLoyaltyRewardResponse
 
-### Description
+#### Description (loyalty rewards redeem)
 
 Redeems a loyalty reward.
 
@@ -7564,7 +7526,7 @@ After the reward reaches the terminal state, it cannot be deleted.
 In other words, points used for the reward cannot be returned
 to the account.
 
-### Usage
+#### Usage (loyalty rewards redeem)
 
 ```typescript
 await client.loyalty.rewards.redeem({
@@ -7574,7 +7536,7 @@ await client.loyalty.rewards.redeem({
 });
 ```
 
-### Parameters
+#### Parameters (loyalty rewards redeem)
 
 **request:** `Square.loyalty.RedeemLoyaltyRewardRequest`
 
@@ -7582,14 +7544,14 @@ await client.loyalty.rewards.redeem({
 
 ## Loyalty Programs Promotions
 
-client.loyalty.programs.promotions.list({ ...params }) -> core.Page
+### client.loyalty.programs.promotions.list({ ...params }) -> core.Page
 
-### Description
+#### Description (loyalty programs promotions list)
 
 Lists the loyalty promotions associated with a [loyalty program](entity:LoyaltyProgram).
 Results are sorted by the `created_at` date in descending order (newest to oldest).
 
-### Usage
+#### Usage (loyalty programs promotions list)
 
 ```typescript
 const response = await client.loyalty.programs.promotions.list({
@@ -7608,15 +7570,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (loyalty programs promotions list)
 
 **request:** `Square.loyalty.programs.ListPromotionsRequest`
 
 **requestOptions:** `Promotions.RequestOptions`
 
-client.loyalty.programs.promotions.create({ ...params }) -> Square.CreateLoyaltyPromotionResponse
+### client.loyalty.programs.promotions.create({ ...params }) -> Square.CreateLoyaltyPromotionResponse
 
-### Description
+#### Description (loyalty programs promotions create)
 
 Creates a loyalty promotion for a [loyalty program](entity:LoyaltyProgram). A loyalty promotion
 enables buyers to earn points in addition to those earned from the base loyalty program.
@@ -7625,7 +7587,7 @@ This endpoint sets the loyalty promotion to the `ACTIVE` or `SCHEDULED` status, 
 `available_time` setting. A loyalty program can have a maximum of 10 loyalty promotions with an
 `ACTIVE` or `SCHEDULED` status.
 
-### Usage
+#### Usage (loyalty programs promotions create)
 
 ```typescript
 await client.loyalty.programs.promotions.create({
@@ -7657,19 +7619,19 @@ await client.loyalty.programs.promotions.create({
 });
 ```
 
-### Parameters
+#### Parameters (loyalty programs promotions create)
 
 **request:** `Square.loyalty.programs.CreateLoyaltyPromotionRequest`
 
 **requestOptions:** `Promotions.RequestOptions`
 
-client.loyalty.programs.promotions.get({ ...params }) -> Square.GetLoyaltyPromotionResponse
+### client.loyalty.programs.promotions.get({ ...params }) -> Square.GetLoyaltyPromotionResponse
 
-### Description
+#### Description (loyalty programs promotions get)
 
 Retrieves a loyalty promotion.
 
-### Usage
+#### Usage (loyalty programs promotions get)
 
 ```typescript
 await client.loyalty.programs.promotions.get({
@@ -7678,15 +7640,15 @@ await client.loyalty.programs.promotions.get({
 });
 ```
 
-### Parameters
+#### Parameters (loyalty programs promotions get)
 
 **request:** `Square.loyalty.programs.GetPromotionsRequest`
 
 **requestOptions:** `Promotions.RequestOptions`
 
-client.loyalty.programs.promotions.cancel({ ...params }) -> Square.CancelLoyaltyPromotionResponse
+### client.loyalty.programs.promotions.cancel({ ...params }) -> Square.CancelLoyaltyPromotionResponse
 
-### Description
+#### Description (loyalty programs promotions cancel)
 
 Cancels a loyalty promotion. Use this endpoint to cancel an `ACTIVE` promotion earlier than the
 end date, cancel an `ACTIVE` promotion when an end date is not specified, or cancel a `SCHEDULED` promotion.
@@ -7695,7 +7657,7 @@ you create a new one.
 
 This endpoint sets the loyalty promotion to the `CANCELED` state
 
-### Usage
+#### Usage (loyalty programs promotions cancel)
 
 ```typescript
 await client.loyalty.programs.promotions.cancel({
@@ -7704,7 +7666,7 @@ await client.loyalty.programs.promotions.cancel({
 });
 ```
 
-### Parameters
+#### Parameters (loyalty programs promotions cancel)
 
 **request:** `Square.loyalty.programs.CancelPromotionsRequest`
 
@@ -7712,16 +7674,16 @@ await client.loyalty.programs.promotions.cancel({
 
 ## Merchants CustomAttributeDefinitions
 
-client.merchants.customAttributeDefinitions.list({ ...params }) -> core.Page
+### client.merchants.customAttributeDefinitions.list({ ...params }) -> core.Page
 
-### Description
+#### Description (merchants custom attribute definitions list)
 
 Lists the merchant-related [custom attribute definitions](entity:CustomAttributeDefinition) that belong to a Square seller account.
 When all response pages are retrieved, the results include all custom attribute definitions
 that are visible to the requesting application, including those that are created by other
 applications and set to `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (merchants custom attribute definitions list)
 
 ```typescript
 const response = await client.merchants.customAttributeDefinitions.list();
@@ -7736,15 +7698,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (merchants custom attribute definitions list)
 
 **request:** `Square.merchants.ListCustomAttributeDefinitionsRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.merchants.customAttributeDefinitions.create({ ...params }) -> Square.CreateMerchantCustomAttributeDefinitionResponse
+### client.merchants.customAttributeDefinitions.create({ ...params }) -> Square.CreateMerchantCustomAttributeDefinitionResponse
 
-### Description
+#### Description (merchants custom attribute definitions create)
 
 Creates a merchant-related [custom attribute definition](entity:CustomAttributeDefinition) for a Square seller account.
 Use this endpoint to define a custom attribute that can be associated with a merchant connecting to your application.
@@ -7754,7 +7716,7 @@ for a custom attribute. After the definition is created, you can call
 [BulkUpsertMerchantCustomAttributes](api-endpoint:MerchantCustomAttributes-BulkUpsertMerchantCustomAttributes)
 to set the custom attribute for a merchant.
 
-### Usage
+#### Usage (merchants custom attribute definitions create)
 
 ```typescript
 await client.merchants.customAttributeDefinitions.create({
@@ -7770,21 +7732,21 @@ await client.merchants.customAttributeDefinitions.create({
 });
 ```
 
-### Parameters
+#### Parameters (merchants custom attribute definitions create)
 
 **request:** `Square.merchants.CreateMerchantCustomAttributeDefinitionRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.merchants.customAttributeDefinitions.get({ ...params }) -> Square.RetrieveMerchantCustomAttributeDefinitionResponse
+### client.merchants.customAttributeDefinitions.get({ ...params }) -> Square.RetrieveMerchantCustomAttributeDefinitionResponse
 
-### Description
+#### Description (merchants custom attribute definitions get)
 
 Retrieves a merchant-related [custom attribute definition](entity:CustomAttributeDefinition) from a Square seller account.
 To retrieve a custom attribute definition created by another application, the `visibility`
 setting must be `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (merchants custom attribute definitions get)
 
 ```typescript
 await client.merchants.customAttributeDefinitions.get({
@@ -7792,22 +7754,22 @@ await client.merchants.customAttributeDefinitions.get({
 });
 ```
 
-### Parameters
+#### Parameters (merchants custom attribute definitions get)
 
 **request:** `Square.merchants.GetCustomAttributeDefinitionsRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.merchants.customAttributeDefinitions.update({ ...params }) -> Square.UpdateMerchantCustomAttributeDefinitionResponse
+### client.merchants.customAttributeDefinitions.update({ ...params }) -> Square.UpdateMerchantCustomAttributeDefinitionResponse
 
-### Description
+#### Description (merchants custom attribute definitions update)
 
 Updates a merchant-related [custom attribute definition](entity:CustomAttributeDefinition) for a Square seller account.
 Use this endpoint to update the following fields: `name`, `description`, `visibility`, or the
 `schema` for a `Selection` data type.
 Only the definition owner can update a custom attribute definition.
 
-### Usage
+#### Usage (merchants custom attribute definitions update)
 
 ```typescript
 await client.merchants.customAttributeDefinitions.update({
@@ -7819,22 +7781,22 @@ await client.merchants.customAttributeDefinitions.update({
 });
 ```
 
-### Parameters
+#### Parameters (merchants custom attribute definitions update)
 
 **request:** `Square.merchants.UpdateMerchantCustomAttributeDefinitionRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.merchants.customAttributeDefinitions.delete({ ...params }) -> Square.DeleteMerchantCustomAttributeDefinitionResponse
+### client.merchants.customAttributeDefinitions.delete({ ...params }) -> Square.DeleteMerchantCustomAttributeDefinitionResponse
 
-### Description
+#### Description (merchants custom attribute definitions delete)
 
 Deletes a merchant-related [custom attribute definition](entity:CustomAttributeDefinition) from a Square seller account.
 Deleting a custom attribute definition also deletes the corresponding custom attribute from
 the merchant.
 Only the definition owner can delete a custom attribute definition.
 
-### Usage
+#### Usage (merchants custom attribute definitions delete)
 
 ```typescript
 await client.merchants.customAttributeDefinitions.delete({
@@ -7842,7 +7804,7 @@ await client.merchants.customAttributeDefinitions.delete({
 });
 ```
 
-### Parameters
+#### Parameters (merchants custom attribute definitions delete)
 
 **request:** `Square.merchants.DeleteCustomAttributeDefinitionsRequest`
 
@@ -7850,15 +7812,15 @@ await client.merchants.customAttributeDefinitions.delete({
 
 ## Merchants CustomAttributes
 
-client.merchants.customAttributes.batchDelete({ ...params }) -> Square.BulkDeleteMerchantCustomAttributesResponse
+### client.merchants.customAttributes.batchDelete({ ...params }) -> Square.BulkDeleteMerchantCustomAttributesResponse
 
-### Description
+#### Description (merchants custom attributes batch delete)
 
 Deletes [custom attributes](entity:CustomAttribute) for a merchant as a bulk operation.
 To delete a custom attribute owned by another application, the `visibility` setting must be
 `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (merchants custom attributes batch delete)
 
 ```typescript
 await client.merchants.customAttributes.batchDelete({
@@ -7873,15 +7835,15 @@ await client.merchants.customAttributes.batchDelete({
 });
 ```
 
-### Parameters
+#### Parameters (merchants custom attributes batch delete)
 
 **request:** `Square.merchants.BulkDeleteMerchantCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.merchants.customAttributes.batchUpsert({ ...params }) -> Square.BulkUpsertMerchantCustomAttributesResponse
+### client.merchants.customAttributes.batchUpsert({ ...params }) -> Square.BulkUpsertMerchantCustomAttributesResponse
 
-### Description
+#### Description (merchants custom attributes batch upsert)
 
 Creates or updates [custom attributes](entity:CustomAttribute) for a merchant as a bulk operation.
 Use this endpoint to set the value of one or more custom attributes for a merchant.
@@ -7894,7 +7856,7 @@ of the corresponding request.
 To create or update a custom attribute owned by another application, the `visibility` setting
 must be `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (merchants custom attributes batch upsert)
 
 ```typescript
 await client.merchants.customAttributes.batchUpsert({
@@ -7917,15 +7879,15 @@ await client.merchants.customAttributes.batchUpsert({
 });
 ```
 
-### Parameters
+#### Parameters (merchants custom attributes batch upsert)
 
 **request:** `Square.merchants.BulkUpsertMerchantCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.merchants.customAttributes.list({ ...params }) -> core.Page
+### client.merchants.customAttributes.list({ ...params }) -> core.Page
 
-### Description
+#### Description (merchants custom attributes list)
 
 Lists the [custom attributes](entity:CustomAttribute) associated with a merchant.
 You can use the `with_definitions` query parameter to also retrieve custom attribute definitions
@@ -7934,7 +7896,7 @@ When all response pages are retrieved, the results include all custom attributes
 visible to the requesting application, including those that are owned by other applications
 and set to `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (merchants custom attributes list)
 
 ```typescript
 const response = await client.merchants.customAttributes.list({
@@ -7953,15 +7915,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (merchants custom attributes list)
 
 **request:** `Square.merchants.ListCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.merchants.customAttributes.get({ ...params }) -> Square.RetrieveMerchantCustomAttributeResponse
+### client.merchants.customAttributes.get({ ...params }) -> Square.RetrieveMerchantCustomAttributeResponse
 
-### Description
+#### Description (merchants custom attributes get)
 
 Retrieves a [custom attribute](entity:CustomAttribute) associated with a merchant.
 You can use the `with_definition` query parameter to also retrieve the custom attribute definition
@@ -7969,7 +7931,7 @@ in the same call.
 To retrieve a custom attribute owned by another application, the `visibility` setting must be
 `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (merchants custom attributes get)
 
 ```typescript
 await client.merchants.customAttributes.get({
@@ -7978,15 +7940,15 @@ await client.merchants.customAttributes.get({
 });
 ```
 
-### Parameters
+#### Parameters (merchants custom attributes get)
 
 **request:** `Square.merchants.GetCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.merchants.customAttributes.upsert({ ...params }) -> Square.UpsertMerchantCustomAttributeResponse
+### client.merchants.customAttributes.upsert({ ...params }) -> Square.UpsertMerchantCustomAttributeResponse
 
-### Description
+#### Description (merchants custom attributes upsert)
 
 Creates or updates a [custom attribute](entity:CustomAttribute) for a merchant.
 Use this endpoint to set the value of a custom attribute for a specified merchant.
@@ -7995,7 +7957,7 @@ is created using the [CreateMerchantCustomAttributeDefinition](api-endpoint:Merc
 To create or update a custom attribute owned by another application, the `visibility` setting
 must be `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (merchants custom attributes upsert)
 
 ```typescript
 await client.merchants.customAttributes.upsert({
@@ -8007,21 +7969,21 @@ await client.merchants.customAttributes.upsert({
 });
 ```
 
-### Parameters
+#### Parameters (merchants custom attributes upsert)
 
 **request:** `Square.merchants.UpsertMerchantCustomAttributeRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.merchants.customAttributes.delete({ ...params }) -> Square.DeleteMerchantCustomAttributeResponse
+### client.merchants.customAttributes.delete({ ...params }) -> Square.DeleteMerchantCustomAttributeResponse
 
-### Description
+#### Description (merchants custom attributes delete)
 
 Deletes a [custom attribute](entity:CustomAttribute) associated with a merchant.
 To delete a custom attribute owned by another application, the `visibility` setting must be
 `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (merchants custom attributes delete)
 
 ```typescript
 await client.merchants.customAttributes.delete({
@@ -8030,7 +7992,7 @@ await client.merchants.customAttributes.delete({
 });
 ```
 
-### Parameters
+#### Parameters (merchants custom attributes delete)
 
 **request:** `Square.merchants.DeleteCustomAttributesRequest`
 
@@ -8038,9 +8000,9 @@ await client.merchants.customAttributes.delete({
 
 ## Orders CustomAttributeDefinitions
 
-client.orders.customAttributeDefinitions.list({ ...params }) -> core.Page
+### client.orders.customAttributeDefinitions.list({ ...params }) -> core.Page
 
-### Description
+#### Description (orders custom attribute definitions list)
 
 Lists the order-related [custom attribute definitions](entity:CustomAttributeDefinition) that belong to a Square seller account.
 
@@ -8049,7 +8011,7 @@ that are visible to the requesting application, including those that are created
 applications and set to `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`. Note that
 seller-defined custom attributes (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (orders custom attribute definitions list)
 
 ```typescript
 const response = await client.orders.customAttributeDefinitions.list();
@@ -8064,15 +8026,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (orders custom attribute definitions list)
 
 **request:** `Square.orders.ListCustomAttributeDefinitionsRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.orders.customAttributeDefinitions.create({ ...params }) -> Square.CreateOrderCustomAttributeDefinitionResponse
+### client.orders.customAttributeDefinitions.create({ ...params }) -> Square.CreateOrderCustomAttributeDefinitionResponse
 
-### Description
+#### Description (orders custom attribute definitions create)
 
 Creates an order-related custom attribute definition. Use this endpoint to
 define a custom attribute that can be associated with orders.
@@ -8080,7 +8042,7 @@ define a custom attribute that can be associated with orders.
 After creating a custom attribute definition, you can set the custom attribute for orders
 in the Square seller account.
 
-### Usage
+#### Usage (orders custom attribute definitions create)
 
 ```typescript
 await client.orders.customAttributeDefinitions.create({
@@ -8097,15 +8059,15 @@ await client.orders.customAttributeDefinitions.create({
 });
 ```
 
-### Parameters
+#### Parameters (orders custom attribute definitions create)
 
 **request:** `Square.orders.CreateOrderCustomAttributeDefinitionRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.orders.customAttributeDefinitions.get({ ...params }) -> Square.RetrieveOrderCustomAttributeDefinitionResponse
+### client.orders.customAttributeDefinitions.get({ ...params }) -> Square.RetrieveOrderCustomAttributeDefinitionResponse
 
-### Description
+#### Description (orders custom attribute definitions get)
 
 Retrieves an order-related [custom attribute definition](entity:CustomAttributeDefinition) from a Square seller account.
 
@@ -8113,7 +8075,7 @@ To retrieve a custom attribute definition created by another application, the `v
 setting must be `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`. Note that seller-defined custom attributes
 (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (orders custom attribute definitions get)
 
 ```typescript
 await client.orders.customAttributeDefinitions.get({
@@ -8121,21 +8083,21 @@ await client.orders.customAttributeDefinitions.get({
 });
 ```
 
-### Parameters
+#### Parameters (orders custom attribute definitions get)
 
 **request:** `Square.orders.GetCustomAttributeDefinitionsRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.orders.customAttributeDefinitions.update({ ...params }) -> Square.UpdateOrderCustomAttributeDefinitionResponse
+### client.orders.customAttributeDefinitions.update({ ...params }) -> Square.UpdateOrderCustomAttributeDefinitionResponse
 
-### Description
+#### Description (orders custom attribute definitions update)
 
 Updates an order-related custom attribute definition for a Square seller account.
 
 Only the definition owner can update a custom attribute definition. Note that sellers can view all custom attributes in exported customer data, including those set to `VISIBILITY_HIDDEN`.
 
-### Usage
+#### Usage (orders custom attribute definitions update)
 
 ```typescript
 await client.orders.customAttributeDefinitions.update({
@@ -8149,21 +8111,21 @@ await client.orders.customAttributeDefinitions.update({
 });
 ```
 
-### Parameters
+#### Parameters (orders custom attribute definitions update)
 
 **request:** `Square.orders.UpdateOrderCustomAttributeDefinitionRequest`
 
 **requestOptions:** `CustomAttributeDefinitions.RequestOptions`
 
-client.orders.customAttributeDefinitions.delete({ ...params }) -> Square.DeleteOrderCustomAttributeDefinitionResponse
+### client.orders.customAttributeDefinitions.delete({ ...params }) -> Square.DeleteOrderCustomAttributeDefinitionResponse
 
-### Description
+#### Description (orders custom attribute definitions delete)
 
 Deletes an order-related [custom attribute definition](entity:CustomAttributeDefinition) from a Square seller account.
 
 Only the definition owner can delete a custom attribute definition.
 
-### Usage
+#### Usage (orders custom attribute definitions delete)
 
 ```typescript
 await client.orders.customAttributeDefinitions.delete({
@@ -8171,7 +8133,7 @@ await client.orders.customAttributeDefinitions.delete({
 });
 ```
 
-### Parameters
+#### Parameters (orders custom attribute definitions delete)
 
 **request:** `Square.orders.DeleteCustomAttributeDefinitionsRequest`
 
@@ -8179,9 +8141,9 @@ await client.orders.customAttributeDefinitions.delete({
 
 ## Orders CustomAttributes
 
-client.orders.customAttributes.batchDelete({ ...params }) -> Square.BulkDeleteOrderCustomAttributesResponse
+### client.orders.customAttributes.batchDelete({ ...params }) -> Square.BulkDeleteOrderCustomAttributesResponse
 
-### Description
+#### Description (orders custom attributes batch delete)
 
 Deletes order [custom attributes](entity:CustomAttribute) as a bulk operation.
 
@@ -8198,7 +8160,7 @@ To delete a custom attribute owned by another application, the `visibility` sett
 must be `VISIBILITY_READ_WRITE_VALUES`. Note that seller-defined custom attributes
 (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (orders custom attributes batch delete)
 
 ```typescript
 await client.orders.customAttributes.batchDelete({
@@ -8215,15 +8177,15 @@ await client.orders.customAttributes.batchDelete({
 });
 ```
 
-### Parameters
+#### Parameters (orders custom attributes batch delete)
 
 **request:** `Square.orders.BulkDeleteOrderCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.orders.customAttributes.batchUpsert({ ...params }) -> Square.BulkUpsertOrderCustomAttributesResponse
+### client.orders.customAttributes.batchUpsert({ ...params }) -> Square.BulkUpsertOrderCustomAttributesResponse
 
-### Description
+#### Description (orders custom attributes batch upsert)
 
 Creates or updates order [custom attributes](entity:CustomAttribute) as a bulk operation.
 
@@ -8240,7 +8202,7 @@ To create or update a custom attribute owned by another application, the `visibi
 must be `VISIBILITY_READ_WRITE_VALUES`. Note that seller-defined custom attributes
 (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (orders custom attributes batch upsert)
 
 ```typescript
 await client.orders.customAttributes.batchUpsert({
@@ -8265,15 +8227,15 @@ await client.orders.customAttributes.batchUpsert({
 });
 ```
 
-### Parameters
+#### Parameters (orders custom attributes batch upsert)
 
 **request:** `Square.orders.BulkUpsertOrderCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.orders.customAttributes.list({ ...params }) -> core.Page
+### client.orders.customAttributes.list({ ...params }) -> core.Page
 
-### Description
+#### Description (orders custom attributes list)
 
 Lists the [custom attributes](entity:CustomAttribute) associated with an order.
 
@@ -8284,7 +8246,7 @@ When all response pages are retrieved, the results include all custom attributes
 visible to the requesting application, including those that are owned by other applications
 and set to `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (orders custom attributes list)
 
 ```typescript
 const response = await client.orders.customAttributes.list({
@@ -8303,15 +8265,15 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (orders custom attributes list)
 
 **request:** `Square.orders.ListCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.orders.customAttributes.get({ ...params }) -> Square.RetrieveOrderCustomAttributeResponse
+### client.orders.customAttributes.get({ ...params }) -> Square.RetrieveOrderCustomAttributeResponse
 
-### Description
+#### Description (orders custom attributes get)
 
 Retrieves a [custom attribute](entity:CustomAttribute) associated with an order.
 
@@ -8322,7 +8284,7 @@ To retrieve a custom attribute owned by another application, the `visibility` se
 `VISIBILITY_READ_ONLY` or `VISIBILITY_READ_WRITE_VALUES`. Note that seller-defined custom attributes
 also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (orders custom attributes get)
 
 ```typescript
 await client.orders.customAttributes.get({
@@ -8331,15 +8293,15 @@ await client.orders.customAttributes.get({
 });
 ```
 
-### Parameters
+#### Parameters (orders custom attributes get)
 
 **request:** `Square.orders.GetCustomAttributesRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.orders.customAttributes.upsert({ ...params }) -> Square.UpsertOrderCustomAttributeResponse
+### client.orders.customAttributes.upsert({ ...params }) -> Square.UpsertOrderCustomAttributeResponse
 
-### Description
+#### Description (orders custom attributes upsert)
 
 Creates or updates a [custom attribute](entity:CustomAttribute) for an order.
 
@@ -8351,7 +8313,7 @@ To create or update a custom attribute owned by another application, the `visibi
 must be `VISIBILITY_READ_WRITE_VALUES`. Note that seller-defined custom attributes
 (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (orders custom attributes upsert)
 
 ```typescript
 await client.orders.customAttributes.upsert({
@@ -8365,15 +8327,15 @@ await client.orders.customAttributes.upsert({
 });
 ```
 
-### Parameters
+#### Parameters (orders custom attributes upsert)
 
 **request:** `Square.orders.UpsertOrderCustomAttributeRequest`
 
 **requestOptions:** `CustomAttributes.RequestOptions`
 
-client.orders.customAttributes.delete({ ...params }) -> Square.DeleteOrderCustomAttributeResponse
+### client.orders.customAttributes.delete({ ...params }) -> Square.DeleteOrderCustomAttributeResponse
 
-### Description
+#### Description (orders custom attributes delete)
 
 Deletes a [custom attribute](entity:CustomAttribute) associated with a customer profile.
 
@@ -8381,7 +8343,7 @@ To delete a custom attribute owned by another application, the `visibility` sett
 `VISIBILITY_READ_WRITE_VALUES`. Note that seller-defined custom attributes
 (also known as custom fields) are always set to `VISIBILITY_READ_WRITE_VALUES`.
 
-### Usage
+#### Usage (orders custom attributes delete)
 
 ```typescript
 await client.orders.customAttributes.delete({
@@ -8390,7 +8352,7 @@ await client.orders.customAttributes.delete({
 });
 ```
 
-### Parameters
+#### Parameters (orders custom attributes delete)
 
 **request:** `Square.orders.DeleteCustomAttributesRequest`
 
@@ -8398,9 +8360,9 @@ await client.orders.customAttributes.delete({
 
 ## TeamMembers WageSetting
 
-client.teamMembers.wageSetting.get({ ...params }) -> Square.GetWageSettingResponse
+### client.teamMembers.wageSetting.get({ ...params }) -> Square.GetWageSettingResponse
 
-### Description
+#### Description (team members wage setting get)
 
 Retrieves a `WageSetting` object for a team member specified
 by `TeamMember.id`. For more information, see
@@ -8409,7 +8371,7 @@ by `TeamMember.id`. For more information, see
 Square recommends using [RetrieveTeamMember](api-endpoint:Team-RetrieveTeamMember) or [SearchTeamMembers](api-endpoint:Team-SearchTeamMembers)
 to get this information directly from the `TeamMember.wage_setting` field.
 
-### Usage
+#### Usage (team members wage setting get)
 
 ```typescript
 await client.teamMembers.wageSetting.get({
@@ -8417,15 +8379,15 @@ await client.teamMembers.wageSetting.get({
 });
 ```
 
-### Parameters
+#### Parameters (team members wage setting get)
 
 **request:** `Square.teamMembers.GetWageSettingRequest`
 
 **requestOptions:** `WageSetting.RequestOptions`
 
-client.teamMembers.wageSetting.update({ ...params }) -> Square.UpdateWageSettingResponse
+### client.teamMembers.wageSetting.update({ ...params }) -> Square.UpdateWageSettingResponse
 
-### Description
+#### Description (team members wage setting update)
 
 Creates or updates a `WageSetting` object. The object is created if a
 `WageSetting` with the specified `team_member_id` doesn't exist. Otherwise,
@@ -8436,7 +8398,7 @@ The `WageSetting` is returned on a successful update. For more information, see
 Square recommends using [CreateTeamMember](api-endpoint:Team-CreateTeamMember) or [UpdateTeamMember](api-endpoint:Team-UpdateTeamMember)
 to manage the `TeamMember.wage_setting` field directly.
 
-### Usage
+#### Usage (team members wage setting update)
 
 ```typescript
 await client.teamMembers.wageSetting.update({
@@ -8466,7 +8428,7 @@ await client.teamMembers.wageSetting.update({
 });
 ```
 
-### Parameters
+#### Parameters (team members wage setting update)
 
 **request:** `Square.teamMembers.UpdateWageSettingRequest`
 
@@ -8474,13 +8436,13 @@ await client.teamMembers.wageSetting.update({
 
 ## Terminal Actions
 
-client.terminal.actions.create({ ...params }) -> Square.CreateTerminalActionResponse
+### client.terminal.actions.create({ ...params }) -> Square.CreateTerminalActionResponse
 
-### Description
+#### Description (terminal actions create)
 
 Creates a Terminal action request and sends it to the specified device.
 
-### Usage
+#### Usage (terminal actions create)
 
 ```typescript
 await client.terminal.actions.create({
@@ -8497,19 +8459,19 @@ await client.terminal.actions.create({
 });
 ```
 
-### Parameters
+#### Parameters (terminal actions create)
 
 **request:** `Square.terminal.CreateTerminalActionRequest`
 
 **requestOptions:** `Actions.RequestOptions`
 
-client.terminal.actions.search({ ...params }) -> Square.SearchTerminalActionsResponse
+### client.terminal.actions.search({ ...params }) -> Square.SearchTerminalActionsResponse
 
-### Description
+#### Description (terminal actions search)
 
 Retrieves a filtered list of Terminal action requests created by the account making the request. Terminal action requests are available for 30 days.
 
-### Usage
+#### Usage (terminal actions search)
 
 ```typescript
 await client.terminal.actions.search({
@@ -8527,19 +8489,19 @@ await client.terminal.actions.search({
 });
 ```
 
-### Parameters
+#### Parameters (terminal actions search)
 
 **request:** `Square.terminal.SearchTerminalActionsRequest`
 
 **requestOptions:** `Actions.RequestOptions`
 
-client.terminal.actions.get({ ...params }) -> Square.GetTerminalActionResponse
+### client.terminal.actions.get({ ...params }) -> Square.GetTerminalActionResponse
 
-### Description
+#### Description (terminal actions get)
 
 Retrieves a Terminal action request by `action_id`. Terminal action requests are available for 30 days.
 
-### Usage
+#### Usage (terminal actions get)
 
 ```typescript
 await client.terminal.actions.get({
@@ -8547,19 +8509,19 @@ await client.terminal.actions.get({
 });
 ```
 
-### Parameters
+#### Parameters (terminal actions get)
 
 **request:** `Square.terminal.GetActionsRequest`
 
 **requestOptions:** `Actions.RequestOptions`
 
-client.terminal.actions.cancel({ ...params }) -> Square.CancelTerminalActionResponse
+### client.terminal.actions.cancel({ ...params }) -> Square.CancelTerminalActionResponse
 
-### Description
+#### Description (terminal actions cancel)
 
 Cancels a Terminal action request if the status of the request permits it.
 
-### Usage
+#### Usage (terminal actions cancel)
 
 ```typescript
 await client.terminal.actions.cancel({
@@ -8567,7 +8529,7 @@ await client.terminal.actions.cancel({
 });
 ```
 
-### Parameters
+#### Parameters (terminal actions cancel)
 
 **request:** `Square.terminal.CancelActionsRequest`
 
@@ -8575,14 +8537,14 @@ await client.terminal.actions.cancel({
 
 ## Terminal Checkouts
 
-client.terminal.checkouts.create({ ...params }) -> Square.CreateTerminalCheckoutResponse
+### client.terminal.checkouts.create({ ...params }) -> Square.CreateTerminalCheckoutResponse
 
-### Description
+#### Description (terminal checkouts create)
 
 Creates a Terminal checkout request and sends it to the specified device to take a payment
 for the requested amount.
 
-### Usage
+#### Usage (terminal checkouts create)
 
 ```typescript
 await client.terminal.checkouts.create({
@@ -8601,19 +8563,19 @@ await client.terminal.checkouts.create({
 });
 ```
 
-### Parameters
+#### Parameters (terminal checkouts create)
 
 **request:** `Square.terminal.CreateTerminalCheckoutRequest`
 
 **requestOptions:** `Checkouts.RequestOptions`
 
-client.terminal.checkouts.search({ ...params }) -> Square.SearchTerminalCheckoutsResponse
+### client.terminal.checkouts.search({ ...params }) -> Square.SearchTerminalCheckoutsResponse
 
-### Description
+#### Description (terminal checkouts search)
 
 Returns a filtered list of Terminal checkout requests created by the application making the request. Only Terminal checkout requests created for the merchant scoped to the OAuth token are returned. Terminal checkout requests are available for 30 days.
 
-### Usage
+#### Usage (terminal checkouts search)
 
 ```typescript
 await client.terminal.checkouts.search({
@@ -8626,19 +8588,19 @@ await client.terminal.checkouts.search({
 });
 ```
 
-### Parameters
+#### Parameters (terminal checkouts search)
 
 **request:** `Square.terminal.SearchTerminalCheckoutsRequest`
 
 **requestOptions:** `Checkouts.RequestOptions`
 
-client.terminal.checkouts.get({ ...params }) -> Square.GetTerminalCheckoutResponse
+### client.terminal.checkouts.get({ ...params }) -> Square.GetTerminalCheckoutResponse
 
-### Description
+#### Description (terminal checkouts get)
 
 Retrieves a Terminal checkout request by `checkout_id`. Terminal checkout requests are available for 30 days.
 
-### Usage
+#### Usage (terminal checkouts get)
 
 ```typescript
 await client.terminal.checkouts.get({
@@ -8646,19 +8608,19 @@ await client.terminal.checkouts.get({
 });
 ```
 
-### Parameters
+#### Parameters (terminal checkouts get)
 
 **request:** `Square.terminal.GetCheckoutsRequest`
 
 **requestOptions:** `Checkouts.RequestOptions`
 
-client.terminal.checkouts.cancel({ ...params }) -> Square.CancelTerminalCheckoutResponse
+### client.terminal.checkouts.cancel({ ...params }) -> Square.CancelTerminalCheckoutResponse
 
-### Description
+#### Description (terminal checkouts cancel)
 
 Cancels a Terminal checkout request if the status of the request permits it.
 
-### Usage
+#### Usage (terminal checkouts cancel)
 
 ```typescript
 await client.terminal.checkouts.cancel({
@@ -8666,7 +8628,7 @@ await client.terminal.checkouts.cancel({
 });
 ```
 
-### Parameters
+#### Parameters (terminal checkouts cancel)
 
 **request:** `Square.terminal.CancelCheckoutsRequest`
 
@@ -8674,13 +8636,13 @@ await client.terminal.checkouts.cancel({
 
 ## Terminal Refunds
 
-client.terminal.refunds.create({ ...params }) -> Square.CreateTerminalRefundResponse
+### client.terminal.refunds.create({ ...params }) -> Square.CreateTerminalRefundResponse
 
-### Description
+#### Description (terminal refunds create)
 
 Creates a request to refund an Interac payment completed on a Square Terminal. Refunds for Interac payments on a Square Terminal are supported only for Interac debit cards in Canada. Other refunds for Terminal payments should use the Refunds API. For more information, see [Refunds API](api:Refunds).
 
-### Usage
+#### Usage (terminal refunds create)
 
 ```typescript
 await client.terminal.refunds.create({
@@ -8697,19 +8659,19 @@ await client.terminal.refunds.create({
 });
 ```
 
-### Parameters
+#### Parameters (terminal refunds create)
 
 **request:** `Square.terminal.CreateTerminalRefundRequest`
 
 **requestOptions:** `Refunds.RequestOptions`
 
-client.terminal.refunds.search({ ...params }) -> Square.SearchTerminalRefundsResponse
+### client.terminal.refunds.search({ ...params }) -> Square.SearchTerminalRefundsResponse
 
-### Description
+#### Description (terminal refunds search)
 
 Retrieves a filtered list of Interac Terminal refund requests created by the seller making the request. Terminal refund requests are available for 30 days.
 
-### Usage
+#### Usage (terminal refunds search)
 
 ```typescript
 await client.terminal.refunds.search({
@@ -8722,19 +8684,19 @@ await client.terminal.refunds.search({
 });
 ```
 
-### Parameters
+#### Parameters (terminal refunds search)
 
 **request:** `Square.terminal.SearchTerminalRefundsRequest`
 
 **requestOptions:** `Refunds.RequestOptions`
 
-client.terminal.refunds.get({ ...params }) -> Square.GetTerminalRefundResponse
+### client.terminal.refunds.get({ ...params }) -> Square.GetTerminalRefundResponse
 
-### Description
+#### Description (terminal refunds get)
 
 Retrieves an Interac Terminal refund object by ID. Terminal refund objects are available for 30 days.
 
-### Usage
+#### Usage (terminal refunds get)
 
 ```typescript
 await client.terminal.refunds.get({
@@ -8742,19 +8704,19 @@ await client.terminal.refunds.get({
 });
 ```
 
-### Parameters
+#### Parameters (terminal refunds get)
 
 **request:** `Square.terminal.GetRefundsRequest`
 
 **requestOptions:** `Refunds.RequestOptions`
 
-client.terminal.refunds.cancel({ ...params }) -> Square.CancelTerminalRefundResponse
+### client.terminal.refunds.cancel({ ...params }) -> Square.CancelTerminalRefundResponse
 
-### Description
+#### Description (terminal refunds cancel)
 
 Cancels an Interac Terminal refund request by refund request ID if the status of the request permits it.
 
-### Usage
+#### Usage (terminal refunds cancel)
 
 ```typescript
 await client.terminal.refunds.cancel({
@@ -8762,7 +8724,7 @@ await client.terminal.refunds.cancel({
 });
 ```
 
-### Parameters
+#### Parameters (terminal refunds cancel)
 
 **request:** `Square.terminal.CancelRefundsRequest`
 
@@ -8770,19 +8732,19 @@ await client.terminal.refunds.cancel({
 
 ## Webhooks EventTypes
 
-client.webhooks.eventTypes.list({ ...params }) -> Square.ListWebhookEventTypesResponse
+### client.webhooks.eventTypes.list({ ...params }) -> Square.ListWebhookEventTypesResponse
 
-### Description
+#### Description (webhooks event types list)
 
 Lists all webhook event types that can be subscribed to.
 
-### Usage
+#### Usage (webhooks event types list)
 
 ```typescript
 await client.webhooks.eventTypes.list();
 ```
 
-### Parameters
+#### Parameters (webhooks event types list)
 
 **request:** `Square.webhooks.ListEventTypesRequest`
 
@@ -8790,13 +8752,13 @@ await client.webhooks.eventTypes.list();
 
 ## Webhooks Subscriptions
 
-client.webhooks.subscriptions.list({ ...params }) -> core.Page
+### client.webhooks.subscriptions.list({ ...params }) -> core.Page
 
-### Description
+#### Description (webhooks subscriptions list)
 
 Lists all webhook subscriptions owned by your application.
 
-### Usage
+#### Usage (webhooks subscriptions list)
 
 ```typescript
 const response = await client.webhooks.subscriptions.list();
@@ -8811,19 +8773,19 @@ while (page.hasNextPage()) {
 }
 ```
 
-### Parameters
+#### Parameters (webhooks subscriptions list)
 
 **request:** `Square.webhooks.ListSubscriptionsRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.webhooks.subscriptions.create({ ...params }) -> Square.CreateWebhookSubscriptionResponse
+### client.webhooks.subscriptions.create({ ...params }) -> Square.CreateWebhookSubscriptionResponse
 
-### Description
+#### Description (webhooks subscriptions create)
 
 Creates a webhook subscription.
 
-### Usage
+#### Usage (webhooks subscriptions create)
 
 ```typescript
 await client.webhooks.subscriptions.create({
@@ -8837,19 +8799,19 @@ await client.webhooks.subscriptions.create({
 });
 ```
 
-### Parameters
+#### Parameters (webhooks subscriptions create)
 
 **request:** `Square.webhooks.CreateWebhookSubscriptionRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.webhooks.subscriptions.get({ ...params }) -> Square.GetWebhookSubscriptionResponse
+### client.webhooks.subscriptions.get({ ...params }) -> Square.GetWebhookSubscriptionResponse
 
-### Description
+#### Description (webhooks subscriptions get)
 
 Retrieves a webhook subscription identified by its ID.
 
-### Usage
+#### Usage (webhooks subscriptions get)
 
 ```typescript
 await client.webhooks.subscriptions.get({
@@ -8857,19 +8819,19 @@ await client.webhooks.subscriptions.get({
 });
 ```
 
-### Parameters
+#### Parameters (webhooks subscriptions get)
 
 **request:** `Square.webhooks.GetSubscriptionsRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.webhooks.subscriptions.update({ ...params }) -> Square.UpdateWebhookSubscriptionResponse
+### client.webhooks.subscriptions.update({ ...params }) -> Square.UpdateWebhookSubscriptionResponse
 
-### Description
+#### Description (webhooks subscriptions update)
 
 Updates a webhook subscription.
 
-### Usage
+#### Usage (webhooks subscriptions update)
 
 ```typescript
 await client.webhooks.subscriptions.update({
@@ -8881,19 +8843,19 @@ await client.webhooks.subscriptions.update({
 });
 ```
 
-### Parameters
+#### Parameters (webhooks subscriptions update)
 
 **request:** `Square.webhooks.UpdateWebhookSubscriptionRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.webhooks.subscriptions.delete({ ...params }) -> Square.DeleteWebhookSubscriptionResponse
+### client.webhooks.subscriptions.delete({ ...params }) -> Square.DeleteWebhookSubscriptionResponse
 
-### Description
+#### Description (webhooks subscriptions delete)
 
 Deletes a webhook subscription.
 
-### Usage
+#### Usage (webhooks subscriptions delete)
 
 ```typescript
 await client.webhooks.subscriptions.delete({
@@ -8901,19 +8863,19 @@ await client.webhooks.subscriptions.delete({
 });
 ```
 
-### Parameters
+#### Parameters (webhooks subscriptions delete)
 
 **request:** `Square.webhooks.DeleteSubscriptionsRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.webhooks.subscriptions.updateSignatureKey({ ...params }) -> Square.UpdateWebhookSubscriptionSignatureKeyResponse
+### client.webhooks.subscriptions.updateSignatureKey({ ...params }) -> Square.UpdateWebhookSubscriptionSignatureKeyResponse
 
-### Description
+#### Description (webhooks subscriptions update signature key)
 
 Updates a webhook subscription by replacing the existing signature key with a new one.
 
-### Usage
+#### Usage (webhooks subscriptions update signature key)
 
 ```typescript
 await client.webhooks.subscriptions.updateSignatureKey({
@@ -8922,19 +8884,19 @@ await client.webhooks.subscriptions.updateSignatureKey({
 });
 ```
 
-### Parameters
+#### Parameters (webhooks subscriptions update signature key)
 
 **request:** `Square.webhooks.UpdateWebhookSubscriptionSignatureKeyRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
 
-client.webhooks.subscriptions.test({ ...params }) -> Square.TestWebhookSubscriptionResponse
+### client.webhooks.subscriptions.test({ ...params }) -> Square.TestWebhookSubscriptionResponse
 
-### Description
+#### Description (webhooks subscriptions test)
 
 Tests a webhook subscription by sending a test event to the notification URL.
 
-### Usage
+#### Usage (webhooks subscriptions test)
 
 ```typescript
 await client.webhooks.subscriptions.test({
@@ -8943,9 +8905,8 @@ await client.webhooks.subscriptions.test({
 });
 ```
 
-### Parameters
+#### Parameters (webhooks subscriptions test)
 
 **request:** `Square.webhooks.TestWebhookSubscriptionRequest`
 
 **requestOptions:** `Subscriptions.RequestOptions`
-
