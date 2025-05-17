@@ -158,15 +158,6 @@ export const Clients: CollectionConfig = {
         description: 'The program the client is enrolled in'
       }
     },
-    {
-      name: 'selectedClassSlot',
-      type: 'relationship',
-      relationTo: 'classes',
-      hasMany: false,
-      admin: {
-        description: 'The specific day/time slot the client is assigned to'
-      }
-    },
     // Documents
     {
       name: 'agreedToTerms',

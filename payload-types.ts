@@ -682,10 +682,6 @@ export interface Client {
    * The program the client is enrolled in
    */
   selectedProgram?: (string | null) | Program;
-  /**
-   * The specific day/time slot the client is assigned to
-   */
-  selectedClassSlot?: (string | null) | Class;
   agreedToTerms?: boolean | null;
   signature?: string | null;
   paymentOption?: ('pay_as_you_go' | 'autopay_weekly' | 'full_program') | null;
@@ -1072,7 +1068,6 @@ export interface ClientsSelect<T extends boolean = true> {
   referralSourceOther?: T;
   whyReferred?: T;
   selectedProgram?: T;
-  selectedClassSlot?: T;
   agreedToTerms?: T;
   signature?: T;
   paymentOption?: T;
