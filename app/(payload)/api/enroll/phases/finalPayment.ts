@@ -5,8 +5,17 @@ import { v4 as uuidV4 } from 'uuid';
 import { SquareError } from 'square';
 import { squareClient, SQUARE_LOCATION_ID, SQUARE_AUTOPAY_WEEKLY_PLAN_ID } from '../config';
 import { createPaymentRecord } from '../helpers';
-import type { Client, EnrollmentRequestBody } from '../types';
-import type { Program, Payment as PayloadPaymentType } from '@/payload-types';
+import type { Client, Program, Payment as PayloadPaymentType } from '@/payload-types';
+
+// Define the request body structure specific to this phase
+interface FinalPaymentRequestBody {
+    submissionPhase: 'finalPayment';
+    paymentDetails: {
+        cardNonce: string;
+        dueTodayAmount: number;
+        paymentOption: string;
+    };
+}
 
 // Helper to log Square API errors from the response.errors array
 function logSquareResponseErrors(payload: Payload, context: string, errors: unknown[] | undefined, clientId?: string) {
@@ -15,7 +24,7 @@ function logSquareResponseErrors(payload: Payload, context: string, errors: unkn
     }
 }
 
-export async function handleFinalPaymentPhase(payload: Payload, rawRequestBody: EnrollmentRequestBody, client: Client) {
+export async function handleFinalPaymentPhase(payload: Payload, rawRequestBody: FinalPaymentRequestBody, client: Client) {
     if (!squareClient) {
         payload.logger.error('Square SDK not initialized. Cannot process payment.');
         return NextResponse.json({ error: 'Payment processing unavailable.' }, { status: 503 });
@@ -63,18 +72,30 @@ export async function handleFinalPaymentPhase(payload: Payload, rawRequestBody: 
                 }
 
                 await payload.update({
-                    collection: 'clients', id: client.id, data: {
+                    collection: 'clients', 
+                    id: client.id, 
+                    data: {
                         paymentStatus: newPaymentStatus,
-                        enrollmentProcessStatus: 'enrollment_complete'
+                        enrollmentProcessStatus: 'enrollment_complete' as Client['enrollmentProcessStatus']
                     }
                 });
+                
                 await createPaymentRecord(payload, client, createdPayment, {
-                    amount: dueTodayAmount, type: paymentRecordType, notes: `One-time payment for: ${paymentOption}`
+                    amount: dueTodayAmount, 
+                    type: paymentRecordType, 
+                    notes: `One-time payment for: ${paymentOption}`
                 });
+                
                 return NextResponse.json({ message: 'Payment successful and enrollment complete!', paymentId: createdPayment.id }, { status: 200 });
             } else {
                 logSquareResponseErrors(payload, "one-time payment", paymentErrors, client.id);
-                await payload.update({ collection: 'clients', id: client.id, data: { paymentStatus: 'payment_issue' } });
+                await payload.update({ 
+                    collection: 'clients', 
+                    id: client.id, 
+                    data: { 
+                        paymentStatus: 'payment_issue' as Client['paymentStatus'] 
+                    } 
+                });
                 return NextResponse.json({ error: 'Payment failed.', details: paymentErrors }, { status: 500 });
             }
         } else if (paymentOption === 'autopay_weekly') {
@@ -105,12 +126,20 @@ export async function handleFinalPaymentPhase(payload: Payload, rawRequestBody: 
 
                 if (!feePayment || feePayment.status !== 'COMPLETED' || (feePaymentErrors && feePaymentErrors.length > 0)) {
                     logSquareResponseErrors(payload, "enrollment fee payment", feePaymentErrors, client.id);
-                    await payload.update({ collection: 'clients', id: client.id, data: { paymentStatus: 'payment_issue' } });
+                    await payload.update({ 
+                        collection: 'clients', 
+                        id: client.id, 
+                        data: { 
+                            paymentStatus: 'payment_issue' as Client['paymentStatus'] 
+                        } 
+                    });
                     return NextResponse.json({ error: 'Enrollment fee payment failed.', details: feePaymentErrors }, { status: 500 });
                 }
                 payload.logger.info(`Client ${client.id}: Enrollment fee payment successful: ${feePayment.id}`);
                 await createPaymentRecord(payload, client, feePayment, {
-                    amount: clientProgram.enrollmentFee, type: 'enrollment_fee', notes: 'Enrollment fee for autopay setup.'
+                    amount: clientProgram.enrollmentFee, 
+                    type: 'enrollment_fee' as PayloadPaymentType['type'], 
+                    notes: 'Enrollment fee for autopay setup.'
                 });
             }
 
@@ -121,8 +150,10 @@ export async function handleFinalPaymentPhase(payload: Payload, rawRequestBody: 
 
                 const customerResponse = await squareClient.customers.create({
                     idempotencyKey: uuidV4(),
-                    givenName: client.firstName || undefined, familyName: client.lastName || undefined,
-                    emailAddress: client.email || undefined, phoneNumber: client.phone || undefined,
+                    givenName: client.firstName || undefined, 
+                    familyName: client.lastName || undefined,
+                    emailAddress: client.email || undefined, 
+                    phoneNumber: client.phone || undefined,
                     referenceId: client.id,
                 });
 
@@ -132,7 +163,13 @@ export async function handleFinalPaymentPhase(payload: Payload, rawRequestBody: 
 
                 if (createdCustomer?.id && (!customerErrors || customerErrors.length === 0)) {
                     currentSquareCustomerId = createdCustomer.id;
-                    await payload.update({ collection: 'clients', id: client.id, data: { squareCustomerId: currentSquareCustomerId } });
+                    await payload.update({ 
+                        collection: 'clients', 
+                        id: client.id, 
+                        data: { 
+                            squareCustomerId: currentSquareCustomerId 
+                        } 
+                    });
                     payload.logger.info(`Client ${client.id}: Square Customer created: ${currentSquareCustomerId}`);
                 } else {
                     logSquareResponseErrors(payload, "create Square customer", customerErrors, client.id);
@@ -144,7 +181,8 @@ export async function handleFinalPaymentPhase(payload: Payload, rawRequestBody: 
             payload.logger.info(`Client ${client.id}: Creating card on file for customer: ${currentSquareCustomerId}`);
 
             const cardResponse = await squareClient.cards.create({
-                idempotencyKey: uuidV4(), sourceId: cardNonce,
+                idempotencyKey: uuidV4(), 
+                sourceId: cardNonce,
                 card: {
                     customerId: currentSquareCustomerId!,
                     cardholderName: `${client.firstName || ''} ${client.lastName || ''}`.trim() || undefined,
@@ -166,9 +204,11 @@ export async function handleFinalPaymentPhase(payload: Payload, rawRequestBody: 
             payload.logger.info(`Client ${client.id}: Creating subscription with plan: ${SQUARE_AUTOPAY_WEEKLY_PLAN_ID}`);
 
             const subscriptionResponse = await squareClient.subscriptions.create({
-                idempotencyKey: uuidV4(), locationId: SQUARE_LOCATION_ID!,
+                idempotencyKey: uuidV4(), 
+                locationId: SQUARE_LOCATION_ID!,
                 planVariationId: SQUARE_AUTOPAY_WEEKLY_PLAN_ID,
-                customerId: currentSquareCustomerId!, cardId: cardOnFileId,
+                customerId: currentSquareCustomerId!, 
+                cardId: cardOnFileId,
             });
 
             // Corrected: Access subscription and errors directly
@@ -179,10 +219,12 @@ export async function handleFinalPaymentPhase(payload: Payload, rawRequestBody: 
                 const subscriptionId = createdSubscription.id;
                 payload.logger.info(`Client ${client.id}: Subscription created: ${subscriptionId}`);
                 await payload.update({
-                    collection: 'clients', id: client.id, data: {
+                    collection: 'clients', 
+                    id: client.id, 
+                    data: {
                         squareSubscriptionId: subscriptionId,
-                        paymentStatus: 'active_autopay',
-                        enrollmentProcessStatus: 'enrollment_complete'
+                        paymentStatus: 'active_autopay' as Client['paymentStatus'],
+                        enrollmentProcessStatus: 'enrollment_complete' as Client['enrollmentProcessStatus']
                     }
                 });
                 return NextResponse.json({ message: 'Autopay subscription set up successfully!', subscriptionId }, { status: 200 });

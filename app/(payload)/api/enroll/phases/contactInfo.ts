@@ -2,9 +2,25 @@ import { NextResponse } from 'next/server';
 import type { Payload } from 'payload';
 import jwt from 'jsonwebtoken';
 import { ENROLLMENT_JWT_SECRET, ENROLLMENT_JWT_EXPIRES_IN } from '../config';
-import type { ClientUpdateData, Client, EnrollmentRequestBody } from '../types';
+import type { Client } from '@/payload-types';
 
-export async function handleContactInfoPhase(payload: Payload, rawRequestBody: EnrollmentRequestBody) {
+// Define the request body structure specific to this phase
+interface ContactInfoRequestBody {
+    submissionPhase: 'contactInfo';
+    personalInfo: {
+        firstName: string;
+        lastName: string;
+        email: string;
+        phone?: string;
+        city: string;
+        state: string;
+        zipcode: string;
+        sex: Client['sex'];
+        consentToContact?: boolean;
+    };
+}
+
+export async function handleContactInfoPhase(payload: Payload, rawRequestBody: ContactInfoRequestBody) {
     const { personalInfo } = rawRequestBody;
     if (!personalInfo || !personalInfo.email) {
         return NextResponse.json({ error: 'Email (within personalInfo) is required for contactInfo phase.' }, { status: 400 });
@@ -12,11 +28,18 @@ export async function handleContactInfoPhase(payload: Payload, rawRequestBody: E
 
     const { firstName, lastName, email, phone, city, state, zipcode, sex, consentToContact } = personalInfo;
 
-    const dataForUpsert: ClientUpdateData = {
-        email, firstName, lastName, phone: phone || undefined, city, state, zipcode,
-        sex: sex as Client['sex'], // Cast if 'sex' from FE matches Payload type
+    // Define the data for update/create directly with the correct enrollmentProcessStatus type
+    const dataForUpsert = {
+        email, 
+        firstName, 
+        lastName, 
+        phone: phone || undefined, 
+        city, 
+        state, 
+        zipcode,
+        sex,
         consentToContact: consentToContact ?? undefined,
-        enrollmentProcessStatus: 'contact_info_collected',
+        enrollmentProcessStatus: 'contact_info_collected' as Client['enrollmentProcessStatus'],
     };
 
     const existingClientQuery = await payload.find({ collection: 'clients', where: { email: { equals: email } }, limit: 1 });
@@ -25,13 +48,18 @@ export async function handleContactInfoPhase(payload: Payload, rawRequestBody: E
 
     if (existingClientQuery.docs.length > 0) {
         const clientToUpdate = existingClientQuery.docs[0];
-        const updatedClient = await payload.update({ collection: 'clients', id: clientToUpdate.id, data: dataForUpsert });
+        const updatedClient = await payload.update({ 
+            collection: 'clients', 
+            id: clientToUpdate.id, 
+            data: dataForUpsert 
+        });
         finalClientId = updatedClient.id;
         isUpdate = true;
     } else {
-        // Ensure type for create matches Payload's expectation (all required fields are present)
-        const createData = dataForUpsert as Omit<Client, 'id' | 'createdAt' | 'updatedAt' | 'selectedProgram' | 'class' | 'county' | 'referralSource'>;
-        const createdClient = await payload.create({ collection: 'clients', data: createData });
+        const createdClient = await payload.create({ 
+            collection: 'clients', 
+            data: dataForUpsert 
+        });
         finalClientId = createdClient.id;
     }
 

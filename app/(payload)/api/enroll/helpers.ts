@@ -2,8 +2,7 @@ import jwt from 'jsonwebtoken';
 import { ENROLLMENT_JWT_SECRET } from './config';
 import type { NextRequest } from 'next/server';
 import type { Payload } from 'payload';
-import type { Program, Payment as PayloadPayment } from '@/payload-types';
-import type { Client } from './types';
+import type { Client, Program, Payment as PayloadPayment } from '@/payload-types';
 
 export async function findCountyByName(payload: Payload, countyName: string): Promise<string | null> {
     if (!countyName) return null;

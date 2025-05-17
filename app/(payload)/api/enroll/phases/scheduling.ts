@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server';
 import type { Payload } from 'payload';
-import type { Client, EnrollmentRequestBody } from '../types';
-import type { Program, ProgramGroup } from '@/payload-types';
+import type { Client, Program, ProgramGroup } from '@/payload-types';
 
-export async function handleSchedulingPhase(payload: Payload, rawRequestBody: EnrollmentRequestBody, client: Client) {
+// Define the request body structure specific to this phase
+interface SchedulingRequestBody {
+    submissionPhase: 'scheduling';
+    scheduling: {
+        selectedClassId: string;
+    };
+}
+
+export async function handleSchedulingPhase(payload: Payload, rawRequestBody: SchedulingRequestBody, client: Client) {
     const { scheduling } = rawRequestBody;
     if (!scheduling || !scheduling.selectedClassId) {
         return NextResponse.json({ error: 'Scheduling info with selectedClassId is required.' }, { status: 400 });
@@ -60,9 +67,21 @@ export async function handleSchedulingPhase(payload: Payload, rawRequestBody: En
         return NextResponse.json({ error: 'Selected class time is full.' }, { status: 409 });
     }
 
-    await payload.update({ collection: 'clients', id: client.id, data: { class: selectedClassId, enrollmentProcessStatus: 'schedule_selected' } });
+    await payload.update({ 
+        collection: 'clients', 
+        id: client.id, 
+        data: { 
+            class: selectedClassId, 
+            enrollmentProcessStatus: 'schedule_selected' as Client['enrollmentProcessStatus'] 
+        } 
+    });
+    
     if (!enrolledClientIds.includes(client.id)) {
-        await payload.update({ collection: 'classes', id: selectedClassId, data: { clients: [...enrolledClientIds, client.id] } });
+        await payload.update({ 
+            collection: 'classes', 
+            id: selectedClassId, 
+            data: { clients: [...enrolledClientIds, client.id] } 
+        });
     }
 
     return NextResponse.json({ message: 'Scheduling info saved and client assigned to class.' }, { status: 200 });
