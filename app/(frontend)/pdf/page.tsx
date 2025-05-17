@@ -43,7 +43,7 @@ function App() {
     <div className="App" style={{ height: '100vh' }}>
       {/* Use the dynamically imported PDFViewer */}
       <PDFViewerWithNoSSR width="100%" height="100%" className="pdf-viewer">
-        <MyDocument {...documentProps} />
+                    <MyDocument {...documentProps} />
       </PDFViewerWithNoSSR>
     </div>
   );

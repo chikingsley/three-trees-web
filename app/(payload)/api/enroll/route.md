@@ -5,7 +5,7 @@ import configPromise from '@payload-config'
 import type { EnrollmentFormData } from '@/lib/form-types'
 import { enrollmentFormSchema } from '@/lib/form-types'; // For backend Zod validation
 import { ZodError } from 'zod'; // Import ZodError
-import type { Client, Program, ProgramGroup } from '@/payload-types'
+import type { Client, Program } from '@/payload-types'
 import jwt from 'jsonwebtoken'
 
 import { SquareClient, SquareEnvironment, SquareError } from 'square';
@@ -21,20 +21,20 @@ const SQUARE_ENV_FOR_SDK = process.env.SQUARE_ENVIRONMENT?.toLowerCase() === 'pr
                             ? SquareEnvironment.Production 
                             : SquareEnvironment.Sandbox;
 
-let squareClient: SquareClient | null = null;
+let squareClientInstance: SquareClient | null = null;
 
 if (SQUARE_ACCESS_TOKEN) {
   try {
-    squareClient = new SquareClient({
-      token: SQUARE_ACCESS_TOKEN, 
+    squareClientInstance = new SquareClient({
+      accessToken: SQUARE_ACCESS_TOKEN,
       environment: SQUARE_ENV_FOR_SDK,
     });
-    console.log('Square SDK Client initialized with specified environment.');
+    console.log('Square SDK Client initialized.');
   } catch (e) {
     console.error('Failed to initialize Square SDK Client:', e);
   }
 } else {
-  console.warn('SQUARE_TOKEN is missing. Payment processing disabled.');
+  console.warn('SQUARE_ACCESS_TOKEN is missing. Payment processing disabled.');
 }
 
 // Define a type for the data used to update/create clients
@@ -259,7 +259,7 @@ export async function POST(request: NextRequest) {
         const classDoc = await payload.findByID({
           collection: 'classes',
           id: selectedClassId,
-          depth: 1, // Depth 1 to populate the 'programGroup' field
+          depth: 1, // Depth 1 to populate the 'program' field
         });
 
         if (!classDoc) {
@@ -269,63 +269,50 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ error: 'Selected class is not active.' }, { status: 400 });
         }
 
-        // Corrected: Use programGroup instead of program, as per Classes.ts definition
-        if (typeof classDoc.programGroup !== 'object' || classDoc.programGroup === null || !('id' in classDoc.programGroup)) {
-          return NextResponse.json({ error: 'Could not retrieve program group details for the selected class.' }, { status: 500 });
+        // Ensure the program field is populated and is an object
+        if (typeof classDoc.program !== 'object' || classDoc.program === null || !('id' in classDoc.program)) {
+          return NextResponse.json({ error: 'Could not retrieve program details for the selected class.' }, { status: 500 });
         }
-        // programForClass is now a ProgramGroup document
-        const programGroupForClass = classDoc.programGroup as ProgramGroup; 
+        const programForClass = classDoc.program as Program; // Type assertion
 
         // TEMPORARY LOGGING FOR MISMATCH DIAGNOSIS - STARTS
         payload.logger.info(`[PROGRAM MISMATCH CHECK] targetClient.id: ${targetClient.id}`);
-        // Assuming targetClient.selectedProgram is populated with depth:1 to get its own programGroup relationship
-        // If not, this access might fail or be just an ID. Client fetch uses depth: 1.
-        // selectedProgram (a Program) -> programGroup (a ProgramGroup)
-        // classDoc (a Class) -> programGroup (a ProgramGroup)
-        // We need to compare targetClient.selectedProgram.programGroup.id with classDoc.programGroup.id
-        
-        let clientSelectedProgramActual: Program | null = null;
-        if (typeof targetClient.selectedProgram === 'string') { // if it's just an ID
-            // fetch the program to get its programGroup
-            clientSelectedProgramActual = await payload.findByID({ collection: 'programs', id: targetClient.selectedProgram, depth: 1});
-        } else if (typeof targetClient.selectedProgram === 'object' && targetClient.selectedProgram !== null) {
-            clientSelectedProgramActual = targetClient.selectedProgram as Program;
-        }
-
-        if (!clientSelectedProgramActual || typeof clientSelectedProgramActual.programGroup !== 'object' || !clientSelectedProgramActual.programGroup?.id) {
-             payload.logger.error(`[PROGRAM MISMATCH CHECK] Could not resolve program group for client's selected program: ${JSON.stringify(targetClient.selectedProgram)}`);
-             return NextResponse.json({ error: 'Could not resolve program group for client\'s selected program.' }, { status: 400 });
-        }
-        const clientProgramGroupId = clientSelectedProgramActual.programGroup.id;
-
-        payload.logger.info(`[PROGRAM MISMATCH CHECK] Client's Selected Program ID: ${clientSelectedProgramActual.id}`);
-        payload.logger.info(`[PROGRAM MISMATCH CHECK] Client's Program Group ID (from selected program): ${clientProgramGroupId}`);
-        payload.logger.info(`[PROGRAM MISMATCH CHECK] Class's Program Group ID: ${programGroupForClass.id}`);
-        payload.logger.info(`[PROGRAM MISMATCH CHECK] Class's Program Group Name: ${programGroupForClass.name}`);
+        payload.logger.info(`[PROGRAM MISMATCH CHECK] targetClient.selectedProgram (ID): ${targetClient.selectedProgram}`);
+        payload.logger.info(`[PROGRAM MISMATCH CHECK] classDoc.id (Selected Class ID): ${classDoc.id}`);
+        payload.logger.info(`[PROGRAM MISMATCH CHECK] programForClass.id (Program ID of Selected Class): ${programForClass.id}`);
+        payload.logger.info(`[PROGRAM MISMATCH CHECK] programForClass.name (Program Name of Selected Class): ${programForClass.name}`); // Log name for easier identification
         // TEMPORARY LOGGING FOR MISMATCH DIAGNOSIS - ENDS
 
-        if (clientProgramGroupId !== programGroupForClass.id) {
+        // --- Consistency Check: Class Program vs Client\'s Selected Program ---
+        let clientProgramId: string | undefined;
+        if (typeof targetClient.selectedProgram === 'string') {
+          clientProgramId = targetClient.selectedProgram;
+        } else if (typeof targetClient.selectedProgram === 'object' && targetClient.selectedProgram !== null) {
+          clientProgramId = targetClient.selectedProgram.id;
+        }
+
+        if (clientProgramId !== programForClass.id) {
           return NextResponse.json({
-            error: 'Mismatch between the program group of your selected program and the program group of the chosen class time.'
+            error: 'Mismatch between selected program and the program of the chosen class time.'
           }, { status: 400 });
         }
 
         // --- Check Availability --- 
+        // TEMPORARY LOGGING STARTS
         payload.logger.info(`[SCHEDULING CHECK] Class ID: ${selectedClassId}`);
         payload.logger.info(`[SCHEDULING CHECK] classDoc.numberOfParallelClasses: ${classDoc.numberOfParallelClasses}`);
-        payload.logger.info(`[SCHEDULING CHECK] programGroupForClass (raw from classDoc.programGroup): ${JSON.stringify(programGroupForClass)}`);
-        // Corrected: Use spotsPerClassInstance from ProgramGroup
-        payload.logger.info(`[SCHEDULING CHECK] programGroupForClass.spotsPerClassInstance (direct access): ${programGroupForClass.spotsPerClassInstance}`);
-        
-        // Corrected: Use spotsPerClassInstance from ProgramGroup
-        const spotsPerInstance = programGroupForClass.spotsPerClassInstance ?? 0;
-        const spotsTotal = (classDoc.numberOfParallelClasses ?? 0) * spotsPerInstance;
-        const enrolledClientIds = Array.isArray(classDoc.clients) ? classDoc.clients.map(c => typeof c === 'string' ? c : c.id) : [];
+        payload.logger.info(`[SCHEDULING CHECK] programForClass (raw from classDoc.program): ${JSON.stringify(programForClass)}`);
+        payload.logger.info(`[SCHEDULING CHECK] programForClass.spotsPerClass (direct access): ${programForClass.spotsPerClass}`);
+        // TEMPORARY LOGGING ENDS
+
+        const spotsPerClass = programForClass.spotsPerClass ?? 0;
+        const spotsTotal = (classDoc.numberOfParallelClasses ?? 0) * spotsPerClass;
+        const enrolledClientIds = Array.isArray(classDoc.clients) ? classDoc.clients.map(c => typeof c === 'string' ? c : c.id) : []; // Ensure we get IDs
         const enrolledClientCount = enrolledClientIds.length;
         const spotsAvailable = Math.max(0, spotsTotal - enrolledClientCount);
 
         // TEMPORARY LOGGING STARTS
-        payload.logger.info(`[SCHEDULING CHECK] Calculated spotsPerInstance: ${spotsPerInstance}`);
+        payload.logger.info(`[SCHEDULING CHECK] Calculated spotsPerClass: ${spotsPerClass}`);
         payload.logger.info(`[SCHEDULING CHECK] Calculated spotsTotal: ${spotsTotal}`);
         payload.logger.info(`[SCHEDULING CHECK] Enrolled client count: ${enrolledClientCount}`);
         payload.logger.info(`[SCHEDULING CHECK] Calculated spotsAvailable: ${spotsAvailable}`);
@@ -462,7 +449,7 @@ export async function POST(request: NextRequest) {
         selectedProgram: finalProgramDocumentId, 
         consentToContact: personalInfo.consentToContact ?? undefined, 
         class: scheduling.selectedClassId, 
-      agreedToTerms: documents.agreedToTerms,
+        agreedToTerms: documents.agreedToTerms,
         signature: documents.signature,
         paymentOption: payment.paymentOption as Client['paymentOption'],
         agreeToRecurring: payment.agreeToRecurring ?? false,
@@ -473,7 +460,7 @@ export async function POST(request: NextRequest) {
       await payload.update({ collection: 'clients', id: targetClient.id, data: finalClientData })
       return NextResponse.json({ message: 'Enrollment data finalized. Ready for payment processing.' }, { status: 200 })
     } else if (submissionPhase === 'finalPayment') {
-      if (!squareClient) { 
+      if (!squareClientInstance) { 
         payload.logger.error('Square SDK not initialized. Cannot process payment.');
         return NextResponse.json({ error: 'Payment processing unavailable.' }, { status: 503 }); 
       }
@@ -493,7 +480,7 @@ export async function POST(request: NextRequest) {
       try {
         if (paymentOption === 'full_program' || paymentOption === 'pay_as_you_go') {
           payload.logger.info(`Attempting one-time payment with nonce for amount ${amountToCharge}`);
-          const paymentResponse = await squareClient.payments.create({
+          const paymentResponse = await squareClientInstance.payments.create({
             sourceId: cardNonce,
             idempotencyKey: idempotencyKey,
             amountMoney: {
@@ -503,182 +490,104 @@ export async function POST(request: NextRequest) {
             locationId: SQUARE_LOCATION_ID, 
           });
 
-          // Corrected response handling for Square SDK v42.x.x
-          const paymentResult = paymentResponse.payment;
-          const paymentErrors = paymentResponse.errors;
-
-          if (paymentResult) {
+          if (paymentResponse.result.payment) {
+            const paymentResult = paymentResponse.result.payment;
             payload.logger.info(`Payment successful: ${paymentResult.id}, Status: ${paymentResult.status}`);
             
-            let newPaymentStatus: Client['paymentStatus'] = 'payment_issue';
-            let paymentRecordType: 'enrollment_fee' | 'program_fee_pif' = 'enrollment_fee'; // Default
-
-            if (paymentOption === 'full_program') {
-                newPaymentStatus = 'active_paid_full';
-                paymentRecordType = 'program_fee_pif';
-            } else if (paymentOption === 'pay_as_you_go') { // This option implies just enrollment fee paid
-                newPaymentStatus = 'active_paid_enrollment_fee';
-                paymentRecordType = 'enrollment_fee';
-            }
+            let newPaymentStatus: Client['paymentStatus'] = 'payment_issue'; // Default to issue if logic error
+            if (paymentOption === 'full_program') newPaymentStatus = 'active_paid_full';
+            else if (paymentOption === 'pay_as_you_go') newPaymentStatus = 'active_paid_enrollment_fee';
             
-            // Update client status
             await payload.update({ collection: 'clients', id: targetClient.id, data: { 
                 paymentStatus: newPaymentStatus, 
                 enrollmentProcessStatus: 'enrollment_complete' 
             }});
-
-            // Create Payment record in Payload
-            try {
-              await payload.create({
-                collection: 'payments',
-                data: {
-                  client: targetClient.id,
-                  program: typeof targetClient.selectedProgram === 'object' && targetClient.selectedProgram !== null ? targetClient.selectedProgram.id : targetClient.selectedProgram,
-                  squarePaymentId: paymentResult.id,
-                  squareCustomerId: targetClient.squareCustomerId || paymentResult.customerId,
-                  amount: dueTodayAmount, 
-                  currency: 'USD',
-                  status: paymentResult.status || 'UNKNOWN',
-                  paymentDate: paymentResult.createdAt ? new Date(paymentResult.createdAt).toISOString() : new Date().toISOString(),
-                  type: paymentRecordType,
-                  paymentMethod: 'Square Online',
-                  notes: `One-time payment for: ${paymentOption}`
-                }
-              });
-              payload.logger.info(`Payment record created for client ${targetClient.id}, Square payment ${paymentResult.id}`);
-            } catch (paymentRecordError) {
-              payload.logger.error(`Failed to create payment record for client ${targetClient.id}, Square payment ${paymentResult.id}: ${paymentRecordError}`);
-              // Decide if this should be a fatal error for the client response. 
-              // For now, the main payment was successful, so we proceed.
-            }
-
+            // TODO: Create Payment record in Payload
             return NextResponse.json({ message: 'Payment successful and enrollment complete!', paymentId: paymentResult.id }, { status: 200 });
           } else {
-            payload.logger.error('Square payment error.', paymentErrors);
-            return NextResponse.json({ error: 'Payment failed.', details: paymentErrors }, { status: 500 });
+            payload.logger.error('Square payment error.', paymentResponse.result.errors);
+            return NextResponse.json({ error: 'Payment failed.', details: paymentResponse.result.errors }, { status: 500 });
           }
         } else if (paymentOption === 'autopay_weekly') {
           payload.logger.info('Processing autopay_weekly...');
           let currentSquareCustomerId = targetClient.squareCustomerId;
 
+          // Step 1: Charge Enrollment Fee (if any)
           if (targetClient.selectedProgram && typeof targetClient.selectedProgram === 'object' && targetClient.selectedProgram.enrollmentFee > 0) {
             const enrollFee = BigInt(Math.round(targetClient.selectedProgram.enrollmentFee * 100));
             payload.logger.info(`Charging enrollment fee: ${enrollFee}`);
-            const feePaymentResponse = await squareClient.payments.create({
+            const feePaymentResponse = await squareClientInstance.payments.create({
                 sourceId: cardNonce,
-                idempotencyKey: uuidV4(),
+                idempotencyKey: uuidV4(), // New idempotency key for this payment
                 amountMoney: { amount: enrollFee, currency: 'USD' },
                 locationId: SQUARE_LOCATION_ID,
             });
-            
-            // Corrected response handling
-            const feePaymentResult = feePaymentResponse.payment;
-            const feePaymentErrors = feePaymentResponse.errors;
-
-            if (!feePaymentResult || feePaymentResult.status !== 'COMPLETED') {
-                payload.logger.error('Enrollment fee payment failed.', feePaymentErrors);
-                return NextResponse.json({ error: 'Enrollment fee payment failed.', details: feePaymentErrors }, { status: 500 });
+            if (!feePaymentResponse.result.payment || feePaymentResponse.result.payment.status !== 'COMPLETED') {
+                payload.logger.error('Enrollment fee payment failed.', feePaymentResponse.result.errors);
+                return NextResponse.json({ error: 'Enrollment fee payment failed.', details: feePaymentResponse.result.errors }, { status: 500 });
             }
-            payload.logger.info(`Enrollment fee payment successful: ${feePaymentResult.id}`);
-            
-            // Create Payment record in Payload for enrollment fee
-            try {
-              if (typeof targetClient.selectedProgram === 'object' && targetClient.selectedProgram !== null && targetClient.selectedProgram.enrollmentFee > 0) {
-                await payload.create({
-                  collection: 'payments',
-                  data: {
-                    client: targetClient.id,
-                    program: targetClient.selectedProgram.id, 
-                    squarePaymentId: feePaymentResult.id,
-                    squareCustomerId: targetClient.squareCustomerId || feePaymentResult.customerId, 
-                    amount: targetClient.selectedProgram.enrollmentFee, 
-                    currency: 'USD',
-                    status: feePaymentResult.status || 'UNKNOWN',
-                    paymentDate: feePaymentResult.createdAt ? new Date(feePaymentResult.createdAt).toISOString() : new Date().toISOString(),
-                    type: 'enrollment_fee',
-                    paymentMethod: 'Square Online',
-                    notes: 'Enrollment fee for autopay setup.'
-                  }
-                });
-                payload.logger.info(`Enrollment fee payment record created for client ${targetClient.id}, Square payment ${feePaymentResult.id}`);
-              } else {
-                payload.logger.warn(`Skipping enrollment fee payment record for client ${targetClient.id}: no enrollment fee or program info missing.`);
-              }
-            } catch (paymentRecordError) {
-              payload.logger.error(`Failed to create enrollment fee payment record for client ${targetClient.id}, Square payment ${feePaymentResult.id}: ${paymentRecordError}`);
-            }
-
+            payload.logger.info(`Enrollment fee payment successful: ${feePaymentResponse.result.payment.id}`);
+            // TODO: Create Payment record in Payload for enrollment fee
           }
 
+          // Step 2: Create/Retrieve Square Customer
           if (!currentSquareCustomerId) {
             payload.logger.info('No Square Customer ID found, creating one...');
-            const customerResponse = await squareClient.customers.create({
+            const customerResponse = await squareClientInstance.customers.create({
               idempotencyKey: uuidV4(),
               givenName: targetClient.firstName,
               familyName: targetClient.lastName,
               emailAddress: targetClient.email || undefined,
               phoneNumber: targetClient.phone || undefined,
-              referenceId: targetClient.id, 
+              referenceId: targetClient.id, // Link to our client ID
             });
-
-            // Corrected response handling
-            const customerResult = customerResponse.customer;
-            const customerErrors = customerResponse.errors;
-
-            if (customerResult?.id) {
-              currentSquareCustomerId = customerResult.id;
+            if (customerResponse.result.customer?.id) {
+              currentSquareCustomerId = customerResponse.result.customer.id;
               await payload.update({collection: 'clients', id: targetClient.id, data: { squareCustomerId: currentSquareCustomerId }});
               payload.logger.info(`Square Customer created: ${currentSquareCustomerId}`);
             } else {
-              payload.logger.error('Failed to create Square customer.', customerErrors);
-              return NextResponse.json({ error: 'Failed to set up customer for autopay.', details: customerErrors }, { status: 500 });
+              payload.logger.error('Failed to create Square customer.', customerResponse.result.errors);
+              return NextResponse.json({ error: 'Failed to set up customer for autopay.', details: customerResponse.result.errors }, { status: 500 });
             }
           }
 
+          // Step 3: Create Card on File for Customer
           payload.logger.info(`Creating card on file for customer: ${currentSquareCustomerId}`);
-          const cardResponse = await squareClient.cards.create({
+          const cardResponse = await squareClientInstance.cards.create({
             idempotencyKey: uuidV4(),
-            sourceId: cardNonce, 
+            sourceId: cardNonce, // This nonce is for the card itself
             card: {
-              customerId: currentSquareCustomerId!,
+              customerId: currentSquareCustomerId,
+              // billingAddress: { ... } // Optional: map from clientData if available & needed
               cardholderName: `${targetClient.firstName} ${targetClient.lastName}`,
             }
           });
-
-          // Corrected response handling
-          const cardResult = cardResponse.card;
-          const cardErrors = cardResponse.errors;
-
-          if (!cardResult?.id) {
-            payload.logger.error('Failed to create card on file.', cardErrors);
-            return NextResponse.json({ error: 'Failed to save card for autopay.', details: cardErrors }, { status: 500 });
+          if (!cardResponse.result.card?.id) {
+            payload.logger.error('Failed to create card on file.', cardResponse.result.errors);
+            return NextResponse.json({ error: 'Failed to save card for autopay.', details: cardResponse.result.errors }, { status: 500 });
           }
-          const cardOnFilId = cardResult.id;
+          const cardOnFilId = cardResponse.result.card.id;
           payload.logger.info(`Card on file created: ${cardOnFilId}`);
 
-          // const planVariationId = process.env.SQUARE_AUTOPAY_WEEKLY_PLAN_ID;
-          // TEMPORARILY HARDCODED FOR TESTING - Positive Parenting Program - Weekly Autopay
-          const planVariationId = 'SFPA46WEXPORZCNDBUR64R6P'; 
-
+          // Step 4: Create Subscription
+          // IMPORTANT: Replace 'YOUR_PLAN_VARIATION_ID' with the actual ID from your Square Dashboard
+          const planVariationId = process.env.SQUARE_AUTOPAY_WEEKLY_PLAN_ID;
           if (!planVariationId) {
-            payload.logger.error('Square Autopay Weekly Plan ID is not configured (this should not happen with hardcoded ID).');
+            payload.logger.error('Square Autopay Weekly Plan ID is not configured.');
             return NextResponse.json({ error: 'Autopay configuration error.' }, { status: 500 });
           }
-          payload.logger.info(`Creating subscription with HARDCODED plan: ${planVariationId}`);
-          const subscriptionResponse = await squareClient.subscriptions.create({
+          payload.logger.info(`Creating subscription with plan: ${planVariationId}`);
+          const subscriptionResponse = await squareClientInstance.subscriptionsApi.createSubscription({
             idempotencyKey: uuidV4(),
             locationId: SQUARE_LOCATION_ID!,
             planVariationId: planVariationId,
             customerId: currentSquareCustomerId!,
             cardId: cardOnFilId,
+            // startDate: YYYY-MM-DD // Optional: if you want to set a specific start date
           });
 
-          // Corrected response handling
-          const subscriptionResult = subscriptionResponse.subscription;
-          const subscriptionErrors = subscriptionResponse.errors;
-
-          if (subscriptionResult?.id) {
-            const subscriptionId = subscriptionResult.id;
+          if (subscriptionResponse.result.subscription?.id) {
+            const subscriptionId = subscriptionResponse.result.subscription.id;
             payload.logger.info(`Subscription created: ${subscriptionId}`);
             await payload.update({collection: 'clients', id: targetClient.id, data: { 
                 squareSubscriptionId: subscriptionId, 
@@ -687,8 +596,8 @@ export async function POST(request: NextRequest) {
             }});
             return NextResponse.json({ message: 'Autopay subscription set up successfully!', subscriptionId }, { status: 200 });
           } else {
-            payload.logger.error('Failed to create subscription.', subscriptionErrors);
-            return NextResponse.json({ error: 'Failed to set up autopay subscription.', details: subscriptionErrors }, { status: 500 });
+            payload.logger.error('Failed to create subscription.', subscriptionResponse.result.errors);
+            return NextResponse.json({ error: 'Failed to set up autopay subscription.', details: subscriptionResponse.result.errors }, { status: 500 });
           }
         } else {
           return NextResponse.json({ error: 'Invalid payment option for final payment.' }, { status: 400 });

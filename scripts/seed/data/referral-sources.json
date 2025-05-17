@@ -1,0 +1,19 @@
+[
+  { "countyName": "York", "sourceTypeName": "Probation Pardon & Parole (PPP)", "isActive": true },
+  { "countyName": "York", "sourceTypeName": "Department of Social Services (DSS)", "isActive": true },
+  { "countyName": "Union", "sourceTypeName": "Probation Pardon & Parole (PPP)", "isActive": true },
+  { "countyName": "Spartanburg", "sourceTypeName": "Probation Pardon & Parole (PPP)", "isActive": true },
+  { "countyName": "Richland", "sourceTypeName": "Probation Pardon & Parole (PPP)", "isActive": true },
+  { "countyName": "Orangeburg", "sourceTypeName": "Probation Pardon & Parole (PPP)", "isActive": true },
+  { "countyName": "Lexington", "sourceTypeName": "Probation Pardon & Parole (PPP)", "isActive": true },
+  { "countyName": "Lancaster", "sourceTypeName": "Probation Pardon & Parole (PPP)", "isActive": true },
+  { "countyName": "Greenville", "sourceTypeName": "Probation Pardon & Parole (PPP)", "isActive": true },
+  { "countyName": "Fairfield", "sourceTypeName": "Probation Pardon & Parole (PPP)", "isActive": true },
+  { "countyName": "Chester", "sourceTypeName": "Probation Pardon & Parole (PPP)", "isActive": true },
+  { "countyName": "Chester", "sourceTypeName": "Pre-Trial Intervention (PTI)", "isActive": true },
+  { "countyName": "Cherokee", "sourceTypeName": "Probation Pardon & Parole (PPP)", "isActive": true },
+  { "countyName": "Charleston", "sourceTypeName": "Probation Pardon & Parole (PPP)", "isActive": true },
+  { "countyName": "Anderson", "sourceTypeName": "Probation Pardon & Parole (PPP)", "isActive": true },
+  { "countyName": "Aiken", "sourceTypeName": "Probation Pardon & Parole (PPP)", "isActive": true },
+  { "countyName": "Abbeville", "sourceTypeName": "Probation Pardon & Parole (PPP)", "isActive": true }
+] 

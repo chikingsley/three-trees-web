@@ -181,6 +181,7 @@ export const Clients: CollectionConfig = {
     // Payment
     {
       name: 'paymentOption',
+      label: 'Payment Options',
       type: 'select',
       options: [
         { label: 'Pay As You Go', value: 'pay_as_you_go' },
@@ -216,7 +217,9 @@ export const Clients: CollectionConfig = {
     // Internal Admin Fields
     {
       name: 'enrollmentDate',
+      label: 'Enrollment Date',
       type: 'date',
+      defaultValue: () => new Date(),
       admin: {
         date: {
           pickerAppearance: 'dayOnly',
@@ -225,10 +228,10 @@ export const Clients: CollectionConfig = {
         position: 'sidebar',
         readOnly: false, // Or true if only set programmatically
       },
-      defaultValue: () => new Date(),
     },
     {
       name: 'paymentStatus',
+      label: 'Payment Status',
       type: 'select',
       options: [
         { label: 'Pending Enrollment Fee', value: 'pending_enrollment_fee' },
@@ -241,10 +244,10 @@ export const Clients: CollectionConfig = {
         { label: 'On Hold', value: 'on_hold' },
         { label: 'Cancelled', value: 'cancelled' },
       ],
+      defaultValue: 'pending_enrollment_fee',
       admin: {
         position: 'sidebar',
       },
-      defaultValue: 'pending_enrollment_fee',
     },
     {
       name: 'squareCustomerId',

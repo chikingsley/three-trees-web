@@ -49,7 +49,7 @@ const ProgramInfoStep: React.FC = () => {
 
   return (
     <>
-      <StepHeader 
+      <StepHeader
         title="Program & Referral Information"
         subtitle="Tell us about the program you're interested in and how you heard about us."
       />
@@ -114,29 +114,29 @@ const ProgramInfoStep: React.FC = () => {
 
         {/* Referral Source Row */}
         <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4">
-        <FormField
-          control={control}
-          name="personalInfo.referralSource"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-sm">Referral Source <span className="">*</span></FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="bg-white">
-                    <SelectValue placeholder="Select referral source..." />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {referralSources.map((source) => (
-                    <SelectItem key={source} value={source}>{source}</SelectItem>
-                  ))}
-                  <SelectItem value="Other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={control}
+            name="personalInfo.referralSource"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-sm">Referral Source <span className="">*</span></FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger className="bg-white">
+                      <SelectValue placeholder="Select referral source..." />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {referralSources.map((source) => (
+                      <SelectItem key={source} value={source}>{source}</SelectItem>
+                    ))}
+                    <SelectItem value="Other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <FormField
             control={control}

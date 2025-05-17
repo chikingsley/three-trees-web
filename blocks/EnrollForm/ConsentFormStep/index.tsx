@@ -149,18 +149,18 @@ const ConsentFormStep: React.FC = () => {
             </FormItem>
           )}
         />
-        <Button
+          <Button
             variant="link"
             type="button" // Ensure it doesn't submit the form
             className="mt-1 p-0 h-auto text-primary text-xs"
             onClick={() => setValue("documents.signature", "", { shouldValidate: true, shouldDirty: true })} // Clear and validate
           >
             Clear signature
-        </Button>
+          </Button>
         {/* The error message below Controller will now work if documents.signature has Zod validation */}
       </div>
     </>
   );
 };
 
-export default ConsentFormStep;
+export default ConsentFormStep; 

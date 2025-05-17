@@ -257,7 +257,7 @@ const MyDocument: React.FC<MyDocumentProps> = ({ clientData, selectedClass }) =>
           <View key={`shared-${index}`} style={tw('mb-1 flex-row')}>
             <Text style={listItemNumberStyle}>{index + 1}.</Text>
             <Text style={listItemTextStyle}>{item}</Text>
-          </View>
+        </View>
         ))}
 
         <Text style={tw('mt-2 text-sm')}>My birth date is: <Text style={tw('border-b border-black min-w-[200px] mx-0.5')}>____________________________________________________</Text></Text>

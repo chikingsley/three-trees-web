@@ -34,6 +34,7 @@ import {
   PaymentOption
 } from "@/lib/form-types";
 import StepAnimationWrapper from "@/components/StepAnimationWrapper";
+import type { Program } from "@/payload-types";
 
 const LOCAL_STORAGE_KEY = 'threeTreesEnrollmentFormData';
 const STEP_ID_WELCOME = "welcome";
@@ -45,9 +46,9 @@ const getInitialFormValues = (): EnrollmentFormData => {
       const savedData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
       if (savedData) {
         const parsedData = JSON.parse(savedData);
-        if (typeof parsedData === 'object' && parsedData !== null &&
-          'personalInfo' in parsedData &&
-          'payment' in parsedData
+        if (typeof parsedData === 'object' && parsedData !== null && 
+            'personalInfo' in parsedData && 
+            'payment' in parsedData 
         ) {
           const validatedPaymentData = {
             paymentOption: parsedData.payment.paymentOption || "full_program",
@@ -60,9 +61,9 @@ const getInitialFormValues = (): EnrollmentFormData => {
           const defaultPersonalInfo = {
             firstName: "", lastName: "", email: "", phone: "",
             city: "", state: "", zipcode: "",
-            sex: "Male",
+            sex: "Male", 
             county: "", countyOther: "",
-            consentToContact: false,
+            consentToContact: false, 
             referralSource: "", referralSourceOther: "",
             whyReferred: "",
             selectedProgram: "",
@@ -86,9 +87,9 @@ const getInitialFormValues = (): EnrollmentFormData => {
     personalInfo: {
       firstName: "", lastName: "", email: "", phone: "",
       city: "", state: "", zipcode: "",
-      sex: "Male",
+      sex: "Male", 
       county: "", countyOther: "",
-      consentToContact: false,
+      consentToContact: false, 
       referralSource: "", referralSourceOther: "",
       whyReferred: "",
       selectedProgram: "",
@@ -107,6 +108,11 @@ export default function EnrollmentForm() {
   const [enrollmentToken, setEnrollmentToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  // State for fetched full program details
+  const [selectedProgramFullDetailsFromServer, setSelectedProgramFullDetailsFromServer] = useState<Program | null>(null);
+  const [isProgramDetailsLoading, setIsProgramDetailsLoading] = useState(false);
+  const [programDetailsError, setProgramDetailsError] = useState<string | null>(null);
 
   const methods = useForm<EnrollmentFormData>({
     resolver: zodResolver(enrollmentFormSchema),
@@ -129,6 +135,45 @@ export default function EnrollmentForm() {
     });
     return () => subscription.unsubscribe();
   }, [methods]);
+
+  // Effect to fetch full program details when selectedProgram ID changes
+  useEffect(() => {
+    const programIdString = methods.watch("personalInfo.selectedProgram"); // This is "am", "dv_male" etc.
+
+    if (programIdString) {
+      setIsProgramDetailsLoading(true);
+      setProgramDetailsError(null);
+      setSelectedProgramFullDetailsFromServer(null); // Clear previous details
+
+      // Assuming your API can fetch a program by its `programId` field (e.g., "am")
+      // If it needs the MongoDB document ID, this approach needs adjustment.
+      fetch(`/api/programs?where[programId][equals]=${programIdString}&depth=1`) // Fetch by programId field and ensure depth for programGroup
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Failed to fetch program details for ${programIdString}. Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.docs && data.docs.length > 0) {
+            setSelectedProgramFullDetailsFromServer(data.docs[0] as Program);
+          } else {
+            throw new Error(`Program with ID ${programIdString} not found.`);
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching program details:", error);
+          setProgramDetailsError(error.message);
+          setSelectedProgramFullDetailsFromServer(null);
+        })
+        .finally(() => {
+          setIsProgramDetailsLoading(false);
+        });
+    } else {
+      setSelectedProgramFullDetailsFromServer(null); // Clear details if no program is selected
+      setProgramDetailsError(null);
+    }
+  }, [methods.watch("personalInfo.selectedProgram")]);
 
   const enrollmentSteps = [
     {
@@ -162,19 +207,23 @@ export default function EnrollmentForm() {
   ];
 
   const stepComponents = [
-    <WelcomeSection key="welcome" steps={enrollmentSteps} />,
-    <ContactInfoStep key="contact" />,
-    <ProgramInfoStep key="program" />,
-    <SchedulingSection key="scheduling" />,
-    <ConsentFormStep key="documents" />,
-    <PaymentStep key="payment" />,
-    <SuccessStep key="success" />,
+    <WelcomeSection key="welcome" steps={enrollmentSteps} />, 
+    <ContactInfoStep key="contact" />,                       
+    <ProgramInfoStep key="program" />,                       
+    <SchedulingSection 
+      key="scheduling" 
+      selectedProgramFullDetails={selectedProgramFullDetailsFromServer} 
+      clientSex={methods.watch("personalInfo.sex")} 
+    />,                  
+    <ConsentFormStep key="documents" />,                     
+    <PaymentStep key="payment" />,                           
+    <SuccessStep key="success" />,                           
   ];
 
   const watchedPersonalInfo = methods.watch("personalInfo");
   const watchedScheduling = methods.watch("scheduling");
   const watchedDocuments = methods.watch("documents");
-  const watchedPaymentInfo = methods.watch("payment");
+  const watchedPaymentInfo = methods.watch("payment"); 
 
   // Updated isStepComplete logic for new steps
   const isStepComplete = (stepIndex: number): boolean => {
@@ -182,7 +231,7 @@ export default function EnrollmentForm() {
       case 0: return true; // Welcome
       case 1: { // ContactInfoStep
         const pi = watchedPersonalInfo;
-        if (!pi) return false;
+        if (!pi) return false; 
         // Removed county and countyOther checks from here
         return !!(pi.firstName && pi.lastName && pi.email && pi.phone && pi.city && pi.state && pi.zipcode && pi.sex && pi.consentToContact);
       }
@@ -251,7 +300,8 @@ export default function EnrollmentForm() {
   }
 
   const areCurrentStepFieldsZodValid = currentStep === 0 ? true : !currentStepHasLocalZodErrors;
-  const canProceed = isStepComplete(currentStep) && areCurrentStepFieldsZodValid;
+  const canProceed = isStepComplete(currentStep) && areCurrentStepFieldsZodValid && 
+                     !(currentStep === 3 && isProgramDetailsLoading); // Can't proceed to schedule if details still loading
 
   // console.log(`Current Step: ${currentStep}, Can Proceed: ${canProceed}, Watched Scheduling:`, watchedScheduling);
 
@@ -432,7 +482,7 @@ export default function EnrollmentForm() {
     setIsLoading(true); // Ensure isLoading is true before API call if not already.
 
     // API Call Logic (remains largely the same)
-    try {
+        try {
       const headers: HeadersInit = { 'Content-Type': 'application/json' };
       if (enrollmentToken && submissionPhase !== 'contactInfo') {
         headers['Authorization'] = `Bearer ${enrollmentToken}`;
@@ -442,12 +492,12 @@ export default function EnrollmentForm() {
         method: "POST",
         headers: headers,
         body: JSON.stringify({ submissionPhase, ...dataToSend }),
-      });
+          });
 
       const result = await response.json();
       // setIsLoading(false); // Moved to finally block
 
-      if (!response.ok) {
+          if (!response.ok) {
         console.error("API Error:", result);
         if (response.status === 401 && result.error?.includes("token")) {
             setEnrollmentToken(null);
@@ -527,7 +577,15 @@ export default function EnrollmentForm() {
             <AnimatePresence mode="wait">
               <StepAnimationWrapper customKey={currentStep}>
                 <div className="w-full max-w-md mx-auto">
-                  {stepComponents[currentStep]}
+                  {/* Display loading or error for program details if critical for the current view */}
+                  {currentStep === 3 && isProgramDetailsLoading && (
+                    <div className="text-center p-4"><SpinnerIcon className="mr-2 h-6 w-6 animate-spin inline-block" /> Loading program schedules...</div>
+                  )}
+                  {currentStep === 3 && programDetailsError && !isProgramDetailsLoading && (
+                    <div className="text-center p-4 text-destructive">Error loading program information: {programDetailsError}</div>
+                  )}
+                  {/* Render step component if not loading/error OR if not scheduling step */}
+                  {!(currentStep === 3 && (isProgramDetailsLoading || programDetailsError)) && stepComponents[currentStep]}
                 </div>
               </StepAnimationWrapper>
             </AnimatePresence>
@@ -538,7 +596,7 @@ export default function EnrollmentForm() {
             <div className="container mx-auto max-w-lg mt-auto p-4">
               <div className={isFirstStep ? "flex justify-center" : "flex items-center justify-between"}>
                 {!isFirstStep ? (
-                  <Button onClick={goToPreviousStep} variant="outline" className="mr-2">
+                  <Button onClick={goToPreviousStep} variant="outline" className="mr-2" disabled={isLoading || isProgramDetailsLoading}>
                     <ArrowLeft size={16} className="mr-2" /> Back
                   </Button>
                 ) : (
@@ -548,19 +606,19 @@ export default function EnrollmentForm() {
                 <Button
                   onClick={goToNextStep}
                   size={isFirstStep ? "lg" : "default"}
-                  className={`${isFirstStep ? "px-8 py-2 h-auto text-base" : "w-auto"} ${!canProceed && !isFirstStep ? "opacity-50 cursor-not-allowed" : ""
+                  className={`${isFirstStep ? "px-8 py-2 h-auto text-base" : "w-auto"} ${(!canProceed && !isFirstStep) ? "opacity-50 cursor-not-allowed" : ""
                     }`}
-                  disabled={(!canProceed && !isFirstStep) || isLoading}
+                  disabled={(!canProceed && !isFirstStep) || isLoading || (currentStep === 2 && isProgramDetailsLoading) /* Disable continue from ProgInfo if details loading for next step */ }
                 >
-                  {isLoading ? (
+                  {isLoading || (currentStep === 2 && isProgramDetailsLoading) ? ( /* Show general loading or specific program loading */
                     <>
                       <SpinnerIcon className="mr-2 h-4 w-4 animate-spin" />
-                      {isFirstStep ? "Processing..." : "Saving..."}
+                      {isProgramDetailsLoading && currentStep ===2 ? "Loading Program..." : (isFirstStep ? "Processing..." : "Saving...")}
                     </>
                   ) : (
                     <>
-                      {isFirstStep ? "Start Enrollment" : "Continue"}
-                      {!isLastStep && <ArrowRight size={16} className="ml-2" />}
+                  {isFirstStep ? "Start Enrollment" : "Continue"}
+                  {!isLastStep && <ArrowRight size={16} className="ml-2" />}
                     </>
                   )}
                 </Button>

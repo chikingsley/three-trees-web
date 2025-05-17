@@ -85,6 +85,11 @@ async function runSeed() {
     console.log('Payload initialized.');
   } catch (e) {
     console.error('Error initializing Payload:', e);
+    if ((e as any).payloadInitError) {
+        // Already logged by Payload, just exit
+    } else {
+        console.error('Full error object during Payload init:', e);
+    }
     process.exit(1);
   }
 
@@ -94,6 +99,7 @@ async function runSeed() {
     await seedCollection(payload, 'program-groups', 'program-groups.json', 'sharedProgramId');
     await seedPrograms(payload);
     await seedClasses(payload);
+    await seedReferralSources(payload);
 
     // TODO: Add seeding for clients
     // TODO: Add seeding for referral sources
@@ -290,6 +296,103 @@ async function seedClasses(payload: Payload) {
     }
   }
   console.log(`Seeded ${createdCount} classes. Skipped ${skippedCount} existing or unlinked.`);
+}
+
+async function seedReferralSources(payload: Payload) {
+  const dataFilePath = path.resolve(__dirname, 'data', 'referral-sources.json');
+  console.log(`\n--- Seeding referral-sources from referral-sources.json ---`);
+
+  if (!fs.existsSync(dataFilePath)) {
+    console.warn(`Warning: Data file not found at ${dataFilePath}. Skipping referral-sources.`);
+    return;
+  }
+
+  let dataToSeed;
+  try {
+    const jsonData = fs.readFileSync(dataFilePath, 'utf-8');
+    dataToSeed = JSON.parse(jsonData);
+    if (!Array.isArray(dataToSeed)) {
+      console.error(`Error: Expected an array in referral-sources.json, but got ${typeof dataToSeed}. Skipping.`);
+      return;
+    }
+  } catch (e) {
+    console.error(`Error reading or parsing ${dataFilePath}:`, e);
+    return;
+  }
+
+  let createdCount = 0;
+  let skippedCount = 0;
+
+  for (const item of dataToSeed as any[]) {
+    try {
+      if (!item.countyName || !item.sourceTypeName) {
+        console.warn('Skipping referral source item due to missing countyName or sourceTypeName:', item);
+        skippedCount++;
+        continue;
+      }
+
+      // Find County ID
+      const countyQuery = await payload.find({
+        collection: 'counties',
+        where: { name: { equals: item.countyName } },
+        limit: 1,
+        depth: 0,
+      });
+      if (countyQuery.docs.length === 0) {
+        console.warn(`Warning: County '${item.countyName}' not found. Skipping referral source:`, item);
+        skippedCount++;
+        continue;
+      }
+      const countyId = countyQuery.docs[0].id;
+
+      // Find ReferralSourceType ID
+      const sourceTypeQuery = await payload.find({
+        collection: 'referral-source-types',
+        where: { name: { equals: item.sourceTypeName } },
+        limit: 1,
+        depth: 0,
+      });
+      if (sourceTypeQuery.docs.length === 0) {
+        console.warn(`Warning: ReferralSourceType '${item.sourceTypeName}' not found. Skipping referral source:`, item);
+        skippedCount++;
+        continue;
+      }
+      const sourceTypeId = sourceTypeQuery.docs[0].id;
+
+      // Check if this specific referral source (county + type) already exists
+      const existingReferralSource = await payload.find({
+        collection: 'referral-sources',
+        where: {
+          county: { equals: countyId },
+          sourceType: { equals: sourceTypeId },
+        },
+        limit: 1,
+        depth: 0,
+      });
+
+      if (existingReferralSource.docs.length > 0) {
+        // console.log(`Skipping existing referral source: ${item.countyName} - ${item.sourceTypeName}`);
+        skippedCount++;
+        continue;
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { countyName, sourceTypeName, ...referralSourceData } = item;
+
+      await payload.create({
+        collection: 'referral-sources' as any,
+        data: {
+          ...referralSourceData,
+          county: countyId,
+          sourceType: sourceTypeId,
+        },
+      });
+      createdCount++;
+    } catch (error) {
+      console.error(`Error creating referral-sources item:`, JSON.stringify(item, null, 2), error);
+    }
+  }
+  console.log(`Seeded ${createdCount} referral-sources. Skipped ${skippedCount} existing or unlinked.`);
 }
 
 runSeed(); 
