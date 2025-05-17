@@ -177,57 +177,32 @@ export default function SchedulingSection({
                 const isFull = spotsAvailable <= 0;
                 const isSelected = field.value === classDoc.id;
 
-                // Prepare display text, using fallbacks if virtual fields are not populated yet
-                // or if some fields used by classBlockIdentifier are missing temporarily during data load.
-                let displayIdentifier = `Class on ${classDoc.day || 'N/A'} at ${classDoc.time || 'N/A'}`;
-                if (classDoc.classBlockIdentifier) {
-                    displayIdentifier = classDoc.classBlockIdentifier;
-                } else if (classDoc.programGroup && typeof classDoc.programGroup === 'object' && (classDoc.programGroup as ProgramGroup).name) {
-                    displayIdentifier = `${(classDoc.programGroup as ProgramGroup).name} - ${classDoc.day || ''} ${classDoc.time || ''} (x${classDoc.numberOfParallelClasses || 1})`;
-                }
-
-
                 return (
                   <Label
                     key={classDoc.id}
                     htmlFor={`class-${classDoc.id}`}
-                          className={cn(
-                      "flex flex-col items-start space-y-1.5 rounded-md border p-3 transition-all duration-150 ease-in-out",
+                    className={cn(
+                      "flex items-center space-x-3 rounded-md border p-3 transition-all duration-150 ease-in-out",
                       "hover:shadow-md",
                       isFull ? "cursor-not-allowed bg-muted/50 opacity-70" : "cursor-pointer hover:border-primary/70",
                       isSelected ? "border-primary ring-2 ring-primary ring-offset-1 ring-offset-background" : "border-border",
                     )}
                   >
-                    <div className="flex w-full items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <RadioGroupItem
-                          value={classDoc.id}
-                          id={`class-${classDoc.id}`}
-                          disabled={isFull}
-                          checked={isSelected}
-                        />
-                        <span className="font-semibold text-md">
-                          {displayIdentifier}
-                        </span>
-                      </div>
+                    <RadioGroupItem
+                      value={classDoc.id}
+                      id={`class-${classDoc.id}`}
+                      disabled={isFull}
+                      checked={isSelected}
+                      className="flex-shrink-0"
+                    />
+                    <div className="flex flex-grow items-center justify-between">
+                      <span className="font-semibold text-md">
+                        Day: {classDoc.day || 'N/A'}, Time: {classDoc.time || 'N/A'}
+                      </span>
                       <Badge variant={isFull ? "destructive" : (spotsAvailable < 5 ? "secondary" : "default")}>
                         {isFull ? 'Full' : `${spotsAvailable} spot${spotsAvailable === 1 ? '' : 's'} available`}
                       </Badge>
                     </div>
-                    <div className="pl-8 text-sm text-muted-foreground space-y-0.5">
-                      <p><strong>Day:</strong> {classDoc.day || 'N/A'}</p>
-                      <p><strong>Time:</strong> {classDoc.time || 'N/A'}</p>
-                      {classDoc.genderSpecific && <p><strong>Gender Specific:</strong> <span className="capitalize">{classDoc.genderSpecific}</span></p>}
-                      {/* 
-                        If you add fields like 'startDate', 'durationMinutes', 'meetingType', 'locationDescription', 'notes' 
-                        to your 'Classes' collection in Payload, and regenerate types, you can uncomment these:
-                      */}
-                      {/* {classDoc.startDate && <p><strong>Starts:</strong> {new Date(classDoc.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>} */}
-                      {/* {classDoc.durationMinutes && <p><strong>Duration:</strong> {classDoc.durationMinutes} minutes</p>} */}
-                      {/* {classDoc.meetingType && <p><strong>Type:</strong> <span className="capitalize">{classDoc.meetingType.replace(/_/g, ' ')}</span></p>} */}
-                      {/* {classDoc.locationDescription && <p><strong>Location:</strong> {classDoc.locationDescription}</p>} */}
-                      {/* {classDoc.notes && <p className="italic text-xs pt-1">Note: {classDoc.notes}</p>} */}
-              </div>
                   </Label>
                 );
               })}

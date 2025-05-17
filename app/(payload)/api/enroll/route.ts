@@ -284,19 +284,56 @@ export async function POST(request: NextRequest) {
         // classDoc (a Class) -> programGroup (a ProgramGroup)
         // We need to compare targetClient.selectedProgram.programGroup.id with classDoc.programGroup.id
         
+        payload.logger.info(`[PROGRAM MISMATCH CHECK] Attempting to resolve client's selected program. Current client.selectedProgram: ${JSON.stringify(targetClient.selectedProgram)}`);
+        
         let clientSelectedProgramActual: Program | null = null;
-        if (typeof targetClient.selectedProgram === 'string') { // if it's just an ID
-            // fetch the program to get its programGroup
-            clientSelectedProgramActual = await payload.findByID({ collection: 'programs', id: targetClient.selectedProgram, depth: 1});
-        } else if (typeof targetClient.selectedProgram === 'object' && targetClient.selectedProgram !== null) {
+        if (typeof targetClient.selectedProgram === 'string') {
+            payload.logger.info(`[PROGRAM MISMATCH CHECK] Client's selectedProgram is a string ID: ${targetClient.selectedProgram}. Fetching full program object with depth 1.`);
+            try {
+                clientSelectedProgramActual = await payload.findByID({ collection: 'programs', id: targetClient.selectedProgram, depth: 1 });
+                if (!clientSelectedProgramActual) {
+                    payload.logger.error(`[PROGRAM MISMATCH CHECK] Program with ID ${targetClient.selectedProgram} not found when fetching for client.`);
+                } else {
+                    payload.logger.info(`[PROGRAM MISMATCH CHECK] Successfully fetched clientSelectedProgramActual. ProgramGroup: ${JSON.stringify(clientSelectedProgramActual.programGroup)}`);
+                }
+            } catch (fetchError) {
+                payload.logger.error(`[PROGRAM MISMATCH CHECK] Error fetching program with ID ${targetClient.selectedProgram}: ${fetchError}`);
+            }
+        } else if (typeof targetClient.selectedProgram === 'object' && targetClient.selectedProgram !== null && 'id' in targetClient.selectedProgram) {
+            payload.logger.info(`[PROGRAM MISMATCH CHECK] Client's selectedProgram is an object. Using as is. Object: ${JSON.stringify(targetClient.selectedProgram)}`);
             clientSelectedProgramActual = targetClient.selectedProgram as Program;
+             payload.logger.info(`[PROGRAM MISMATCH CHECK] ProgramGroup from object: ${JSON.stringify(clientSelectedProgramActual.programGroup)}`);
+        } else {
+            payload.logger.warn(`[PROGRAM MISMATCH CHECK] Client's selectedProgram is neither a string ID nor a valid object: ${JSON.stringify(targetClient.selectedProgram)}`);
         }
 
-        if (!clientSelectedProgramActual || typeof clientSelectedProgramActual.programGroup !== 'object' || !clientSelectedProgramActual.programGroup?.id) {
-             payload.logger.error(`[PROGRAM MISMATCH CHECK] Could not resolve program group for client's selected program: ${JSON.stringify(targetClient.selectedProgram)}`);
-             return NextResponse.json({ error: 'Could not resolve program group for client\'s selected program.' }, { status: 400 });
+        if (!clientSelectedProgramActual) {
+            payload.logger.error(`[PROGRAM MISMATCH CHECK] FINAL: Client's selected program could not be resolved. targetClient.selectedProgram was: ${JSON.stringify(targetClient.selectedProgram)}`);
+            return NextResponse.json({ error: 'Could not resolve client\'s selected program details.' }, { status: 400 });
         }
-        const clientProgramGroupId = clientSelectedProgramActual.programGroup.id;
+        payload.logger.info(`[PROGRAM MISMATCH CHECK] Resolved clientSelectedProgramActual: ${clientSelectedProgramActual.name} (ID: ${clientSelectedProgramActual.id})`);
+
+
+        let clientProgramGroupId: string | undefined;
+        if (clientSelectedProgramActual.programGroup) {
+          payload.logger.info(`[PROGRAM MISMATCH CHECK] clientSelectedProgramActual.programGroup type: ${typeof clientSelectedProgramActual.programGroup}, value: ${JSON.stringify(clientSelectedProgramActual.programGroup)}`);
+          if (typeof clientSelectedProgramActual.programGroup === 'object' && clientSelectedProgramActual.programGroup.id) {
+            clientProgramGroupId = clientSelectedProgramActual.programGroup.id;
+            payload.logger.info(`[PROGRAM MISMATCH CHECK] Extracted clientProgramGroupId (from object): ${clientProgramGroupId}`);
+          } else if (typeof clientSelectedProgramActual.programGroup === 'string') {
+            clientProgramGroupId = clientSelectedProgramActual.programGroup;
+            payload.logger.info(`[PROGRAM MISMATCH CHECK] Extracted clientProgramGroupId (from string): ${clientProgramGroupId}`);
+          } else {
+            payload.logger.warn(`[PROGRAM MISMATCH CHECK] clientSelectedProgramActual.programGroup is neither a populated object with id nor a string. Value: ${JSON.stringify(clientSelectedProgramActual.programGroup)}`);
+          }
+        } else {
+            payload.logger.warn(`[PROGRAM MISMATCH CHECK] clientSelectedProgramActual.programGroup is null or undefined. Program: ${clientSelectedProgramActual.id}`);
+        }
+
+        if (!clientProgramGroupId) {
+             payload.logger.error(`[PROGRAM MISMATCH CHECK] Could not extract program group ID for client\'s selected program: ${JSON.stringify(clientSelectedProgramActual)}`);
+             return NextResponse.json({ error: 'Could not resolve program group ID for client\'s selected program.' }, { status: 400 });
+        }
 
         payload.logger.info(`[PROGRAM MISMATCH CHECK] Client's Selected Program ID: ${clientSelectedProgramActual.id}`);
         payload.logger.info(`[PROGRAM MISMATCH CHECK] Client's Program Group ID (from selected program): ${clientProgramGroupId}`);
