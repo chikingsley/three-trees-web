@@ -2,18 +2,14 @@
 import { NextResponse } from 'next/server';
 import type { Payload } from 'payload';
 import { v4 as uuidV4 } from 'uuid';
-import { SquareError } // Assuming SquareError is the type for errors thrown by the SDK client itself
-    // We'll also need a type for the error objects within the response.errors array.
-    // Often, this is something like ApiError or ErrorDetail from the SDK.
-    // For now, we'll handle it loosely or assume it's part of SquareError's structure.
-    from 'square';
+import { SquareError } from 'square';
 import { squareClient, SQUARE_LOCATION_ID, SQUARE_AUTOPAY_WEEKLY_PLAN_ID } from '../config';
 import { createPaymentRecord } from '../helpers';
 import type { Client, EnrollmentRequestBody } from '../types';
 import type { Program, Payment as PayloadPaymentType } from '@/payload-types';
 
 // Helper to log Square API errors from the response.errors array
-function logSquareResponseErrors(payload: Payload, context: string, errors: any[] | undefined, clientId?: string) {
+function logSquareResponseErrors(payload: Payload, context: string, errors: unknown[] | undefined, clientId?: string) {
     if (errors && errors.length > 0) {
         payload.logger.error(`Client ${clientId || 'N/A'}: Square API call (${context}) failed with errors: ${JSON.stringify(errors)}`);
     }
@@ -200,7 +196,12 @@ export async function handleFinalPaymentPhase(payload: Payload, rawRequestBody: 
     } catch (error) {
         payload.logger.error(`Client ${client.id}: Error during Square payment processing (Payment Option: ${paymentOption}).`, error);
         if (error instanceof SquareError) { // This catches errors thrown by the SDK client itself (e.g., network issues, auth problems)
-            return NextResponse.json({ error: 'Square API Error (SDK Exception)', details: error.errors, context: error.body, messageFromSDK: error.message }, { status: error.statusCode || 500 });
+            return NextResponse.json({
+                error: 'Square API Error (SDK Exception)',
+                statusCode: error.statusCode, 
+                message: error.message,
+                details: error.errors
+            }, { status: error.statusCode || 500 });
         }
         const message = error instanceof Error ? error.message : 'Payment processing failed unexpectedly.';
         return NextResponse.json({ error: message }, { status: 500 });
