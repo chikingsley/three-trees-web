@@ -120,6 +120,8 @@ export default function EnrollmentForm() {
     mode: "onChange",
   });
 
+  const watchedSelectedProgram = methods.watch("personalInfo.selectedProgram");
+
   // Effect to save RHF form data to localStorage
   useEffect(() => {
     const subscription = methods.watch((value) => {
@@ -138,7 +140,7 @@ export default function EnrollmentForm() {
 
   // Effect to fetch full program details when selectedProgram ID changes
   useEffect(() => {
-    const programIdString = methods.watch("personalInfo.selectedProgram"); // This is "am", "dv_male" etc.
+    const programIdString = watchedSelectedProgram; // Use the extracted variable
 
     if (programIdString) {
       setIsProgramDetailsLoading(true);
@@ -173,7 +175,7 @@ export default function EnrollmentForm() {
       setSelectedProgramFullDetailsFromServer(null); // Clear details if no program is selected
       setProgramDetailsError(null);
     }
-  }, [methods.watch("personalInfo.selectedProgram")]);
+  }, [watchedSelectedProgram, methods]);
 
   const enrollmentSteps = [
     {

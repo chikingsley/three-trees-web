@@ -95,7 +95,7 @@ export default function SchedulingSection({
     };
 
     fetchClasses();
-  }, [selectedProgramFullDetails, clientSex]); // Removed setError from dependencies
+  }, [selectedProgramFullDetails, clientSex]);
 
   const handleClassSelection = (classId: string) => {
     setValue('scheduling.selectedClassId', classId, { shouldValidate: true });
