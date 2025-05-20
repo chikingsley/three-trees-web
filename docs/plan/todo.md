@@ -47,36 +47,40 @@ This document outlines the phased development plan for the Three Trees platform,
   * [x] Abstracted all enrollment steps: Welcome, Personal Info, Scheduling, Payment, Consent Form, Success
   * [x] Abstracted Session Header
   * [x] Abstracted StepHeader, StepAnimationWrapper
-  * [x] Conditional logic for "Other" fields in dropdowns (County, Referral Source)
+  * [x] Conditional logic for "Other" fields in dropdowns (County, Referral Source) - partially implemented; "Other" fields always visible, UX enhanced.
   * [x] Mobile-first styling and responsive cleanup
-  * [x] Scheduling UI updated for new class data structure (static data for now)
+  * [x] Scheduling UI updated for new class data structure (fetches live `/api/classes`, filters, shows availability)
   * [x] Payment Step UI updated for Square SDK placeholder and recurring payment consent
+  * [x] Consent checkbox layout fixed, validation message moved.
 * [ ] 7. Desktop View: Review and adapt the enrollment form for a polished desktop experience
   * Consider how `max-w-md` behaves
   * Evaluate if wider layouts/adjustments are needed for desktop form usability
 * [x] 8. Digital Signature for Consent Form
   * [x] Research and implement MVP digital signature method (typed name affirmation implemented with validation against client's name, alongside checkbox).
   * [x] **Decision:** For "go-live next week," simplest acceptable is checkbox affirming "I have read and agree..." with form data submission logged as proof of consent (Typed signature now implemented as MVP)
-  * [ ] **Storage:** Determine how signed consent representation (e.g., PDF snapshot, timestamped affirmation text) will be stored (e.g., S3 via Supabase Storage or Payload Storage) and linked to the Client record in Payload
-* [ ] 9. Backend - Initial Setup (Payload CMS with Supabase/PostgreSQL Backend)
+  * [x] **Storage:** PDF prototype page created using react-pdf; `MyDocument` separated; need to finish typing fixes. (Placeholder for now, actual storage of signed PDF TBD)
+* [x] 9. Backend - Initial Setup (Payload CMS with Supabase/PostgreSQL Backend)
   * [x] Payload CMS project initialized.
   * [x] Initial admin user for Payload set up.
   * [x] Define Payload Collections (mapping to Supabase Tables) for MVP:
-    * [x] `Clients`
-    * [x] `Programs`
-    * [x] `ClassSlots` (now Classes)
-    * [ ] `Payments`
-    * [x] `Enrollments` (now obsolete; client-class link refactored)
-  * [x] **Decision** Data Migration: No bulk migration for MVP.
-  * [ ] API for Enrollment Form Submission (`/api/enroll` - NextJS API Route):
-    * [x] Validate incoming `EnrollmentFormData` (phased validation implemented; final step includes full Zod schema validation; client-side validation for steps also enhanced)
+    * [x] `Clients` (updated with `class` relationship, `tags` commented out)
+    * [x] `Programs` (updated with `spotsPerClass`)
+    * [x] `Classes` (renamed from `ClassSlots`, new fields, virtual fields with hooks)
+    * [ ] `Payments` (schema defined, integration pending)
+    * [x] `Enrollments` (obsolete; client-class link refactored - DELETED)
+    * [x] `Counties` (new collection, seed script added)
+    * [x] `ReferralSourceTypes` (new collection, seed script added)
+    * [x] `ReferralSources` (updated for new structure, seed script needed)
+  * [x] **Decision** Data Migration: No bulk migration for MVP. Seed scripts for core data created.
+  * [x] API for Enrollment Form Submission (`/api/enroll` - NextJS API Route):
+    * [x] Validate incoming `EnrollmentFormData` (phased validation implemented with JWT for session; final step includes full Zod schema validation; client-side validation for steps also enhanced)
     * [x] Create/Update `Client` record (via Payload, targeting Supabase)
     * [ ] Handle payment processing via Square (see below).
-    * [ ] Store digital consent link/data.
+    * [ ] Store digital consent link/data (PDF generation in progress, storage TBD).
     * [x] Create `Enrollment` record. (Obsolete - client/class link refactored to direct relationships in Clients and Classes collections)
     * [ ] Send confirmation email (client & admin).
-    * [x] Implement error handling (basic API error handling on frontend; JWT error handling on backend; client-side error display for Zod also improved).
-    * [x] (Future Enhancement Idea) Consider refactor to save form data incrementally per step for abandonment recovery and analytics. (Implemented with phased submission API and JWT-based enrollment session)
+    * [x] Implement error handling (basic API error handling on frontend; JWT error handling on backend; client-side error display for Zod also improved. Extensive logging added and fixed).
+    * [x] (Future Enhancement Idea) Consider refactor to save form data incrementally per step for abandonment recovery and analytics. (Implemented with phased submission API and JWT-based enrollment session. Token expiry issue noted, interim solution: lengthen expiry & localStorage, long-term: cookie session).
 * [ ] 10. Payments - Square Integration (MVP)
   * **Frontend (`PaymentStep.tsx`):**
     * [ ] Integrate Square Web Payments SDK into `#card-container`.
@@ -99,6 +103,21 @@ This document outlines the phased development plan for the Three Trees platform,
   * [ ] View client list & details.
   * [ ] View class rosters: For each `ClassSlot`, list enrolled clients and show spots filled / total spots.
   * [ ] Manually update client status.
+* [x] 13. Data & Type Consistency Cleanup
+  * [ ] Refactor frontend `form-types.ts` to use Payload-generated types from `payload-types.ts` instead of manually maintained interfaces.
+  * [ ] Auto-generate reusable Zod schemas from the Payload type definitions (e.g. with `zod-to-ts` or `json-schema-to-zod`) so backend and frontend validation stay in sync.
+* [x] 14. Referral Source UX & Association
+  * [x] Implement dependent selects in the Program Info step: County ➜ Referral Source Type. (Backend logic for lookup and persistence of county, referral source type, and specific referral source is complete. Frontend dynamically fetches Counties, then filters Referral Source Types based on selected County. "Other" field handling is in place.)
+  * [x] Persist the chosen `referralSourceType` & `referralSource` (or `referralSourceOther`) on the `Client` record during the `/api/enroll` `programInfo` phase. (Verified complete)
+  * [x] Add `referralSourceType` field to the `Clients` collection for easier analytics & filtering. (Verified complete)
+  * [ ] Verify that referral-source data is surfaced in admin list views and can be filtered/exported for weekly partner reports.
+* [x] 15. Attendance MVP
+  * [x] Create `attendance-records` collection: `date`, `class`, `client`, `status` (Present / Absent Excused / Absent Unexcused), `notes`.
+  * [ ] Simple Admin UI: Allow facilitators/admins to mark attendance for the latest class session.
+  * [ ] Hooks/cron to aggregate totals onto the `Client` document (`totalAbsences`, `consecutiveAbsences`, `attendanceStatus`).
+  * [ ] Implement placeholder business-rules constants (⚠️ 3 consecutive or 5 total absences = Termination Considered) to drive automated status changes & letter generation later.
+  * [ ] Class Roster UI: Enhanced view of spots filled/total.
+  * [x] **Admin UI Enhancements:** Improve usability of the 'Classes' list view with comprehensive sorting and filtering options (e.g., by program, day, time, availability, active status). Consider limitations and solutions for virtual fields. (Task added for Phase 2, virtual field validation hooks implemented as a preliminary step).
 
 ## Phase 2: Full Site Buildout & Enhanced Admin Tools
 
@@ -175,6 +194,26 @@ This document outlines the phased development plan for the Three Trees platform,
   * [ ] (Potentially) Input attendance.
   * [ ] View hours/classes taught.
   * [ ] **Payload:** `Facilitators` collection, links to `ClassSlots`.
+* [x] 3. Define core collection schemas (Initial thoughts, refined in Phase 1 & 2 Payload Collections)
+  * [x] Program types (court-ordered, college, corporate)
+  * [x] Services
+  * [x] Locations
+  * [x] Blog posts
+  * [x] Testimonials
+  * [x] Clients (schema updated)
+  * [x] Programs (schema updated)
+  * [x] Classes (renamed from ClassSlots, schema updated)
+  * [x] Counties (new)
+  * [x] ReferralSourceTypes (new)
+  * [x] ReferralSources (schema updated)
+* [ ] 4. Configure user roles and permissions (Broader item, part of Cross-Cutting & specific portals)
+  * [x] Admin users
+  * [ ] Staff/facilitators (Phase 3)
+  * [ ] Clients (Phase 1 Portal)
+  * [ ] Referral agencies/partners (Phase 3)
+* [x] 11. Develop enrollment workflow (Current focus - Phase 1 Frontend/Backend - Phased submission with JWT implemented, extensive backend refactoring, data model changes, frontend updates for scheduling and consent)
+* [ ] 12. Create client dashboard (Phase 1 Client Portal, Enhanced in Phase 3)
+* [ ] 13. Build facilitator interface (Phase 3 Facilitator Portal)
 
 ## Phase 4: Advanced Features & Platform Maturity
 
@@ -259,10 +298,11 @@ This document outlines the phased development plan for the Three Trees platform,
 2. **Class Slot Granularity for Enrollment:** **Decision:** Users pick a general time block. Admins handle internal splitting.
 3. **Square Subscription Plans:** **Decision:** Pre-define in Square Dashboard for MVP.
 4. **Enrollment Fee for "Pay Per Session":** **Decision:** Charge as a separate one-time fee before subscription starts.
-5. **Digital Signature - MVP Approach:** **Decision:** Research needed. Simplest start: Checkbox affirmation + logged data.
-6. **Admin Data for Class Load (MVP):** **Decision:** "Spots filled / total spots" per class slot + list of names.
-7. **Document Storage (Consent Form, Future Docs):** **Decision:** S3-compatible storage (e.g., Supabase Storage), with Payload storing links. **Open:** Does Payload's file handling with S3 adapter suffice, or is direct API interaction with Supabase Storage preferred?
+5. **Digital Signature - MVP Approach:** **Decision:** Typed name affirmation and checkbox implemented. PDF generation prototype for consent document exists. **Open:** Finalize PDF styling, typing, and storage mechanism.
+6. **Admin Data for Class Load (MVP):** **Decision:** "Spots filled / total spots" per class slot + list of names. Virtual fields `spotsTotal` and `spotsAvailable` added to `Classes` collection with `beforeChange` hooks for correct calculation.
+7. **Document Storage (Consent Form, Future Docs):** **Decision:** S3-compatible storage (e.g., Supabase Storage), with Payload storing links. **Open:** Does Payload's file handling with S3 adapter suffice, or is direct API interaction with Supabase Storage preferred? PDF generation prototype uses `react-pdf`.
 8. **Operational Detail - "General Pool" for Classes:** If multiple `ClassSlots` map to the *same actual video call/facilitator group* and are split manually in breakout rooms:
-    * Does `selectedClassSlotId` point to one of these specific, capacity-limited "schedulable" instances? (Assumed yes for now).
-    * Or does the client pick a more general block and then admins assign to an instance?
-    * How is attendance taken if it's a general pool initially?
+    * [x] Does `selectedClassSlotId` point to one of these specific, capacity-limited "schedulable" instances? (Yes, `selectedClassId` now points to a specific `Class` record which has capacity defined by `Program.spotsPerClass` and `Class.numberOfParallelClasses`).
+    * Client picks a specific class instance.
+    * Attendance will be taken against the specific `Class` instance.
+9. **JWT Session Management:** **Decision:** Implemented for phased enrollment. **Open:** Address token expiry concerns. Interim: Lengthen expiry, store in localStorage. Long-term: Cookie-based session.

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Script from "next/script";
 import { motion } from "framer-motion";
 import { useFormContext, Controller } from "react-hook-form";
@@ -8,7 +8,6 @@ import {
   CalendarCheck as PayAsYouGoIcon,
   Calendar,
   CircleDollarSign,
-  ArrowRight,
   Loader2,
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -26,8 +25,27 @@ interface SquarePayments {
 
 interface SquareCard {
   attach(selector: string): Promise<void>;
-  tokenize(): Promise<SquareTokenizeResult>;
+  tokenize(verificationDetails?: SquareVerificationDetails): Promise<SquareTokenizeResult>;
   // Add other card methods if you use them
+}
+
+interface SquareVerificationDetails {
+  amount: string;
+  currencyCode: string;
+  intent: 'CHARGE' | 'STORE' | 'CHARGE_AND_STORE';
+  billingContact: {
+    familyName?: string;
+    givenName?: string;
+    email?: string;
+    countryCode?: string;
+    postalCode?: string;
+    city?: string;
+    addressLines?: string[];
+    phone?: string;
+  };
+  customerInitiated: boolean;
+  sellerKeyedIn: boolean;
+  // customerId?: string; // If you have a Square Customer ID and want to associate the token
 }
 
 interface SquareTokenizeResultError {
@@ -72,8 +90,11 @@ const PaymentStep: React.FC = () => {
 
   const [card, setCard] = useState<SquareCard | null>(null);
   const [isSquareSdkLoaded, setIsSquareSdkLoaded] = useState(false);
+  const [isInitializingCard, setIsInitializingCard] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  
+  const cardContainerRef = useRef<HTMLDivElement>(null);
 
   const selectedProgramId = watch("personalInfo.selectedProgram");
   const paymentOption = watch("payment.paymentOption") as PaymentOptionType;
@@ -130,84 +151,159 @@ const PaymentStep: React.FC = () => {
     ];
 
   useEffect(() => {
-    if (isSquareSdkLoaded && SQUARE_APPLICATION_ID && SQUARE_LOCATION_ID) {
-      const initializeCard = async () => {
-        if (!window.Square) {
-          console.error("Square SDK not loaded yet");
-          setPaymentError("Payment system failed to load. Please refresh.");
-          return;
-        }
-        try {
-          const payments = window.Square.payments(SQUARE_APPLICATION_ID, SQUARE_LOCATION_ID);
-          const cardInstance = await payments.card();
-          await cardInstance.attach('#card-container');
-          setCard(cardInstance);
-          console.log("Square Card mounted.");
-          setPaymentError(null); // Clear any previous loading errors
-        } catch (e) {
-          console.error("Error initializing Square Card:", e);
-          setPaymentError("Could not load payment form. Please check your connection or try again.");
-        }
-      };
-      initializeCard();
-    } else if (SQUARE_APPLICATION_ID === "YOUR_SQUARE_APPLICATION_ID" || SQUARE_LOCATION_ID === "YOUR_SQUARE_LOCATION_ID") {
+    if (!SQUARE_APPLICATION_ID || SQUARE_APPLICATION_ID === "YOUR_SQUARE_APPLICATION_ID" || 
+        !SQUARE_LOCATION_ID || SQUARE_LOCATION_ID === "YOUR_SQUARE_LOCATION_ID") {
+      console.error("Square payment system is not configured. Application ID or Location ID is missing or uses placeholders.");
       setPaymentError("Payment system is not configured. Please contact support.");
+      setIsSquareSdkLoaded(false);
+      return;
     }
-  }, [isSquareSdkLoaded]);
+
+    if (isSquareSdkLoaded && cardContainerRef.current && !card && !isInitializingCard) {
+      const initializeCardWithRetry = async () => {
+        setIsInitializingCard(true);
+        setPaymentError(null);
+        console.log("Attempting to initialize Square Card...");
+
+        let attempts = 0;
+        const maxAttempts = 5;
+        const delayMs = 500;
+
+        const tryInit = async () => {
+          if (window.Square) {
+            console.log("Square SDK found on window object.");
+            try {
+              const payments = window.Square.payments(SQUARE_APPLICATION_ID, SQUARE_LOCATION_ID);
+              const cardInstance = await payments.card();
+              console.log("Card instance created. Attaching to #card-container...");
+              if (document.getElementById('card-container')) {
+                 await cardInstance.attach('#card-container');
+                 setCard(cardInstance);
+                 console.log("Square Card mounted successfully.");
+                 setPaymentError(null); 
+              } else {
+                console.error("#card-container not found in DOM for attach.");
+                setPaymentError("Payment form element not found. Please try refreshing.");
+              }
+            } catch (e) {
+              console.error("Error initializing Square Card:", e);
+              setPaymentError("Could not load payment form. Please check your connection or try again.");
+            } finally {
+              setIsInitializingCard(false);
+            }
+          } else {
+            attempts++;
+            if (attempts <= maxAttempts) {
+              console.warn(`Square SDK not on window. Attempt ${attempts}/${maxAttempts}. Retrying in ${delayMs}ms...`);
+              setTimeout(tryInit, delayMs);
+            } else {
+              console.error("Square SDK failed to load on window after multiple attempts.");
+              setPaymentError("Payment system failed to initialize after multiple attempts. Please refresh.");
+              setIsInitializingCard(false);
+            }
+          }
+        };
+        await tryInit();
+      };
+      initializeCardWithRetry();
+    }
+  }, [isSquareSdkLoaded, card, isInitializingCard]);
 
   const handlePayment = async () => {
     if (!card) {
-      setPaymentError("Payment form not ready. Please wait or refresh.");
+      setPaymentError("Payment form not ready. Please wait for it to load or refresh the page.");
+      if (isInitializingCard) {
+        setPaymentError("Payment form is still initializing. Please wait a moment.");
+      }
       return;
     }
     setIsProcessingPayment(true);
     setPaymentError(null);
     try {
-      const result = await card.tokenize();
+      // Construct verificationDetails
+      const verificationDetails: SquareVerificationDetails = {
+        amount: dueToday.toFixed(2),
+        currencyCode: 'USD', // Assuming USD, adjust if necessary
+        intent: 'CHARGE',    // Or 'CHARGE_AND_STORE' if you plan to save the card
+        billingContact: {
+          givenName: watch("personalInfo.firstName") || undefined,
+          familyName: watch("personalInfo.lastName") || undefined,
+          email: watch("personalInfo.email") || undefined,
+        },
+        customerInitiated: true,
+        sellerKeyedIn: false,
+      };
+
+      const result = await card.tokenize(verificationDetails); // Pass verificationDetails
       if (result.status === 'OK') {
         const token = result.token;
-        console.log("Card Nonce:", token);
-        // TODO: Send this token and form data to your backend API with phase 'finalPayment'
-        // Example: await submitFinalPayment({ cardNonce: token, formData: methods.getValues() });
-        alert(`Payment successful (simulated)! Nonce: ${token}. Next: Send to backend.`);
-        // On success, proceed to the next step in the main form (EnrollNowPage)
-        // This might involve calling a prop function like `onPaymentSuccess(token)`
-      } else {
-        let errorMessage = `Tokenization failed with status: ${result.status}`;
-        if (result.errors) {
-          // Use the defined type for error mapping
-          errorMessage += `\nErrors: ${result.errors.map((error: SquareTokenizeResultError) =>
-            `Field: ${error.field}, Message: ${error.message}${error.detail ? `, Detail: ${error.detail}` : ''}`
-          ).join(", ")}`;
+        console.log("Card Nonce:", token, "Verification Details Sent:", verificationDetails);
+        // TODO: This is where you would send the token and other relevant data (like dueToday, paymentOption)
+        // to your backend API endpoint (e.g., /api/enroll with phase finalPayment)
+        alert(`Payment tokenization successful (simulated)! Nonce: ${token}. Amount: $${dueToday.toFixed(2)}. Next: Send to backend.`);
+
+        // For now, we'll keep the client-side alert.
+        // The actual call to your /api/enroll should happen here.
+        // Example of what that might look like (you'll need to adapt this):
+        /*
+        const response = await fetch('/api/enroll', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            submissionPhase: 'finalPayment',
+            clientToken: getValues('clientToken'), // Assuming you have clientToken in form state
+            paymentDetails: {
+              cardNonce: token,
+              dueTodayAmount: dueToday,
+              paymentOption: paymentOption,
+            }
+          }),
+        });
+        const responseData = await response.json();
+        if (response.ok) {
+          console.log('Backend payment processing successful:', responseData);
+          // Potentially navigate to a success step or show a success message
+        } else {
+          console.error('Backend payment processing failed:', responseData);
+          setPaymentError(responseData.error || 'Payment processing failed on the server.');
         }
-        console.error(errorMessage);
+        */
+
+      } else {
+        let errorMessage = `Tokenization failed: ${result.errors?.[0]?.message || 'Unknown error'}`;
+        if (result.errors) {
+          errorMessage = `Tokenization failed. Errors: ${result.errors.map((error: SquareTokenizeResultError) =>
+            `${error.field}: ${error.message}${error.detail ? ` (${error.detail})` : ''}`
+          ).join("; ")}`;
+        }
+        console.error("Square tokenization error:", result);
         setPaymentError(errorMessage);
-        alert(`Payment Error: ${errorMessage}`); // User-friendly error
+        alert(`Payment Error: ${errorMessage}`);
       }
     } catch (e) {
-      let errorMessage = "An unexpected error occurred during payment.";
-      if (e instanceof Error) {
-        errorMessage = e.message;
-      }
-      console.error("Error during Square tokenization:", e);
-      setPaymentError(errorMessage);
-      alert(`Payment Error: ${errorMessage}`);
+      const err = e as Error;
+      console.error("Error during Square tokenization:", err);
+      setPaymentError(`An unexpected error occurred: ${err.message}`);
+      alert(`Payment Error: ${err.message}`);
     } finally {
       setIsProcessingPayment(false);
     }
   };
+  
+  const isLoading = !isSquareSdkLoaded || isInitializingCard;
 
   return (
     <>
       <Script
         src={SQUARE_ENVIRONMENT_ENDPOINT}
         onLoad={() => {
-          console.log("Square SDK Script loaded.");
+          console.log("Square SDK Script loaded via next/script.");
           setIsSquareSdkLoaded(true);
         }}
-        onError={() => {
-          console.error("Failed to load Square SDK script.");
-          setPaymentError("Payment system could not be loaded. Please check your internet connection and refresh the page.");
+        onError={(e) => {
+          console.error("Failed to load Square SDK script:", e);
+          setPaymentError("Payment system critical error: SDK script failed to load. Check internet and refresh.");
+          setIsSquareSdkLoaded(false);
         }}
       />
       <motion.div className="pt-6 px-0">
@@ -297,38 +393,43 @@ const PaymentStep: React.FC = () => {
           )}
 
           {/* Payment Method - Square Placeholder */}
-          <div className="border rounded-lg overflow-hidden text-sm">
-            <div className="p-3 bg-muted/30 border-b">
-              <div className="flex justify-between items-center">
-                <h3 className="font-medium text-base">Payment Method</h3>
-                <div className="text-xs">
-                  <span className="text-muted-foreground">Due today:</span>{" "}
-                  <span className="font-bold ml-1 text-primary">${dueToday.toFixed(2)}</span>
-                </div>
+          <div className="bg-white p-4 border rounded-lg shadow-sm max-w-md mx-auto">
+            <label htmlFor="card-container" className="block text-sm font-medium text-gray-700 mb-1">
+              Card Information
+            </label>
+            <div id="card-container" ref={cardContainerRef} className="border rounded p-2"></div>
+            {isLoading && !paymentError && (
+              <div className="text-center text-sm text-gray-500">
+                <Loader2 className="animate-spin inline-block mr-2" /> Loading payment form...
               </div>
-            </div>
-            <div className="p-3">
-              <div id="card-container" className="min-h-[50px] border rounded-md p-2 bg-white">
-                {/* Square SDK will mount its card fields here. If error, show message. */}
-                {!isSquareSdkLoaded && !paymentError && <p className="text-xs text-muted-foreground text-center py-4">Loading payment form...</p>}
+            )}
+            {isSquareSdkLoaded && !isInitializingCard && !card && !paymentError && cardContainerRef.current &&(
+               <div className="text-center text-sm text-gray-500">
+                <Loader2 className="animate-spin inline-block mr-2" /> Finalizing payment form...
               </div>
-              {paymentError && <p className="text-xs text-red-500 pt-2 text-center">{paymentError}</p>}
-            </div>
+            )}
+            {paymentError && (
+              <div className="mt-2 text-center text-sm text-red-600 bg-red-50 p-3 rounded-md">
+                {paymentError}
+              </div>
+            )}
           </div>
 
           {/* Pay Button */}
-          <button
-            type="button"
-            onClick={handlePayment}
-            disabled={!card || isProcessingPayment || !isSquareSdkLoaded || !!paymentError}
-            className="w-full bg-primary text-white py-2.5 rounded-md text-sm font-medium hover:bg-primary/90 transition-colors mt-3 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isProcessingPayment ? (
-              <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
-            ) : (
-              <><ArrowRight size={16} className="mr-2 order-last ml-0" /> Pay ${dueToday.toFixed(2)} Now</>
-            )}
-          </button>
+          <div className="flex justify-center mt-6">
+            <button
+              type="button"
+              onClick={handlePayment}
+              disabled={isLoading || isProcessingPayment || !card || !!paymentError}
+              className="w-full max-w-md mx-auto bg-brand-primary hover:bg-brand-primary-dark text-primary font-semibold pb-3 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary-light transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            >
+              {isProcessingPayment ? (
+                <><Loader2 className="animate-spin mr-2" /> Processing...</>
+              ) : (
+                <><CircleDollarSign className="mr-2 text-lg text-primary" /> Confirm & Pay ${dueToday.toFixed(2)}</>
+              )}
+            </button>
+          </div>
         </div>
       </motion.div>
     </>

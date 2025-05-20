@@ -7,6 +7,7 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
+import { AttendanceRecords } from './collections/AttendanceRecords.ts'
 import { BlogPosts } from './collections/BlogPosts.ts'
 import { Classes } from './collections/Classes.ts'
 import { Clients } from './collections/Clients.ts'
@@ -34,6 +35,7 @@ export default buildConfig({
     },
   },
   collections: [
+    AttendanceRecords,
     BlogPosts,
     Classes,
     Clients,

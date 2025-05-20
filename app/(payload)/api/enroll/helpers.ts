@@ -21,7 +21,7 @@ export async function findCountyByName(payload: Payload, countyName: string): Pr
     }
 }
 
-export async function findReferralSource(payload: Payload, referralSourceTypeName: string, countyId: string | null): Promise<string | null> {
+export async function findReferralSource(payload: Payload, referralSourceTypeName: string, countyId: string | null): Promise<{ sourceId: string; typeId: string } | null> {
     if (!referralSourceTypeName || !countyId) return null;
     try {
         const rsTypeQuery = await payload.find({
@@ -37,8 +37,11 @@ export async function findReferralSource(payload: Payload, referralSourceTypeNam
                 where: { county: { equals: countyId }, sourceType: { equals: rsTypeId } },
                 limit: 1, depth: 0,
             });
-            if (actualRsQuery.docs.length > 0) return actualRsQuery.docs[0].id;
-            payload.logger.warn(`ReferralSource not found for type "${referralSourceTypeName}" in county ID "${countyId}". Nulling relationship.`);
+
+            if (actualRsQuery.docs.length > 0) {
+                return { sourceId: actualRsQuery.docs[0].id, typeId: rsTypeId };
+            }
+            payload.logger.warn(`ReferralSource not found for type "${referralSourceTypeName}" (ID: ${rsTypeId}) in county ID "${countyId}". Nulling relationship.`);
             return null;
         }
         payload.logger.warn(`ReferralSourceType name "${referralSourceTypeName}" not found. Nulling relationship.`);

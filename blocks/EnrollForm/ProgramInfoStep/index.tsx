@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useFormContext } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -13,14 +13,124 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import type { EnrollmentFormData } from "@/lib/form-types";
-import { referralSources, PROGRAM_DATA, countyNames } from "@/lib/form-types";
+import { PROGRAM_DATA } from "@/lib/form-types";
 import StepHeader from "@/components/StepHeader"
 import { cn } from "@/lib/utils"
+
+// Define types for API data
+interface ApiCounty {
+  id: string;
+  name: string;
+  // add other county fields if necessary
+}
+
+interface ApiReferralSourceType {
+  id: string;
+  name: string;
+  // add other type fields if necessary
+}
+
+interface ApiReferralSource {
+  id: string;
+  name: string; // Name of the specific referral source agency/entity
+  county: string | ApiCounty; // Can be ID or populated object
+  sourceType: ApiReferralSourceType; // Assuming depth=1 populates this
+  // add other source fields if necessary
+}
 
 const ProgramInfoStep: React.FC = () => {
   const { control, watch, setValue, clearErrors } = useFormContext<EnrollmentFormData>();
   const watchedReferralSource = watch("personalInfo.referralSource");
   const watchedCounty = watch("personalInfo.county");
+
+  const [countiesList, setCountiesList] = useState<ApiCounty[]>([]);
+  const [isLoadingCounties, setIsLoadingCounties] = useState(false);
+
+  const [referralSourceTypesForCounty, setReferralSourceTypesForCounty] = useState<ApiReferralSourceType[]>([]);
+  const [isLoadingReferralSourceTypes, setIsLoadingReferralSourceTypes] = useState(false);
+
+  // Fetch counties on mount
+  useEffect(() => {
+    const fetchCounties = async () => {
+      setIsLoadingCounties(true);
+      try {
+        const response = await fetch('/api/counties?limit=200&sort=name'); // Sort by name for user convenience
+        if (!response.ok) {
+          throw new Error('Failed to fetch counties');
+        }
+        const data = await response.json();
+        setCountiesList(data.docs || []);
+      } catch (error) {
+        console.error("Error fetching counties:", error);
+        // Optionally, set an error state here to display to the user
+      } finally {
+        setIsLoadingCounties(false);
+      }
+    };
+    fetchCounties();
+  }, []);
+
+  // Effect to fetch referral source types when county changes
+  useEffect(() => {
+    const fetchReferralSourceTypes = async () => {
+      if (watchedCounty && watchedCounty !== 'Other') {
+        setIsLoadingReferralSourceTypes(true);
+        setReferralSourceTypesForCounty([]); // Clear previous types
+
+        // Find the ID of the selected county
+        const selectedCountyObj = countiesList.find(c => c.name === watchedCounty);
+        if (!selectedCountyObj) {
+          console.warn("Selected county object not found in countiesList");
+          setIsLoadingReferralSourceTypes(false);
+          return;
+        }
+        const selectedCountyId = selectedCountyObj.id;
+
+        try {
+          // Fetch referral sources for the selected county, with sourceType populated
+          const response = await fetch(`/api/referral-sources?where[county][equals]=${selectedCountyId}&depth=1&limit=200`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch referral sources for county');
+          }
+          const data: { docs: ApiReferralSource[] } = await response.json();
+          
+          const uniqueTypes: ApiReferralSourceType[] = [];
+          const typeIdsSeen = new Set<string>();
+
+          if (data.docs) {
+            data.docs.forEach(source => {
+              if (source.sourceType && source.sourceType.id && !typeIdsSeen.has(source.sourceType.id)) {
+                uniqueTypes.push({ id: source.sourceType.id, name: source.sourceType.name });
+                typeIdsSeen.add(source.sourceType.id);
+              }
+            });
+          }
+          // Sort types by name
+          uniqueTypes.sort((a, b) => a.name.localeCompare(b.name));
+          setReferralSourceTypesForCounty(uniqueTypes);
+
+        } catch (error) {
+          console.error("Error fetching referral source types:", error);
+        } finally {
+          setIsLoadingReferralSourceTypes(false);
+        }
+      } else {
+        // If county is 'Other' or not selected, clear the types and reset form field
+        setReferralSourceTypesForCounty([]);
+      }
+    };
+
+    // Reset dependent fields when county changes
+    setValue("personalInfo.referralSource", "", { shouldValidate: true });
+    clearErrors("personalInfo.referralSource");
+    if (watchedReferralSource === 'Other') { // If it was 'Other', clear the 'Other' text field too
+        setValue("personalInfo.referralSourceOther", "", { shouldValidate: true });
+        clearErrors("personalInfo.referralSourceOther");
+    }
+    
+    fetchReferralSourceTypes();
+
+  }, [watchedCounty, countiesList, setValue, clearErrors]); // Added countiesList dependency
 
   // Effect to clear countyOther if county is not 'Other'
   useEffect(() => {
@@ -31,7 +141,7 @@ const ProgramInfoStep: React.FC = () => {
         clearErrors("personalInfo.countyOther");
       }
     }
-  }, [watchedCounty, setValue, clearErrors, watch]); // watch is stable, but good to include if directly used
+  }, [watchedCounty, setValue, clearErrors, watch]);
 
   // Effect to clear referralSourceOther if referralSource is not 'Other'
   useEffect(() => {
@@ -63,16 +173,26 @@ const ProgramInfoStep: React.FC = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-sm">Referral County <span className="">*</span></FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select 
+                  onValueChange={field.onChange} 
+                  value={field.value} // Use value instead of defaultValue for controlled component
+                  disabled={isLoadingCounties}
+                >
                   <FormControl>
                     <SelectTrigger className="bg-white">
-                      <SelectValue placeholder="Select county..." />
+                      <SelectValue placeholder={isLoadingCounties ? "Loading counties..." : "Select county..."} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {countyNames.map((county) => (
-                      <SelectItem key={county} value={county}>{county}</SelectItem>
-                    ))}
+                    {isLoadingCounties ? (
+                      <SelectItem value="loading" disabled>Loading...</SelectItem>
+                    ) : (
+                      <>
+                        {countiesList.map((county) => (
+                          <SelectItem key={county.id} value={county.name}>{county.name}</SelectItem>
+                        ))}
+                      </>
+                    )}
                     <SelectItem value="Other">Other</SelectItem>
                   </SelectContent>
                 </Select>
@@ -112,24 +232,43 @@ const ProgramInfoStep: React.FC = () => {
           />
         </div>
 
-        {/* Referral Source Row */}
+        {/* Referral Source Row (Now Referral Source Type) */}
         <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4">
         <FormField
           control={control}
-          name="personalInfo.referralSource"
+          name="personalInfo.referralSource" // This field now stores the Referral Source Type NAME
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm">Referral Source <span className="">*</span></FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormLabel className="text-sm">Referral Source Type <span className="">*</span></FormLabel>
+              <Select 
+                onValueChange={field.onChange} 
+                value={field.value} // Controlled component
+                disabled={isLoadingCounties || isLoadingReferralSourceTypes || !watchedCounty}
+              >
                 <FormControl>
                   <SelectTrigger className="bg-white">
-                    <SelectValue placeholder="Select referral source..." />
+                    <SelectValue placeholder={
+                      isLoadingReferralSourceTypes ? "Loading types..." : 
+                      isLoadingCounties ? "Loading counties..." : // Added check for isLoadingCounties for placeholder
+                      !watchedCounty ? "Select county first" : // If no county selected (and counties loaded)
+                      referralSourceTypesForCounty.length === 0 && watchedCounty === 'Other' ? "Select 'Other' or specify below" : // County is 'Other', types list is empty
+                      referralSourceTypesForCounty.length === 0 && watchedCounty !== 'Other' ? "No types found for this county" : // Specific county, but no types
+                      "Select referral source type..."
+                    } />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {referralSources.map((source) => (
-                    <SelectItem key={source} value={source}>{source}</SelectItem>
+                  {isLoadingReferralSourceTypes ? (
+                    <SelectItem value="loading_types" disabled>Loading types...</SelectItem>
+                  ) : referralSourceTypesForCounty.length === 0 && watchedCounty && watchedCounty !== 'Other' ? (
+                    <SelectItem value="no_types" disabled>No types found for this county</SelectItem>
+                  ) : (
+                    <>
+                      {referralSourceTypesForCounty.map((type) => (
+                        <SelectItem key={type.id} value={type.name}>{type.name}</SelectItem>
                   ))}
+                    </>
+                  )}
                   <SelectItem value="Other">Other</SelectItem>
                 </SelectContent>
               </Select>
@@ -149,12 +288,12 @@ const ProgramInfoStep: React.FC = () => {
                     !isReferralOtherActive && "text-muted-foreground"
                   )}
                 >
-                  {isReferralOtherActive ? 'Please specify source' : 'Other Referral Source (if not listed)'} 
+                  {isReferralOtherActive ? 'Please specify source type' : 'Other Source Type (if not listed)'} 
                   {isReferralOtherActive && <span className="">*</span>}
                 </FormLabel>
                 <FormControl>
                   <Input 
-                    placeholder="Enter referral source..." 
+                    placeholder="Enter source type..." 
                     {...field} 
                     className={cn(
                       "bg-white", 
@@ -175,7 +314,7 @@ const ProgramInfoStep: React.FC = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-sm">Select Program <span className="">*</span></FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger className="bg-white">
                     <SelectValue placeholder="Select the program..." />

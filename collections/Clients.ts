@@ -5,7 +5,7 @@ export const Clients: CollectionConfig = {
   slug: 'clients',
   admin: {
     useAsTitle: 'lastName',
-    defaultColumns: ['firstName', 'lastName', 'email', 'publicId', 'enrollmentProcessStatus', 'paymentStatus', 'updatedAt'],
+    defaultColumns: ['firstName', 'lastName', 'email', 'publicId', 'referralSourceType', 'paymentStatus', 'updatedAt'],
     group: 'Customers',
   },
   access: {
@@ -109,11 +109,11 @@ export const Clients: CollectionConfig = {
             description: 'Select the client\'s county of residence or use the "Other" field',
             width: '50%'
           }
-        },
-        {
-          name: 'countyOther',
-          type: 'text',
-          admin: {
+    },
+    {
+      name: 'countyOther',
+      type: 'text',
+      admin: {
             description: 'If county not in the list, specify the name here',
             width: '50%',
             placeholder: 'Other county...'
@@ -125,6 +125,16 @@ export const Clients: CollectionConfig = {
       name: 'consentToContact',
       label: 'Consent to Contact',
       type: 'checkbox',
+      },
+    {
+      name: 'referralSourceType',
+      type: 'relationship',
+      relationTo: 'referral-source-types',
+      hasMany: false,
+      required: false,
+      admin: {
+        description: 'Select the category/type of the referral source (e.g., PPP, DSS, PTI)',
+      }
     },
     {
       name: 'referralSource',
@@ -268,12 +278,12 @@ export const Clients: CollectionConfig = {
     },
     // Notes field for admin
     {
-      name: 'internalNotes',
-      label: 'Internal Notes',
-      type: 'textarea',
-      admin: {
-        description: 'Notes for internal admin use only.'
-      }
+        name: 'internalNotes',
+        label: 'Internal Notes',
+        type: 'textarea',
+        admin: {
+            description: 'Notes for internal admin use only.'
+        }
     },
     // {
     //   name: 'tags',

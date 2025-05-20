@@ -38,10 +38,10 @@ export async function POST(request: NextRequest) {
     let clientRecord: Client;
     try {
       clientRecord = await authenticateAndGetClient(request, payload);
-    } catch (error) {
+  } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       return NextResponse.json({ error: message }, { status: 401 });
-    }
+  }
 
     // Process the different submission phases
     if (submissionPhase === 'programInfo') {

@@ -142,11 +142,11 @@ export const Payments: CollectionConfig = {
       },
     },
     {
-      name: 'paymentMethod',
-      label: 'Payment Method Detail',
-      type: 'text',
-      defaultValue: 'Square Online',
-      admin: {
+        name: 'paymentMethod',
+        label: 'Payment Method Detail',
+        type: 'text',
+        defaultValue: 'Square Online',
+        admin: {
           description: 'e.g., Square Online, Manual Offline, Check'
       }
     },

@@ -25,13 +25,14 @@ export async function handleProgramInfoPhase(payload: Payload, rawRequestBody: P
     const { county, countyOther, referralSource, referralSourceOther, selectedProgram, whyReferred } = personalInfo;
 
     const countyIdToSave = county && !countyOther ? await findCountyByName(payload, county) : null;
-    const referralSourceIdToSave = referralSource && !referralSourceOther && countyIdToSave
+    const referralSourceData = referralSource && !referralSourceOther && countyIdToSave
         ? await findReferralSource(payload, referralSource, countyIdToSave)
         : null;
     const programDoc = selectedProgram ? await findProgramByProgramId(payload, selectedProgram) : null;
 
-    const updateData = {
-        referralSource: referralSourceIdToSave,
+    const updateData: Partial<Client> & { enrollmentProcessStatus: Client['enrollmentProcessStatus'] } = {
+        referralSource: referralSourceData?.sourceId || null,
+        referralSourceType: referralSourceData?.typeId || null,
         referralSourceOther: referralSourceOther || undefined,
         selectedProgram: programDoc ? programDoc.id : null,
         whyReferred: whyReferred || undefined,

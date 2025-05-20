@@ -67,6 +67,7 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    'attendance-records': AttendanceRecord;
     blogPosts: BlogPost;
     classes: Class;
     clients: Client;
@@ -88,6 +89,7 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    'attendance-records': AttendanceRecordsSelect<false> | AttendanceRecordsSelect<true>;
     blogPosts: BlogPostsSelect<false> | BlogPostsSelect<true>;
     classes: ClassesSelect<false> | ClassesSelect<true>;
     clients: ClientsSelect<false> | ClientsSelect<true>;
@@ -138,6 +140,322 @@ export interface UserAuthOperations {
     email: string;
     password: string;
   };
+}
+/**
+ * Track attendance for every class session.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attendance-records".
+ */
+export interface AttendanceRecord {
+  id: string;
+  date: string;
+  class: string | Class;
+  client: string | Client;
+  status: 'present' | 'absent_excused' | 'absent_unexcused';
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Define scheduled blocks of classes for groups of programs.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "classes".
+ */
+export interface Class {
+  id: string;
+  programGroup: string | ProgramGroup;
+  /**
+   * How many instances of this class run simultaneously at this time.
+   */
+  numberOfParallelClasses: number;
+  day: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+  /**
+   * Start time of the class block.
+   */
+  time:
+    | '00:00'
+    | '00:30'
+    | '01:00'
+    | '01:30'
+    | '02:00'
+    | '02:30'
+    | '03:00'
+    | '03:30'
+    | '04:00'
+    | '04:30'
+    | '05:00'
+    | '05:30'
+    | '06:00'
+    | '06:30'
+    | '07:00'
+    | '07:30'
+    | '08:00'
+    | '08:30'
+    | '09:00'
+    | '09:30'
+    | '10:00'
+    | '10:30'
+    | '11:00'
+    | '11:30'
+    | '12:00'
+    | '12:30'
+    | '13:00'
+    | '13:30'
+    | '14:00'
+    | '14:30'
+    | '15:00'
+    | '15:30'
+    | '16:00'
+    | '16:30'
+    | '17:00'
+    | '17:30'
+    | '18:00'
+    | '18:30'
+    | '19:00'
+    | '19:30'
+    | '20:00'
+    | '20:30'
+    | '21:00'
+    | '21:30'
+    | '22:00'
+    | '22:30'
+    | '23:00'
+    | '23:30';
+  /**
+   * Select if this class block is gender-specific.
+   */
+  genderSpecific?: ('male' | 'female') | null;
+  /**
+   * Clients currently enrolled in this class block.
+   */
+  clients?: (string | Client)[] | null;
+  /**
+   * Calculated: Number of Parallel Classes * Spots Per Class Instance (from Program Group).
+   */
+  spotsTotal?: number | null;
+  /**
+   * Calculated: Spots Total - Number of Enrolled Clients.
+   */
+  spotsAvailable?: number | null;
+  classBlockIdentifier?: string | null;
+  /**
+   * Active class blocks are available for enrollment selection.
+   */
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Define groups of programs that share class slots and capacity.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "program-groups".
+ */
+export interface ProgramGroup {
+  id: string;
+  /**
+   * Descriptive name for the group (e.g., "Level 1 Programs")
+   */
+  name: string;
+  /**
+   * A unique code for this group used in scheduling (e.g., "L1_SHARED")
+   */
+  sharedProgramId: string;
+  /**
+   * Max clients in one class instance belonging to this group.
+   */
+  spotsPerClassInstance: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clients".
+ */
+export interface Client {
+  id: string;
+  publicId?: string | null;
+  firstName: string;
+  lastName: string;
+  email?: string | null;
+  phone?: string | null;
+  city?: string | null;
+  state?: string | null;
+  zipcode?: string | null;
+  sex?: ('Male' | 'Female') | null;
+  /**
+   * Select the client's county of residence or use the "Other" field
+   */
+  county?: (string | null) | County;
+  /**
+   * If county not in the list, specify the name here
+   */
+  countyOther?: string | null;
+  consentToContact?: boolean | null;
+  /**
+   * Select the category/type of the referral source (e.g., PPP, DSS, PTI)
+   */
+  referralSourceType?: (string | null) | ReferralSourceType;
+  /**
+   * Select the agency that referred this client or use the "Other" field
+   */
+  referralSource?: (string | null) | ReferralSource;
+  /**
+   * If referral source not in the list, specify here
+   */
+  referralSourceOther?: string | null;
+  whyReferred?: string | null;
+  /**
+   * The program the client is enrolled in
+   */
+  selectedProgram?: (string | null) | Program;
+  agreedToTerms?: boolean | null;
+  signature?: string | null;
+  paymentOption?: ('pay_as_you_go' | 'autopay_weekly' | 'full_program') | null;
+  agreeToRecurring?: boolean | null;
+  enrollmentProcessStatus?:
+    | (
+        | 'contact_info_collected'
+        | 'program_info_collected'
+        | 'schedule_selected'
+        | 'consent_agreed'
+        | 'final_data_collected_pending_payment'
+        | 'enrollment_complete'
+      )
+    | null;
+  enrollmentDate?: string | null;
+  paymentStatus?:
+    | (
+        | 'pending_enrollment_fee'
+        | 'active_paid_enrollment_fee'
+        | 'pending_subscription_setup'
+        | 'active_autopay'
+        | 'active_paid_full'
+        | 'payment_issue'
+        | 'completed'
+        | 'on_hold'
+        | 'cancelled'
+      )
+    | null;
+  squareCustomerId?: string | null;
+  squareSubscriptionId?: string | null;
+  /**
+   * Notes for internal admin use only.
+   */
+  internalNotes?: string | null;
+  /**
+   * The specific class block this client is currently assigned to.
+   */
+  class?: (string | null) | Class;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "counties".
+ */
+export interface County {
+  id: string;
+  name: string;
+  /**
+   * Active counties can be selected during enrollment.
+   */
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "referral-source-types".
+ */
+export interface ReferralSourceType {
+  id: string;
+  /**
+   * Full name of the referral source type (e.g., "Probation Pardon & Parole")
+   */
+  name: string;
+  /**
+   * Common abbreviation (e.g., "PPP")
+   */
+  abbreviation: string;
+  /**
+   * Active referral source types can be selected during enrollment.
+   */
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Specific referral sources combining county and type (e.g., York PPP)
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "referral-sources".
+ */
+export interface ReferralSource {
+  id: string;
+  /**
+   * The county this referral source is located in
+   */
+  county: string | County;
+  /**
+   * The type of referral source (e.g., PPP, DSS, PTI)
+   */
+  sourceType: string | ReferralSourceType;
+  title?: string | null;
+  contactInfo?: {
+    /**
+     * Primary contact person at this referral source
+     */
+    contactName?: string | null;
+    email?: string | null;
+    phone?: string | null;
+  };
+  /**
+   * Any special requirements or procedures for this specific referral source
+   */
+  notes?: string | null;
+  /**
+   * Active referral sources can be selected during enrollment
+   */
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Define the programs offered, their structure, and pricing.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programs".
+ */
+export interface Program {
+  id: string;
+  /**
+   * A unique code for this program (e.g., dv_male, am, sort). This is used for linking.
+   */
+  programId: string;
+  name: string;
+  description?: string | null;
+  durationText?: string | null;
+  weeks?: number | null;
+  sessionsPerWeek?: number | null;
+  costPerSession: number;
+  enrollmentFee: number;
+  /**
+   * Link to the program group that defines shared class capacity.
+   */
+  programGroup: string | ProgramGroup;
+  /**
+   * Categorize the program for filtering or display purposes.
+   */
+  programCategory?: ('court_ordered' | 'college_university' | 'corporate_hospital' | 'general_wellness') | null;
+  /**
+   * Active programs can be selected during enrollment.
+   */
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -533,302 +851,6 @@ export interface Location {
   createdAt: string;
 }
 /**
- * Define scheduled blocks of classes for groups of programs.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "classes".
- */
-export interface Class {
-  id: string;
-  programGroup: string | ProgramGroup;
-  /**
-   * How many instances of this class run simultaneously at this time.
-   */
-  numberOfParallelClasses: number;
-  day: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
-  /**
-   * Start time of the class block.
-   */
-  time:
-    | '00:00'
-    | '00:30'
-    | '01:00'
-    | '01:30'
-    | '02:00'
-    | '02:30'
-    | '03:00'
-    | '03:30'
-    | '04:00'
-    | '04:30'
-    | '05:00'
-    | '05:30'
-    | '06:00'
-    | '06:30'
-    | '07:00'
-    | '07:30'
-    | '08:00'
-    | '08:30'
-    | '09:00'
-    | '09:30'
-    | '10:00'
-    | '10:30'
-    | '11:00'
-    | '11:30'
-    | '12:00'
-    | '12:30'
-    | '13:00'
-    | '13:30'
-    | '14:00'
-    | '14:30'
-    | '15:00'
-    | '15:30'
-    | '16:00'
-    | '16:30'
-    | '17:00'
-    | '17:30'
-    | '18:00'
-    | '18:30'
-    | '19:00'
-    | '19:30'
-    | '20:00'
-    | '20:30'
-    | '21:00'
-    | '21:30'
-    | '22:00'
-    | '22:30'
-    | '23:00'
-    | '23:30';
-  /**
-   * Select if this class block is gender-specific.
-   */
-  genderSpecific?: ('male' | 'female') | null;
-  /**
-   * Clients currently enrolled in this class block.
-   */
-  clients?: (string | Client)[] | null;
-  /**
-   * Calculated: Number of Parallel Classes * Spots Per Class Instance (from Program Group).
-   */
-  spotsTotal?: number | null;
-  /**
-   * Calculated: Spots Total - Number of Enrolled Clients.
-   */
-  spotsAvailable?: number | null;
-  classBlockIdentifier?: string | null;
-  /**
-   * Active class blocks are available for enrollment selection.
-   */
-  isActive?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Define groups of programs that share class slots and capacity.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "program-groups".
- */
-export interface ProgramGroup {
-  id: string;
-  /**
-   * Descriptive name for the group (e.g., "Level 1 Programs")
-   */
-  name: string;
-  /**
-   * A unique code for this group used in scheduling (e.g., "L1_SHARED")
-   */
-  sharedProgramId: string;
-  /**
-   * Max clients in one class instance belonging to this group.
-   */
-  spotsPerClassInstance: number;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "clients".
- */
-export interface Client {
-  id: string;
-  publicId?: string | null;
-  firstName: string;
-  lastName: string;
-  email?: string | null;
-  phone?: string | null;
-  city?: string | null;
-  state?: string | null;
-  zipcode?: string | null;
-  sex?: ('Male' | 'Female') | null;
-  /**
-   * Select the client's county of residence or use the "Other" field
-   */
-  county?: (string | null) | County;
-  /**
-   * If county not in the list, specify the name here
-   */
-  countyOther?: string | null;
-  consentToContact?: boolean | null;
-  /**
-   * Select the agency that referred this client or use the "Other" field
-   */
-  referralSource?: (string | null) | ReferralSource;
-  /**
-   * If referral source not in the list, specify here
-   */
-  referralSourceOther?: string | null;
-  whyReferred?: string | null;
-  /**
-   * The program the client is enrolled in
-   */
-  selectedProgram?: (string | null) | Program;
-  agreedToTerms?: boolean | null;
-  signature?: string | null;
-  paymentOption?: ('pay_as_you_go' | 'autopay_weekly' | 'full_program') | null;
-  agreeToRecurring?: boolean | null;
-  enrollmentProcessStatus?:
-    | (
-        | 'contact_info_collected'
-        | 'program_info_collected'
-        | 'schedule_selected'
-        | 'consent_agreed'
-        | 'final_data_collected_pending_payment'
-        | 'enrollment_complete'
-      )
-    | null;
-  enrollmentDate?: string | null;
-  paymentStatus?:
-    | (
-        | 'pending_enrollment_fee'
-        | 'active_paid_enrollment_fee'
-        | 'pending_subscription_setup'
-        | 'active_autopay'
-        | 'active_paid_full'
-        | 'payment_issue'
-        | 'completed'
-        | 'on_hold'
-        | 'cancelled'
-      )
-    | null;
-  squareCustomerId?: string | null;
-  squareSubscriptionId?: string | null;
-  /**
-   * Notes for internal admin use only.
-   */
-  internalNotes?: string | null;
-  /**
-   * The specific class block this client is currently assigned to.
-   */
-  class?: (string | null) | Class;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "counties".
- */
-export interface County {
-  id: string;
-  name: string;
-  /**
-   * Active counties can be selected during enrollment.
-   */
-  isActive?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Specific referral sources combining county and type (e.g., York PPP)
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "referral-sources".
- */
-export interface ReferralSource {
-  id: string;
-  /**
-   * The county this referral source is located in
-   */
-  county: string | County;
-  /**
-   * The type of referral source (e.g., PPP, DSS, PTI)
-   */
-  sourceType: string | ReferralSourceType;
-  title?: string | null;
-  contactInfo?: {
-    /**
-     * Primary contact person at this referral source
-     */
-    contactName?: string | null;
-    email?: string | null;
-    phone?: string | null;
-  };
-  /**
-   * Any special requirements or procedures for this specific referral source
-   */
-  notes?: string | null;
-  /**
-   * Active referral sources can be selected during enrollment
-   */
-  isActive?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "referral-source-types".
- */
-export interface ReferralSourceType {
-  id: string;
-  /**
-   * Full name of the referral source type (e.g., "Probation Pardon & Parole")
-   */
-  name: string;
-  /**
-   * Common abbreviation (e.g., "PPP")
-   */
-  abbreviation: string;
-  /**
-   * Active referral source types can be selected during enrollment.
-   */
-  isActive?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Define the programs offered, their structure, and pricing.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "programs".
- */
-export interface Program {
-  id: string;
-  /**
-   * A unique code for this program (e.g., dv_male, am, sort). This is used for linking.
-   */
-  programId: string;
-  name: string;
-  description?: string | null;
-  durationText?: string | null;
-  weeks?: number | null;
-  sessionsPerWeek?: number | null;
-  costPerSession: number;
-  enrollmentFee: number;
-  /**
-   * Link to the program group that defines shared class capacity.
-   */
-  programGroup: string | ProgramGroup;
-  /**
-   * Categorize the program for filtering or display purposes.
-   */
-  programCategory?: ('court_ordered' | 'college_university' | 'corporate_hospital' | 'general_wellness') | null;
-  /**
-   * Active programs can be selected during enrollment.
-   */
-  isActive?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
  * Records of financial transactions, primarily from Square.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -885,6 +907,10 @@ export interface Payment {
 export interface PayloadLockedDocument {
   id: string;
   document?:
+    | ({
+        relationTo: 'attendance-records';
+        value: string | AttendanceRecord;
+      } | null)
     | ({
         relationTo: 'blogPosts';
         value: string | BlogPost;
@@ -989,6 +1015,19 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attendance-records_select".
+ */
+export interface AttendanceRecordsSelect<T extends boolean = true> {
+  date?: T;
+  class?: T;
+  client?: T;
+  status?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "blogPosts_select".
  */
 export interface BlogPostsSelect<T extends boolean = true> {
@@ -1064,6 +1103,7 @@ export interface ClientsSelect<T extends boolean = true> {
   county?: T;
   countyOther?: T;
   consentToContact?: T;
+  referralSourceType?: T;
   referralSource?: T;
   referralSourceOther?: T;
   whyReferred?: T;

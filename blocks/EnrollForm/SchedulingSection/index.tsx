@@ -181,7 +181,7 @@ export default function SchedulingSection({
                   <Label
                     key={classDoc.id}
                     htmlFor={`class-${classDoc.id}`}
-                    className={cn(
+                          className={cn(
                       "flex items-center space-x-3 rounded-md border p-3 transition-all duration-150 ease-in-out",
                       "hover:shadow-md",
                       isFull ? "cursor-not-allowed bg-muted/50 opacity-70" : "cursor-pointer hover:border-primary/70",
