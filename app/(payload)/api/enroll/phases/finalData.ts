@@ -42,7 +42,7 @@ export async function handleFinalDataPhase(payload: Payload, rawRequestBody: Fin
         city: personalInfo.city, 
         state: personalInfo.state, 
         zipcode: personalInfo.zipcode,
-        sex: personalInfo.sex as Client['sex'],
+        sex: personalInfo.sex ? (personalInfo.sex as 'Male' | 'Female') : undefined,
         county: finalCountyId, 
         countyOther: personalInfo.countyOther || undefined,
         referralSource: finalReferralSourceId, 
