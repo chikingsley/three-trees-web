@@ -165,158 +165,250 @@ const ProgramInfoStep: React.FC = () => {
       />
       <div className="space-y-4 rounded-lg">
 
-        {/* County Row */}
-        <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4">
-          <FormField
-            control={control}
-            name="personalInfo.county"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm">Referral County <span className="">*</span></FormLabel>
-                <Select 
-                  onValueChange={field.onChange} 
-                  value={field.value} // Use value instead of defaultValue for controlled component
-                  disabled={isLoadingCounties}
-                >
-                  <FormControl>
-                    <SelectTrigger className="bg-white">
-                      <SelectValue placeholder={isLoadingCounties ? "Loading counties..." : "Select county..."} />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {isLoadingCounties ? (
-                      <SelectItem value="loading" disabled>Loading...</SelectItem>
-                    ) : (
-                      <>
-                        {countiesList.map((county) => (
-                          <SelectItem key={county.id} value={county.name}>{county.name}</SelectItem>
-                        ))}
-                      </>
-                    )}
-                    <SelectItem value="Other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <FormField
-            control={control}
-            name="personalInfo.countyOther"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel 
-                  className={cn(
-                    "text-sm", 
-                    !isCountyOtherActive && "text-muted-foreground"
-                  )}
-                > 
-                  {isCountyOtherActive ? 'Please specify county' : 'Other County (if not listed)'} 
-                  {isCountyOtherActive && <span className="">*</span>}
-                </FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="Enter county name..." 
-                    {...field} 
-                    className={cn(
-                      "bg-white", 
-                      !isCountyOtherActive && 'cursor-not-allowed opacity-50'
-                    )}
-                    disabled={!isCountyOtherActive}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        {/* Conditional layout based on whether County "Other" is selected */}
+        {!isCountyOtherActive ? (
+          // When County is NOT "Other": Show County and Referral Source Type on same line
+          <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4">
+            <FormField
+              control={control}
+              name="personalInfo.county"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className="text-sm">Referral County <span className="">*</span></FormLabel>
+                  <Select 
+                    onValueChange={field.onChange} 
+                    value={field.value}
+                    disabled={isLoadingCounties}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="bg-white w-full">
+                        <SelectValue placeholder={isLoadingCounties ? "Loading counties..." : "Select county..."} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {isLoadingCounties ? (
+                        <SelectItem value="loading" disabled>Loading...</SelectItem>
+                      ) : (
+                        <>
+                          {countiesList.map((county) => (
+                            <SelectItem key={county.id} value={county.name}>{county.name}</SelectItem>
+                          ))}
+                        </>
+                      )}
+                      <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        {/* Referral Source Row (Now Referral Source Type) */}
-        <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4">
-        <FormField
-          control={control}
-          name="personalInfo.referralSource" // This field now stores the Referral Source Type NAME
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-sm">Referral Source Type <span className="">*</span></FormLabel>
-              <Select 
-                onValueChange={field.onChange} 
-                value={field.value} // Controlled component
-                disabled={isLoadingCounties || isLoadingReferralSourceTypes || !watchedCounty}
-              >
-                <FormControl>
-                  <SelectTrigger className="bg-white">
-                    <SelectValue placeholder={
-                      isLoadingReferralSourceTypes ? "Loading types..." : 
-                      isLoadingCounties ? "Loading counties..." : // Added check for isLoadingCounties for placeholder
-                      !watchedCounty ? "Select county first" : // If no county selected (and counties loaded)
-                      referralSourceTypesForCounty.length === 0 && watchedCounty === 'Other' ? "Select 'Other' or specify below" : // County is 'Other', types list is empty
-                      referralSourceTypesForCounty.length === 0 && watchedCounty !== 'Other' ? "No types found for this county" : // Specific county, but no types
-                      "Select referral source type..."
-                    } />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {isLoadingReferralSourceTypes ? (
-                    <SelectItem value="loading_types" disabled>Loading types...</SelectItem>
-                  ) : referralSourceTypesForCounty.length === 0 && watchedCounty && watchedCounty !== 'Other' ? (
-                    <SelectItem value="no_types" disabled>No types found for this county</SelectItem>
-                  ) : (
-                    <>
-                      {referralSourceTypesForCounty.map((type) => (
-                        <SelectItem key={type.id} value={type.name}>{type.name}</SelectItem>
-                  ))}
-                    </>
-                  )}
-                  <SelectItem value="Other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={control}
+              name="personalInfo.referralSource"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className="text-sm">Referral Source Type <span className="">*</span></FormLabel>
+                  <Select 
+                    onValueChange={field.onChange} 
+                    value={field.value}
+                    disabled={isLoadingCounties || isLoadingReferralSourceTypes || !watchedCounty}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="bg-white w-full">
+                        <SelectValue placeholder={
+                          isLoadingReferralSourceTypes ? "Loading types..." : 
+                          isLoadingCounties ? "Loading counties..." :
+                          !watchedCounty ? "Select county first" :
+                          referralSourceTypesForCounty.length === 0 && watchedCounty === 'Other' ? "Select 'Other' or specify below" :
+                          referralSourceTypesForCounty.length === 0 && watchedCounty !== 'Other' ? "No types found for this county" :
+                          "Select referral source type..."
+                        } />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {isLoadingReferralSourceTypes ? (
+                        <SelectItem value="loading_types" disabled>Loading types...</SelectItem>
+                      ) : referralSourceTypesForCounty.length === 0 && watchedCounty && watchedCounty !== 'Other' ? (
+                        <SelectItem value="no_types" disabled>No types found for this county</SelectItem>
+                      ) : (
+                        <>
+                          {referralSourceTypesForCounty.map((type) => (
+                            <SelectItem key={type.id} value={type.name}>{type.name}</SelectItem>
+                          ))}
+                        </>
+                      )}
+                      <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        ) : (
+          // When County IS "Other": Keep original two-line layout
+          <>
+            {/* County Row */}
+            <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4">
+              <FormField
+                control={control}
+                name="personalInfo.county"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="text-sm">Referral County <span className="">*</span></FormLabel>
+                    <Select 
+                      onValueChange={field.onChange} 
+                      value={field.value}
+                      disabled={isLoadingCounties}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="bg-white w-full">
+                          <SelectValue placeholder={isLoadingCounties ? "Loading counties..." : "Select county..."} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {isLoadingCounties ? (
+                          <SelectItem value="loading" disabled>Loading...</SelectItem>
+                        ) : (
+                          <>
+                            {countiesList.map((county) => (
+                              <SelectItem key={county.id} value={county.name}>{county.name}</SelectItem>
+                            ))}
+                          </>
+                        )}
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={control}
+                name="personalInfo.countyOther"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="text-sm">
+                      Please specify county <span className="">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="Enter county name..." 
+                        {...field} 
+                        className="bg-white"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
+            {/* Referral Source Row */}
+            <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4">
+              <FormField
+                control={control}
+                name="personalInfo.referralSource"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="text-sm">Referral Source Type <span className="">*</span></FormLabel>
+                    <Select 
+                      onValueChange={field.onChange} 
+                      value={field.value}
+                      disabled={isLoadingCounties || isLoadingReferralSourceTypes || !watchedCounty}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="bg-white w-full">
+                          <SelectValue placeholder={
+                            isLoadingReferralSourceTypes ? "Loading types..." : 
+                            isLoadingCounties ? "Loading counties..." :
+                            !watchedCounty ? "Select county first" :
+                            referralSourceTypesForCounty.length === 0 && watchedCounty === 'Other' ? "Select 'Other' or specify below" :
+                            referralSourceTypesForCounty.length === 0 && watchedCounty !== 'Other' ? "No types found for this county" :
+                            "Select referral source type..."
+                          } />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {isLoadingReferralSourceTypes ? (
+                          <SelectItem value="loading_types" disabled>Loading types...</SelectItem>
+                        ) : referralSourceTypesForCounty.length === 0 && watchedCounty && watchedCounty !== 'Other' ? (
+                          <SelectItem value="no_types" disabled>No types found for this county</SelectItem>
+                        ) : (
+                          <>
+                            {referralSourceTypesForCounty.map((type) => (
+                              <SelectItem key={type.id} value={type.name}>{type.name}</SelectItem>
+                            ))}
+                          </>
+                        )}
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={control}
+                name="personalInfo.referralSourceOther"
+                render={({ field }) => (
+                  <FormItem className={cn(
+                    "transition-all duration-200",
+                    !isReferralOtherActive && "hidden"
+                  )}>
+                    <FormLabel className="text-sm">
+                      Please specify source type <span className="">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="Enter source type..." 
+                        {...field} 
+                        className="bg-white"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </>
+        )}
+
+        {/* Referral Source Other field - shown only when Referral Source is "Other" and County is not "Other" */}
+        {!isCountyOtherActive && isReferralOtherActive && (
           <FormField
             control={control}
             name="personalInfo.referralSourceOther"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel 
-                  className={cn(
-                    "text-sm", 
-                    !isReferralOtherActive && "text-muted-foreground"
-                  )}
-                >
-                  {isReferralOtherActive ? 'Please specify source type' : 'Other Source Type (if not listed)'} 
-                  {isReferralOtherActive && <span className="">*</span>}
+              <FormItem className="w-full">
+                <FormLabel className="text-sm">
+                  Please specify source type <span className="">*</span>
                 </FormLabel>
                 <FormControl>
                   <Input 
                     placeholder="Enter source type..." 
                     {...field} 
-                    className={cn(
-                      "bg-white", 
-                      !isReferralOtherActive && 'cursor-not-allowed opacity-50'
-                    )}
-                    disabled={!isReferralOtherActive}
+                    className="bg-white"
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-        </div>
+        )}
 
         <FormField
           control={control}
           name="personalInfo.selectedProgram"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="w-full">
               <FormLabel className="text-sm">Select Program <span className="">*</span></FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
-                  <SelectTrigger className="bg-white">
+                  <SelectTrigger className="bg-white w-full">
                     <SelectValue placeholder="Select the program..." />
                   </SelectTrigger>
                 </FormControl>
@@ -337,7 +429,7 @@ const ProgramInfoStep: React.FC = () => {
           control={control}
           name="personalInfo.whyReferred"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="w-full">
               <FormLabel className="text-sm">Why were you referred? <span className="">*</span></FormLabel>
               <FormControl>
                 <Textarea

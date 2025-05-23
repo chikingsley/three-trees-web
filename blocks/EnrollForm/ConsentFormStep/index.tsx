@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -26,11 +26,24 @@ const ConsentFormStep: React.FC = () => {
   const signatureValue = watch("documents.signature");
   const agreedToTermsValue = watch("documents.agreedToTerms");
 
+  const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (agreedToTermsValue) {
       trigger("documents.signature");
     }
   }, [signatureValue, agreedToTermsValue, trigger]);
+
+  const handleScroll = () => {
+    if (scrollContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+      // Check if user has scrolled to within 50px of the bottom
+      if (scrollHeight - scrollTop - clientHeight < 50) {
+        setHasScrolledToBottom(true);
+      }
+    }
+  };
 
   return (
     <>
@@ -39,7 +52,11 @@ const ConsentFormStep: React.FC = () => {
         subtitle="Please read and sign the following document"
       />
       <div className="space-y-4 rounded-lg">
-        <div className="h-60 overflow-y-auto p-3 rounded-lg border border-border mb-2 text-xs">
+        <div 
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
+          className="h-60 overflow-y-auto p-3 rounded-lg border border-border bg-white mb-2 text-xs"
+        >
           {/* General Standards for Educational Classes */}
           <h3 className="text-sm font-semibold mb-2">General Standards for Educational Classes</h3>
           <ol className="list-decimal list-inside space-y-1 mb-3 text-muted-foreground">
@@ -108,55 +125,74 @@ const ConsentFormStep: React.FC = () => {
           <p className="text-xs text-muted-foreground">I have reviewed and provide permission for my information to be released to the above-mentioned parties.</p>
         </div>
 
+        {!hasScrolledToBottom && (
+          <div className="text-center p-3 bg-muted/50 rounded-lg text-sm text-muted-foreground">
+            Please scroll through and read the entire agreement above to continue
+          </div>
+        )}
+
         <Controller
           name="documents.agreedToTerms"
           control={control}
           render={({ field }) => (
-            <div className="flex items-center p-2 rounded-lg hover:bg-muted/50 cursor-pointer" onClick={() => field.onChange(!field.value)}>
-              <Checkbox
-                id="agreedToTerms"
-                checked={field.value}
-                onCheckedChange={field.onChange} // RHF handles state
-                className="mr-2"
-              />
-              <Label htmlFor="agreedToTerms" className="text-xs text-muted-foreground font-normal cursor-pointer">
-                I have read and agree to the Program Agreement.
-              </Label>
+            <div className={`bg-white border rounded-lg p-4 shadow-sm ${!hasScrolledToBottom ? 'opacity-50' : ''}`}>
+              <div 
+                className="flex items-center hover:bg-muted/50 cursor-pointer" 
+                onClick={() => hasScrolledToBottom && field.onChange(!field.value)}
+              >
+                <Checkbox
+                  id="agreedToTerms"
+                  checked={field.value}
+                  onCheckedChange={field.onChange} // RHF handles state
+                  className="mr-3"
+                  disabled={!hasScrolledToBottom}
+                />
+                <Label 
+                  htmlFor="agreedToTerms" 
+                  className={`text-sm font-normal cursor-pointer ${!hasScrolledToBottom ? 'text-muted-foreground' : 'text-foreground'}`}
+                >
+                  I have read and agree to the Program Agreement.
+                </Label>
+              </div>
             </div>
           )}
         />
         {errors.documents?.agreedToTerms?.message && (
-          <p className="text-xs text-red-500 px-2 -mt-2">{errors.documents.agreedToTerms.message as string}</p>
+          <p className="text-xs text-red-500 -mt-2">{errors.documents.agreedToTerms.message as string}</p>
         )}
 
         {/* Electronic Signature - Typed Name Input */}
-        <Controller
-          name="documents.signature" // Ensure this path is in your Zod schema if validation is needed
-          control={control}
-          render={({ field }) => (
-            <FormItem className="mt-4">
-              <FormLabel className="block text-sm font-medium mb-1">
-                Electronic Signature (Type your full name as: <span className="font-semibold">{clientDisplayName}</span>)
-              </FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="Type your full name to sign"
-                  {...field} 
-                  className="bg-white"
-                />
-              </FormControl>
-              <FormMessage /> {/* For displaying validation errors for the signature field */}
-            </FormItem>
-          )}
-        />
+        <div className={`space-y-2 ${!hasScrolledToBottom ? 'opacity-50' : ''}`}>
+          <Controller
+            name="documents.signature" // Ensure this path is in your Zod schema if validation is needed
+            control={control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-sm font-medium">
+                  Electronic Signature (Type your full name as: <span className="font-semibold">{clientDisplayName}</span>)
+                </FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="Type your full name to sign"
+                    {...field} 
+                    className="bg-white"
+                    disabled={!hasScrolledToBottom}
+                  />
+                </FormControl>
+                <FormMessage /> {/* For displaying validation errors for the signature field */}
+              </FormItem>
+            )}
+          />
           <Button
             variant="link"
             type="button" // Ensure it doesn't submit the form
-            className="mt-1 p-0 h-auto text-primary text-xs"
-            onClick={() => setValue("documents.signature", "", { shouldValidate: true, shouldDirty: true })} // Clear and validate
+            className="p-0 h-auto text-primary text-xs"
+            onClick={() => hasScrolledToBottom && setValue("documents.signature", "", { shouldValidate: true, shouldDirty: true })} // Clear and validate
+            disabled={!hasScrolledToBottom}
           >
             Clear signature
           </Button>
+        </div>
         {/* The error message below Controller will now work if documents.signature has Zod validation */}
       </div>
     </>

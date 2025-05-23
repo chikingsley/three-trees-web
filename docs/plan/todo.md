@@ -61,31 +61,31 @@ This document outlines the phased development plan for the Three Trees platform,
     * [ ] Ensure pages span full height on desktop
     * [ ] Always scroll to top when navigating between steps
   * [ ] **Consent Form Page Fixes**
-    * [ ] Fix "Electronic Signature" label spacing to match input field spacing
-    * [ ] Add white background to "I have read and agreed" checkbox area (currently blends into background)
+    * [x] Fix "Electronic Signature" label spacing to match input field spacing
+    * [x] Add white background to "I have read and agreed" checkbox area (currently blends into background)
     * [ ] Ensure consistent padding/spacing across all form elements
   * [ ] **Scheduling Page Overhaul**
     * [ ] Complete UI redesign to match rest of form styling
     * [ ] Use consistent card/input styling from other steps
     * [ ] Improve mobile layout and spacing
   * [ ] **Payment Page Fixes**
-    * [ ] Change all payment option cards to white background by default
-    * [ ] Fix "I understand this is a recurring charge" checkbox so it doesn't affect other element spacing
+    * [x] Change all payment option cards to white background by default
+    * [x] Fix "I understand this is a recurring charge" checkbox so it doesn't affect other element spacing
     * [ ] Make payment icons readable (better contrast)
-    * [ ] Reorganize program cost display:
-      * [ ] Enrollment fee first
-      * [ ] Per session cost
-      * [ ] Number of sessions
-      * [ ] Total cost
-      * [ ] Add note: "* Only enrollment fee due today"
+    * [x] Reorganize program cost display:
+      * [x] Enrollment fee first
+      * [x] Per session cost
+      * [x] Number of sessions
+      * [x] Total cost
+      * [x] Add note: "* Only enrollment fee due today"
     * [ ] Fix extra spacing at bottom of card input (remove "Enter your card number" label or adjust)
     * [ ] Reduce excessive divs around card element
     * [ ] Remove "Continue" button, keep only "Pay $X.XX" button
     * [ ] Fix "Loading payment form..." that sometimes hangs (add timeout/retry mechanism)
     * [ ] Verify payment form loading as part of final payment validation
   * [ ] **Program Info Page Fixes**
-    * [ ] Only show "Other County" field when "Other" is selected
-    * [ ] Only show "Other Referral Source" field when "Other" is selected
+    * [x] Only show "Other County" field when "Other" is selected
+    * [x] Only show "Other Referral Source" field when "Other" is selected
   * [ ] **Navigation & Flow Issues**
     * [ ] Prevent going back after payment is complete
     * [ ] Make "Go to your dashboard" redirect to home page

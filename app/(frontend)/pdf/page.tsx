@@ -1,7 +1,8 @@
 'use client'
 
 import dynamic from 'next/dynamic';
-import MyDocument from './mydocument';
+import React from 'react';
+import MyDocument from './mydocument.tsx';
 // Removed direct import: import { PDFViewer } from '@react-pdf/renderer';
 import './app.css';
 
@@ -43,7 +44,9 @@ function App() {
     <div className="App" style={{ height: '100vh' }}>
       {/* Use the dynamically imported PDFViewer */}
       <PDFViewerWithNoSSR width="100%" height="100%" className="pdf-viewer">
-                    <MyDocument {...documentProps} />
+        <>
+          <MyDocument {...documentProps} />
+        </>
       </PDFViewerWithNoSSR>
     </div>
   );

@@ -45,7 +45,7 @@ const PaymentOptionCard: React.FC<PaymentOptionCardProps> = ({
       className={`relative py-3 rounded-lg border transition-colors text-sm flex flex-col justify-between h-full w-full
         ${isSelected
           ? "bg-white border-primary ring-2 ring-primary"
-          : "bg-muted/10 border-gray-300 hover:bg-gray-50"
+          : "bg-white border-gray-300 hover:border-gray-400 hover:shadow-sm"
         }`}
       onClick={onClick}
       aria-pressed={isSelected}

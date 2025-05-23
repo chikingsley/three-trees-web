@@ -315,30 +315,39 @@ const PaymentStep: React.FC = () => {
         {/* --- Program Details Section --- */}
         <div className="border rounded-lg overflow-hidden text-sm max-w-md mx-auto">
           {selectedProgram ? (
-            <div className="p-2 space-y-2 bg-white">
+            <div className="p-4 space-y-3 bg-white">
               {/* Program Name & Duration */}
-              <div className="font-medium text-base mb-1 text-center border-b pb-2">
-                {selectedProgram.name} <span className="text-sm font-normal text-muted-foreground">({selectedProgram.duration})</span>
+              <div className="font-medium text-base text-center border-b pb-2">
+                {selectedProgram.name}
               </div>
 
-              {/* Details Row (Flex) */}
-              <div className="flex justify-between items-start text-xs space-x-2">
-                <div className="flex flex-col text-left flex-1">
-                  <span className="text-muted-foreground">Total Cost</span>
-                  <span className="font-medium">${baseProgramCost.toFixed(2)}</span>
-                </div>
-                <div className="flex flex-col text-center flex-1 px-1">
-                  <span className="text-muted-foreground">Per Session</span>
-                  <span className="font-medium">${selectedProgram.costPerSession.toFixed(2)}</span>
-                </div>
-                <div className="flex flex-col text-right flex-1">
-                  <span className="text-muted-foreground">Enroll Fee</span>
+              {/* Details Grid */}
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Enrollment Fee:</span>
                   <span className="font-medium">${enrollmentFee.toFixed(2)}</span>
                 </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Per Session:</span>
+                  <span className="font-medium">${selectedProgram.costPerSession.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Number of Sessions:</span>
+                  <span className="font-medium">{selectedProgram.weeks}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Total Program Cost:</span>
+                  <span className="font-medium">${baseProgramCost.toFixed(2)}</span>
+                </div>
+              </div>
+
+              {/* Due Today Note */}
+              <div className="text-center pt-2 border-t">
+                <span className="text-xs text-muted-foreground">* Only enrollment fee due today</span>
               </div>
             </div>
           ) : (
-            <div className="text-center text-sm text-muted-foreground">
+            <div className="text-center text-sm text-muted-foreground p-4">
               Please select a program in the previous step.
             </div>
           )}
@@ -372,64 +381,73 @@ const PaymentStep: React.FC = () => {
         )}
 
         {/* Consent Checkbox for Recurring Payments (Conditional for autopay_weekly) */}
-        {paymentOption === 'autopay_weekly' && (
-          <div className="pt-2 space-y-1">
-            <Controller
-              name="payment.agreeToRecurring"
-              control={control}
-              render={({ field }) => (
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="agreeToRecurring" checked={field.value ?? false} onCheckedChange={field.onChange} />
-                  <CheckboxLabel htmlFor="agreeToRecurring" className="text-xs text-muted-foreground font-normal leading-snug">
-                    I understand this is a recurring weekly charge (5% session discount) and agree to the terms.
-                  </CheckboxLabel>
-                </div>
-              )}
-            />
-            {errors.payment?.agreeToRecurring?.message && (
-              <p className="text-xs text-red-500 pt-1 pl-1">{errors.payment.agreeToRecurring.message as string}</p>
-            )}
-          </div>
-        )}
+        <div className="h-14">
+          {paymentOption === 'autopay_weekly' && (
+            <div className="bg-white border rounded-lg p-4 shadow-sm">
+              <Controller
+                name="payment.agreeToRecurring"
+                control={control}
+                render={({ field }) => (
+                  <div className="space-y-2">
+                    <div className="flex items-start space-x-2">
+                      <Checkbox 
+                        id="agreeToRecurring" 
+                        checked={field.value ?? false} 
+                        onCheckedChange={field.onChange}
+                        className="mt-0.5" 
+                      />
+                      <CheckboxLabel htmlFor="agreeToRecurring" className="text-sm text-foreground font-normal leading-snug">
+                        I understand this is a recurring weekly charge (5% session discount) and agree to the terms.
+                      </CheckboxLabel>
+                    </div>
+                    {errors.payment?.agreeToRecurring?.message && (
+                      <p className="text-xs text-red-500 pl-6">{errors.payment.agreeToRecurring.message as string}</p>
+                    )}
+                  </div>
+                )}
+              />
+            </div>
+          )}
+        </div>
 
         {/* Payment Method - Square Placeholder */}
-          <div className="bg-white p-4 border rounded-lg shadow-sm max-w-md mx-auto">
-            <label htmlFor="card-container" className="block text-sm font-medium text-gray-700 mb-1">
-              Card Information
-            </label>
-            <div id="card-container" ref={cardContainerRef} className="border rounded p-2"></div>
+        <div className="bg-white border rounded-lg shadow-sm max-w-md mx-auto">
+          <div className="p-4 space-y-3">
+            <h3 className="text-sm font-medium text-foreground">Card Information</h3>
+            <div id="card-container" ref={cardContainerRef} className="min-h-[40px]"></div>
             {isLoading && !paymentError && (
-              <div className="text-center text-sm text-gray-500">
-                <Loader2 className="animate-spin inline-block mr-2" /> Loading payment form...
+              <div className="text-center text-sm text-muted-foreground py-2">
+                <Loader2 className="animate-spin inline-block mr-2 h-4 w-4" /> Loading payment form...
               </div>
             )}
             {isSquareSdkLoaded && !isInitializingCard && !card && !paymentError && cardContainerRef.current &&(
-               <div className="text-center text-sm text-gray-500">
-                <Loader2 className="animate-spin inline-block mr-2" /> Finalizing payment form...
+               <div className="text-center text-sm text-muted-foreground py-2">
+                <Loader2 className="animate-spin inline-block mr-2 h-4 w-4" /> Finalizing payment form...
               </div>
             )}
             {paymentError && (
-              <div className="mt-2 text-center text-sm text-red-600 bg-red-50 p-3 rounded-md">
+              <div className="text-sm text-red-600 bg-red-50 p-3 rounded">
                 {paymentError}
-            </div>
+              </div>
             )}
           </div>
-
-          {/* Pay Button */}
-          <div className="flex justify-center mt-6">
+          
+          {/* Pay Button integrated into the card */}
+          <div className="border-t p-4">
             <button
               type="button"
               onClick={handlePayment}
               disabled={isLoading || isProcessingPayment || !card || !!paymentError}
-              className="w-full max-w-md mx-auto bg-brand-primary hover:bg-brand-primary-dark text-primary font-semibold pb-3 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary-light transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3 px-4 rounded-lg transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               {isProcessingPayment ? (
-                <><Loader2 className="animate-spin mr-2" /> Processing...</>
+                <><Loader2 className="animate-spin mr-2 h-5 w-5" /> Processing...</>
               ) : (
-                <><CircleDollarSign className="mr-2 text-lg text-primary" /> Confirm & Pay ${dueToday.toFixed(2)}</>
+                <><CircleDollarSign className="mr-2 h-5 w-5" /> Confirm & Pay ${dueToday.toFixed(2)}</>
               )}
             </button>
           </div>
+        </div>
       </div>
     </motion.div>
     </>
