@@ -82,7 +82,7 @@ const WhyChooseSection = (props: WhyChooseSectionProps) => {
           <div className="h-1 w-20 bg-primary mx-auto mb-6"></div>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {features.map((feature, index) => {
             const IconComponent = iconMap[feature.iconName];
             if (!IconComponent) return null; // Skip if icon name is invalid

@@ -52,14 +52,58 @@ This document outlines the phased development plan for the Three Trees platform,
   * [x] Scheduling UI updated for new class data structure (fetches live `/api/classes`, filters, shows availability)
   * [x] Payment Step UI updated for Square SDK placeholder and recurring payment consent
   * [x] Consent checkbox layout fixed, validation message moved.
-* [ ] 7. Desktop View: Review and adapt the enrollment form for a polished desktop experience
+* [ ] 7. UI/UX Fixes for Enrollment Form (Pre-Go-Live Polish)
+  * [ ] **Layout & Spacing Foundation**
+    * [ ] Add logo (icon only, no text) to welcome page above welcome text
+    * [ ] Fix overall page spacing (especially mobile Safari)
+    * [ ] Implement wider container for desktop view (current `max-w-md` is too narrow)
+    * [ ] Create distinct desktop and mobile layouts
+    * [ ] Ensure pages span full height on desktop
+    * [ ] Always scroll to top when navigating between steps
+  * [ ] **Consent Form Page Fixes**
+    * [ ] Fix "Electronic Signature" label spacing to match input field spacing
+    * [ ] Add white background to "I have read and agreed" checkbox area (currently blends into background)
+    * [ ] Ensure consistent padding/spacing across all form elements
+  * [ ] **Scheduling Page Overhaul**
+    * [ ] Complete UI redesign to match rest of form styling
+    * [ ] Use consistent card/input styling from other steps
+    * [ ] Improve mobile layout and spacing
+  * [ ] **Payment Page Fixes**
+    * [ ] Change all payment option cards to white background by default
+    * [ ] Fix "I understand this is a recurring charge" checkbox so it doesn't affect other element spacing
+    * [ ] Make payment icons readable (better contrast)
+    * [ ] Reorganize program cost display:
+      * [ ] Enrollment fee first
+      * [ ] Per session cost
+      * [ ] Number of sessions
+      * [ ] Total cost
+      * [ ] Add note: "* Only enrollment fee due today"
+    * [ ] Fix extra spacing at bottom of card input (remove "Enter your card number" label or adjust)
+    * [ ] Reduce excessive divs around card element
+    * [ ] Remove "Continue" button, keep only "Pay $X.XX" button
+    * [ ] Fix "Loading payment form..." that sometimes hangs (add timeout/retry mechanism)
+    * [ ] Verify payment form loading as part of final payment validation
+  * [ ] **Program Info Page Fixes**
+    * [ ] Only show "Other County" field when "Other" is selected
+    * [ ] Only show "Other Referral Source" field when "Other" is selected
+  * [ ] **Navigation & Flow Issues**
+    * [ ] Prevent going back after payment is complete
+    * [ ] Make "Go to your dashboard" redirect to home page
+    * [ ] Remove button disabling - let users click to see validation errors
+  * [ ] **Success Page**
+    * [ ] Make enrollment complete page responsive
+  * [ ] **General Polish**
+    * [ ] Review and fix all responsive breakpoints
+    * [ ] Ensure consistent theming across all components
+    * [ ] Test on actual mobile devices (not just browser dev tools)
+* [ ] 8. Desktop View: Review and adapt the enrollment form for a polished desktop experience
   * Consider how `max-w-md` behaves
   * Evaluate if wider layouts/adjustments are needed for desktop form usability
-* [x] 8. Digital Signature for Consent Form
+* [x] 9. Digital Signature for Consent Form
   * [x] Research and implement MVP digital signature method (typed name affirmation implemented with validation against client's name, alongside checkbox).
   * [x] **Decision:** For "go-live next week," simplest acceptable is checkbox affirming "I have read and agree..." with form data submission logged as proof of consent (Typed signature now implemented as MVP)
   * [x] **Storage:** PDF prototype page created using react-pdf; `MyDocument` separated; need to finish typing fixes. (Placeholder for now, actual storage of signed PDF TBD)
-* [x] 9. Backend - Initial Setup (Payload CMS with Supabase/PostgreSQL Backend)
+* [x] 10. Backend - Initial Setup (Payload CMS with Supabase/PostgreSQL Backend)
   * [x] Payload CMS project initialized.
   * [x] Initial admin user for Payload set up.
   * [x] Define Payload Collections (mapping to Supabase Tables) for MVP:
@@ -81,7 +125,7 @@ This document outlines the phased development plan for the Three Trees platform,
     * [ ] Send confirmation email (client & admin).
     * [x] Implement error handling (basic API error handling on frontend; JWT error handling on backend; client-side error display for Zod also improved. Extensive logging added and fixed).
     * [x] (Future Enhancement Idea) Consider refactor to save form data incrementally per step for abandonment recovery and analytics. (Implemented with phased submission API and JWT-based enrollment session. Token expiry issue noted, interim solution: lengthen expiry & localStorage, long-term: cookie session).
-* [ ] 10. Payments - Square Integration (MVP)
+* [ ] 11. Payments - Square Integration (MVP)
   * **Frontend (`PaymentStep.tsx`):**
     * [ ] Integrate Square Web Payments SDK into `#card-container`.
     * [ ] On "Pay" button click: Validate RHF step, then `card.tokenize()`.
@@ -96,22 +140,22 @@ This document outlines the phased development plan for the Three Trees platform,
       * [ ] 4. Subscribe Square Customer to pre-defined weekly plan (from Square Dashboard).
       * [ ] 5. Store Square Customer ID & Subscription ID with `Client`.
     * [ ] Securely manage Square Access Token.
-* [ ] 11. Phase 1 Completion - Client Portal (Manage Payments - Basic)
+* [ ] 12. Phase 1 Completion - Client Portal (Manage Payments - Basic)
   * [ ] Authentication: Basic client login (Payload Auth, custom frontend, no Payload Admin UI access).
   * [ ] Functionality: View subscription status, update card on file (Square SDK), view payment history (from Payload/Supabase).
-* [ ] 12. Phase 1 Completion - Admin - Basic Client & Class Management View (Payload CMS)
+* [ ] 13. Phase 1 Completion - Admin - Basic Client & Class Management View (Payload CMS)
   * [ ] View client list & details.
   * [ ] View class rosters: For each `ClassSlot`, list enrolled clients and show spots filled / total spots.
   * [ ] Manually update client status.
-* [x] 13. Data & Type Consistency Cleanup
+* [x] 14. Data & Type Consistency Cleanup
   * [ ] Refactor frontend `form-types.ts` to use Payload-generated types from `payload-types.ts` instead of manually maintained interfaces.
   * [ ] Auto-generate reusable Zod schemas from the Payload type definitions (e.g. with `zod-to-ts` or `json-schema-to-zod`) so backend and frontend validation stay in sync.
-* [x] 14. Referral Source UX & Association
+* [x] 15. Referral Source UX & Association
   * [x] Implement dependent selects in the Program Info step: County ➜ Referral Source Type. (Backend logic for lookup and persistence of county, referral source type, and specific referral source is complete. Frontend dynamically fetches Counties, then filters Referral Source Types based on selected County. "Other" field handling is in place.)
   * [x] Persist the chosen `referralSourceType` & `referralSource` (or `referralSourceOther`) on the `Client` record during the `/api/enroll` `programInfo` phase. (Verified complete)
   * [x] Add `referralSourceType` field to the `Clients` collection for easier analytics & filtering. (Verified complete)
   * [ ] Verify that referral-source data is surfaced in admin list views and can be filtered/exported for weekly partner reports.
-* [x] 15. Attendance MVP
+* [x] 16. Attendance MVP
   * [x] Create `attendance-records` collection: `date`, `class`, `client`, `status` (Present / Absent Excused / Absent Unexcused), `notes`.
   * [ ] Simple Admin UI: Allow facilitators/admins to mark attendance for the latest class session.
   * [ ] Hooks/cron to aggregate totals onto the `Client` document (`totalAbsences`, `consecutiveAbsences`, `attendanceStatus`).
