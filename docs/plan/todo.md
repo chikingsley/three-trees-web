@@ -53,21 +53,21 @@ This document outlines the phased development plan for the Three Trees platform,
   * [x] Payment Step UI updated for Square SDK placeholder and recurring payment consent
   * [x] Consent checkbox layout fixed, validation message moved.
 * [ ] 7. UI/UX Fixes for Enrollment Form (Pre-Go-Live Polish)
-  * [ ] **Layout & Spacing Foundation**
-    * [ ] Add logo (icon only, no text) to welcome page above welcome text
+  * [x] **Layout & Spacing Foundation**
+    * [x] Add logo (icon only, no text) to welcome page above welcome text
     * [ ] Fix overall page spacing (especially mobile Safari)
     * [ ] Implement wider container for desktop view (current `max-w-md` is too narrow)
     * [ ] Create distinct desktop and mobile layouts
     * [ ] Ensure pages span full height on desktop
     * [ ] Always scroll to top when navigating between steps
-  * [ ] **Consent Form Page Fixes**
+  * [x] **Consent Form Page Fixes**
     * [x] Fix "Electronic Signature" label spacing to match input field spacing
     * [x] Add white background to "I have read and agreed" checkbox area (currently blends into background)
     * [ ] Ensure consistent padding/spacing across all form elements
-  * [ ] **Scheduling Page Overhaul**
-    * [ ] Complete UI redesign to match rest of form styling
-    * [ ] Use consistent card/input styling from other steps
-    * [ ] Improve mobile layout and spacing
+  * [x] **Scheduling Page Overhaul**
+    * [x] Complete UI redesign to match rest of form styling
+    * [x] Use consistent card/input styling from other steps
+    * [x] Improve mobile layout and spacing
   * [ ] **Payment Page Fixes**
     * [x] Change all payment option cards to white background by default
     * [x] Fix "I understand this is a recurring charge" checkbox so it doesn't affect other element spacing

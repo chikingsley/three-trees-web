@@ -81,6 +81,10 @@ const ProgramsGlance = (props: ProgramsGlanceProps) => {
     Autoplay({ delay: 5000, stopOnInteraction: true })
   );
   const [api, setApi] = React.useState<CarouselApi>();
+  
+  // Refs for mobile button scrolling
+  const buttonContainerRef = useRef<HTMLDivElement>(null);
+  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   // Handle carousel navigation
   const scrollPrev = React.useCallback(() => {
@@ -95,14 +99,33 @@ const ProgramsGlance = (props: ProgramsGlanceProps) => {
     if (index !== undefined) setActiveCategory(index);
   }, [api]);
   
+  // Function to scroll button into view
+  const scrollButtonIntoView = (index: number) => {
+    const button = buttonRefs.current[index];
+    if (button && buttonContainerRef.current) {
+      button.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+  };
+  
   // Update activeCategory when slide changes
   React.useEffect(() => {
     if (!api) return;
     
     api.on("select", () => {
-      setActiveCategory(api.selectedScrollSnap());
+      const newIndex = api.selectedScrollSnap();
+      setActiveCategory(newIndex);
+      scrollButtonIntoView(newIndex);
     });
   }, [api]);
+  
+  // Scroll button into view when activeCategory changes
+  React.useEffect(() => {
+    scrollButtonIntoView(activeCategory);
+  }, [activeCategory]);
   // --- END OF HOOKS ---
 
   // Merge props with defaults AFTER hooks
@@ -202,13 +225,18 @@ const ProgramsGlance = (props: ProgramsGlanceProps) => {
         {/* MOBILE VIEW - Swipeable Carousel (Visible only on mobile) */}
         <div className="md:hidden space-y-4">
           {/* Tabs/Pills for category selection */}
-          <div className="flex justify-center gap-2 mb-6 overflow-x-auto pb-2">
+          <div 
+            ref={buttonContainerRef}
+            className="flex justify-center gap-2 mb-6 overflow-x-auto pb-2 scroll-smooth"
+          >
             {programsData.categories.map((category, index) => (
               <button
                 key={category} // Use category string as key
+                ref={el => { buttonRefs.current[index] = el; }}
                 onClick={() => {
                   api?.scrollTo(index);
                   setActiveCategory(index);
+                  scrollButtonIntoView(index);
                 }}
                 className={cn(
                   "px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors",
