@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { useFormContext } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -48,6 +48,10 @@ const ProgramInfoStep: React.FC = () => {
 
   const [referralSourceTypesForCounty, setReferralSourceTypesForCounty] = useState<ApiReferralSourceType[]>([]);
   const [isLoadingReferralSourceTypes, setIsLoadingReferralSourceTypes] = useState(false);
+
+  // Track previous values to prevent clearing on mount
+  const previousCountyRef = useRef<string | undefined>(undefined);
+  const previousReferralSourceRef = useRef<string | undefined>(undefined);
 
   // Fetch counties on mount
   useEffect(() => {
@@ -120,17 +124,25 @@ const ProgramInfoStep: React.FC = () => {
       }
     };
 
-    // Reset dependent fields when county changes
-    setValue("personalInfo.referralSource", "", { shouldValidate: true });
-    clearErrors("personalInfo.referralSource");
-    if (watchedReferralSource === 'Other') { // If it was 'Other', clear the 'Other' text field too
-        setValue("personalInfo.referralSourceOther", "", { shouldValidate: true });
-        clearErrors("personalInfo.referralSourceOther");
+    // Only reset dependent fields when county actually changes, not on initial mount
+    const countyActuallyChanged = previousCountyRef.current !== undefined && 
+                                  previousCountyRef.current !== watchedCounty;
+    
+    if (countyActuallyChanged) {
+      setValue("personalInfo.referralSource", "", { shouldValidate: true });
+      clearErrors("personalInfo.referralSource");
+      if (watchedReferralSource === 'Other') { // If it was 'Other', clear the 'Other' text field too
+          setValue("personalInfo.referralSourceOther", "", { shouldValidate: true });
+          clearErrors("personalInfo.referralSourceOther");
+      }
     }
+    
+    // Update the previous county ref
+    previousCountyRef.current = watchedCounty;
     
     fetchReferralSourceTypes();
 
-  }, [watchedCounty, countiesList, setValue, clearErrors]); // Added countiesList dependency
+  }, [watchedCounty, countiesList, setValue, clearErrors, watchedReferralSource]); // Added watchedReferralSource dependency
 
   // Effect to clear countyOther if county is not 'Other'
   useEffect(() => {
@@ -145,13 +157,20 @@ const ProgramInfoStep: React.FC = () => {
 
   // Effect to clear referralSourceOther if referralSource is not 'Other'
   useEffect(() => {
-    if (watchedReferralSource !== 'Other') {
+    // Only clear if referralSource actually changed from 'Other' to something else
+    const referralSourceChangedFromOther = previousReferralSourceRef.current === 'Other' && 
+                                           watchedReferralSource !== 'Other';
+    
+    if (referralSourceChangedFromOther) {
       const referralSourceOtherValue = watch("personalInfo.referralSourceOther");
       if (referralSourceOtherValue) { // Only clear if it has a value
         setValue("personalInfo.referralSourceOther", "", { shouldValidate: true });
         clearErrors("personalInfo.referralSourceOther");
       }
     }
+    
+    // Update the previous referral source ref
+    previousReferralSourceRef.current = watchedReferralSource;
   }, [watchedReferralSource, setValue, clearErrors, watch]);
 
   const isReferralOtherActive = watchedReferralSource === 'Other';
